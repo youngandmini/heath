@@ -5,6 +5,6 @@ import java.io.Serializable;
 
 public class MemberPostLikedPK implements Serializable {
 
-    private String memberId;
+    private Long memberId;
     private Long postId;
 }

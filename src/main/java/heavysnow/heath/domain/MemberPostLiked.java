@@ -10,7 +10,7 @@ public class MemberPostLiked {
 
     @Id
     @Column(name = "member_id")
-    private String memberId;
+    private Long memberId;
 
     @Id
     @Column(name = "post_id")
