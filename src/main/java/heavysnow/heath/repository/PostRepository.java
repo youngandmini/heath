@@ -13,4 +13,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p join fetch p.member m where p.member.id = :memberId order by p.createdDate desc")
     Page<Post> findPageByMember(@Param("memberId") Long memberId, Pageable pageable);
 
+    @Query("select p from Post p join fetch p.member m")
+    Page<Post> findPage(Pageable pageable);
 }
