@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * MemberPostListResponseDto에 들어갈 List<Post> 정보를 위한 클래스
+ * PostListResponseDto에 들어갈 List<Post> 정보를 위한 클래스
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
