@@ -4,7 +4,6 @@ import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.repository.MemberRepository;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +28,7 @@ class MemberServiceTest {
                 .username("aaa")
                 .nickname("gwan")
                 .userStatusMessage("fighting!!!")
-                .profileImgPath("None")
+                .profileImgUrl("None")
                 .build();
 
         //when
@@ -41,7 +40,7 @@ class MemberServiceTest {
         assertEquals(memberDto.getUsername(), findMember.getUsername());
         assertEquals(memberDto.getNickname(), findMember.getNickname());
         assertEquals(memberDto.getUserStatusMessage(), findMember.getUserStatusMessage());
-        assertEquals(memberDto.getProfileImgPath(), findMember.getProfileImgPath());
+        assertEquals(memberDto.getProfileImgUrl(), findMember.getProfileImgUrl());
     }
 
     @Test
@@ -50,7 +49,7 @@ class MemberServiceTest {
                 .username("aaa")
                 .nickname("gwan")
                 .userStatusMessage("fighting!!!")
-                .profileImgPath("None")
+                .profileImgUrl("None")
                 .build();
         memberService.createUser(memberDto);
         memberService.editMember("aaa", "hwi", "good!", "Null");
@@ -58,7 +57,7 @@ class MemberServiceTest {
         assertEquals(result.getUsername(), "aaa");
         assertEquals(result.getNickname(), "hwi");
         assertEquals(result.getUserStatusMessage(), "good!");
-        assertEquals(result.getProfileImgPath(), "Null");
+        assertEquals(result.getProfileImgUrl(), "Null");
 
     }
 

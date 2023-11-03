@@ -20,12 +20,12 @@ public class MemberService {
     }
 
     @Transactional
-    public Member editMember(String userName, String nickName, String userStatusMessage, String profileImgPath) {
+    public Member editMember(String userName, String nickName, String userStatusMessage, String profileImgUrl) {
         Member entity = memberRepository.findByUsername(userName).orElse(null);
         if (entity == null){
             System.out.println("회원정보가 없습니다.");
         }
-        entity.update(nickName, userStatusMessage, profileImgPath);
+        entity.update(nickName, userStatusMessage, profileImgUrl);
         return memberRepository.findByUsername("userName").orElse(null);
     }
 }
