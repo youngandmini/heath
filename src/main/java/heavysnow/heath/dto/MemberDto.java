@@ -19,14 +19,14 @@ public class MemberDto {
 
     private String userStatusMessage;
 
-    private String profileImgPath;
+    private String profileImgUrl;
 
     @Builder
-    public MemberDto(String username, String nickname, String userStatusMessage, String profileImgPath) {
+    public MemberDto(String username, String nickname, String userStatusMessage, String profileImgUrl) {
         this.username = username;
         this.nickname = nickname;
         this.userStatusMessage = userStatusMessage;
-        this.profileImgPath = profileImgPath;
+        this.profileImgUrl = profileImgUrl;
     }
 
     public Member toEntity() {
@@ -34,7 +34,7 @@ public class MemberDto {
                 .username(username)
                 .nickname(nickname)
                 .userStatusMessage(userStatusMessage)
-                .profileImgPath(profileImgPath)
+                .profileImgUrl(profileImgUrl)
                 .build();
     }
 }
