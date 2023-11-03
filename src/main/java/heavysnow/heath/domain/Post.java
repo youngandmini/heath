@@ -22,7 +22,7 @@ public class Post extends BaseEntity {
     private Member member;
     private String title;
     private String content;
-    private int liked;
+//    private int liked;
     private int consecutiveDays;
 
     @OneToOne(fetch = FetchType.LAZY)
