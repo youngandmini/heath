@@ -1,7 +1,7 @@
 package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Post;
-import heavysnow.heath.dto.postdto.MemberPostListResponseDto;
+import heavysnow.heath.dto.postdto.PostListResponseDto;
 import heavysnow.heath.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,8 +16,10 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public MemberPostListResponseDto getPostListByMember(Long memberId, Pageable pageable) {
+    public PostListResponseDto getPostListByMember(Long memberId, Pageable pageable) {
         Page<Post> postPage = postRepository.findPageByMember(memberId, pageable);
-        return MemberPostListResponseDto.of(postPage);
+        return PostListResponseDto.of(postPage);
     }
+
+
 }

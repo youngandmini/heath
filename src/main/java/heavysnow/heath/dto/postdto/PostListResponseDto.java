@@ -13,12 +13,12 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberPostListResponseDto {
+public class PostListResponseDto {
 
-    private List<MemberPostInfo> posts;
+    private List<PostInfo> posts;
     private PageInfo pageInfo;
 
-    public static MemberPostListResponseDto of(Page<Post> postPage) {
-        return new MemberPostListResponseDto(MemberPostInfo.listOf(postPage), PageInfo.of(postPage));
+    public static PostListResponseDto of(Page<Post> postPage) {
+        return new PostListResponseDto(PostInfo.listOf(postPage), PageInfo.of(postPage));
     }
 }

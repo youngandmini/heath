@@ -18,21 +18,28 @@ import java.util.stream.Collectors;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class MemberPostInfo {
+public class PostInfo {
 
+    private Long memberId;
     private Long postId;
+    private String profileImgUrl;
+    private String nickname;
     private String title;
     private String content;
     private String mainImgUrl;
     private LocalDate createdDate;
     private int consecutiveDays;
 
-    public static List<MemberPostInfo> listOf(Page<Post> postPage) {
-        return postPage.getContent().stream().map(MemberPostInfo::of).collect(Collectors.toList());
+    public static List<PostInfo> listOf(Page<Post> postPage) {
+        return postPage.getContent().stream().map(PostInfo::of).collect(Collectors.toList());
     }
 
-    private static MemberPostInfo of(Post post) {
-        return new MemberPostInfo(post.getId(),
+    private static PostInfo of(Post post) {
+        return new PostInfo(
+                post.getMember().getId(),
+                post.getId(),
+                post.getMember().getProfileImgUrl(),
+                post.getMember().getNickname(),
                 post.getTitle(),
                 post.getContent(),
                 post.getMainImage().getImgUrl(),
