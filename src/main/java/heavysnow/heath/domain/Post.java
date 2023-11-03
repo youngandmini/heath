@@ -34,4 +34,7 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post")
+    private List<MemberPostLiked> memberPostLikedList = new ArrayList<>();
 }
