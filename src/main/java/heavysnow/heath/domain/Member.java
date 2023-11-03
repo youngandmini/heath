@@ -17,7 +17,7 @@ public class Member {
 
     @Id
     @Column(name = "member_id")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
@@ -34,4 +34,13 @@ public class Member {
         this.nickname = nickname;
         this.userStatusMessage = userStatusMessage;
         this.profileImgPath = profileImgPath;
-    }}
+    }
+
+    public void update(String nickname, String userStatusMessage, String profileImgPath) {
+        this.nickname = nickname;
+        this.userStatusMessage = userStatusMessage;
+        this.profileImgPath = profileImgPath;
+        }
+
+
+}
