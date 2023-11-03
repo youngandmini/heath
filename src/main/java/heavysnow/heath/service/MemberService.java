@@ -16,13 +16,7 @@ public class MemberService {
 
     @Transactional
     public Member createUser(MemberDto dto){
-        Member encoding = Member.builder()
-                .username(dto.getUsername())
-                .nickname(dto.getNickname())
-                .userStatusMessage(dto.getUserStatusMessage())
-                .profileImgPath(dto.getProfileImgPath())
-                .build();
-        return memberRepository.save(encoding);
+        return memberRepository.save(dto.toEntity());
     }
 
     @Transactional
