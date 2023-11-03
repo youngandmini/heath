@@ -4,10 +4,7 @@ import heavysnow.heath.domain.Post;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
 import heavysnow.heath.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +24,8 @@ public class PostService {
      */
     public PostListResponseDto getPostListByMember(Long memberId, int page) {
         Pageable pageable = PageRequest.of(page, 9);
-        Page<Post> postPage = postRepository.findPageByMember(memberId, pageable);
-        return PostListResponseDto.of(postPage);
+        Slice<Post> postSlice = postRepository.findPageByMember(memberId, pageable);
+        return PostListResponseDto.of(postSlice);
     }
 
     /**
@@ -39,8 +36,8 @@ public class PostService {
      */
     public PostListResponseDto getPostList(int page, String sort) {
         Pageable pageable = PageRequest.of(page, 3, Sort.by(Sort.Direction.DESC, sort));
-        Page<Post> postPage = postRepository.findPage(pageable);
-        return PostListResponseDto.of(postPage);
+        Slice<Post> postSlice = postRepository.findPage(pageable);
+        return PostListResponseDto.of(postSlice);
     }
 
 }

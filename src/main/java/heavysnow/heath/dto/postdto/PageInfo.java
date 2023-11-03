@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 
 /**
@@ -20,7 +20,7 @@ public class PageInfo {
     private int page;
     private int numberOfElements;
 
-    public static PageInfo of(Page<Post> postPage) {
-        return new PageInfo(postPage.isFirst(), postPage.isLast(), postPage.getNumber(), postPage.getNumberOfElements());
+    public static PageInfo of(Slice<Post> postSlice) {
+        return new PageInfo(postSlice.isFirst(), postSlice.isLast(), postSlice.getNumber(), postSlice.getNumberOfElements());
     }
 }

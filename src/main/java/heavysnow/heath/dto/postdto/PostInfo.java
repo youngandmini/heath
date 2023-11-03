@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,8 +31,8 @@ public class PostInfo {
     private LocalDate createdDate;
     private int consecutiveDays;
 
-    public static List<PostInfo> listOf(Page<Post> postPage) {
-        return postPage.getContent().stream().map(PostInfo::of).collect(Collectors.toList());
+    public static List<PostInfo> listOf(Slice<Post> postSlice) {
+        return postSlice.getContent().stream().map(PostInfo::of).collect(Collectors.toList());
     }
 
     private static PostInfo of(Post post) {
