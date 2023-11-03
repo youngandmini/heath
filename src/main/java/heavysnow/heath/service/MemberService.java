@@ -26,7 +26,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Member EditMember(String userName, String nickName, String userStatusMessage, String profileImgPath) {
+    public Member editMember(String userName, String nickName, String userStatusMessage, String profileImgPath) {
         Member entity = memberRepository.findByUsername(userName).orElse(null);
         if (entity == null){
             System.out.println("회원정보가 없습니다.");

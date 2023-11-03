@@ -53,7 +53,7 @@ class MemberServiceTest {
                 .profileImgPath("None")
                 .build();
         memberService.createUser(memberDto);
-        memberService.EditMember("aaa", "hwi", "good!", "Null");
+        memberService.editMember("aaa", "hwi", "good!", "Null");
         Member result = memberRepository.findByUsername("aaa").orElse(null);
         assertEquals(result.getUsername(), "aaa");
         assertEquals(result.getNickname(), "hwi");
