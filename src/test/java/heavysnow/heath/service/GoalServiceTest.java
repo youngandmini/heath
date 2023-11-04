@@ -5,14 +5,13 @@ import heavysnow.heath.domain.Goal;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.GoalCreationDto;
 import heavysnow.heath.dto.MemberDto;
-import heavysnow.heath.repository.GoalRepository;
-import heavysnow.heath.repository.MemberRepository;
-import heavysnow.heath.service.GoalService;
-import heavysnow.heath.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,6 +62,50 @@ class GoalServiceTest {
         assertThat(createdGoal.getMember().getId()).isEqualTo(member.getId());  // 같은 멤버인지 검증
         assertThat(createdGoal.getContent()).isEqualTo(goalCreationDto.getContent());
         assertThat(createdGoal.isAchieved()).isEqualTo(goalCreationDto.isAchieved());
-
     }
+
+
+    @DisplayName("findGoalsByMember : 특정 멤버에 대한 모든 목표를 가져오는데 성공한다.")
+    @Test
+    @Transactional
+    public void findGoals() throws Exception {
+        // give
+
+        // 멤버 DTO
+        MemberDto memberDto = MemberDto.builder()
+                .username("leejungbin")
+                .nickname("ego2")
+                .userStatusMessage("fighting!!!")
+                .profileImgUrl("None")
+                .build();
+
+        // memberDto에 있는 정보 데베에 저장
+        Member member = memberService.createUser(memberDto);
+
+        // 멤버 id
+        Long userId = member.getId();
+
+
+        // Goal DTO
+        GoalCreationDto goalCreationDto1 = new GoalCreationDto("content1", false);
+        GoalCreationDto goalCreationDto2 = new GoalCreationDto("content2", true);
+
+
+        // 해당 멤버의 목표 데베 저장
+        Goal createdGoal1 = goalService.createGoalForMember(userId, goalCreationDto1);
+        Goal createdGoal2 = goalService.createGoalForMember(userId, goalCreationDto2);
+
+
+        // when
+        List<Goal> findGoals = goalService.findGoalsByMember(userId);
+
+        // then
+        // 반환된 목표리스트가 전부 포함되어있는지 확인
+        assertThat(findGoals.get(0).getId()).isEqualTo(createdGoal1.getId());
+        assertThat(findGoals.get(1).getId()).isEqualTo(createdGoal2.getId());
+
+        // 멤버 객체와 목표들이 정확히 설정되어있는지 확인
+        assertThat(findGoals).allMatch(goal -> goal.getMember().equals(member));
+    }
+
 }
