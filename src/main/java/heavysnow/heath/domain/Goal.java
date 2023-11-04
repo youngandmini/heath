@@ -2,8 +2,14 @@ package heavysnow.heath.domain;
 
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "goal")
 public class Goal {
 
@@ -19,5 +25,13 @@ public class Goal {
     private String content;
 
     private boolean isAchieved;
+
+    @Builder    // 빌더 패턴으로 객체 생성
+    public Goal(Member member, String content, boolean isAchieved) {
+        this.member = member;
+        this.content = content;
+        this.isAchieved = isAchieved;
+    }
+
 
 }
