@@ -3,8 +3,10 @@ package heavysnow.heath.service;
 import heavysnow.heath.domain.Goal;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.GoalCreationDto;
+import heavysnow.heath.dto.GoalUpdateDto;
 import heavysnow.heath.repository.GoalRepository;
 import heavysnow.heath.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,4 +39,19 @@ public class GoalService {
     public List<Goal> findGoalsByMember(Long memberId) {
         return goalRepository.findByMemberId(memberId);
     }
+
+    // 수정 : 특정 멤버에 대한 목표 수정하는 메서드
+    @Transactional
+    public Goal updateGoalForMember(Long memberId, Long goalId, GoalUpdateDto updateDto){
+        // 목표 조회
+        Goal goal = goalRepository.findByIdAndMemberId(goalId, memberId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 멤버에 대한 목표를 찾을 수 업습니다."));
+
+        // 값 변경
+        goal.update(updateDto.getContent(), updateDto.isAchieved());
+
+        // 변경 사항 데베 반영
+        return goal;
+    }
+
 }
