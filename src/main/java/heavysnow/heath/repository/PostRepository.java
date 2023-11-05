@@ -8,12 +8,26 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface PostRepository extends JpaRepository<Post, Long> {
 
 
-    @Query(value = "select p from Post p join fetch p.member m where p.member.id = :memberId order by p.createdDate desc")
+    @Query("select p from Post p join fetch p.member m where p.member.id = :memberId order by p.createdDate desc")
     Slice<Post> findPageByMember(@Param("memberId") Long memberId, Pageable pageable);
 
-    @Query(value = "select p from Post p join fetch p.member m")
+    @Query("select p from Post p join fetch p.member m")
     Slice<Post> findPage(Pageable pageable);
+
+
+    /**
+     * use lazy loading on postImages column
+     */
+    @Query("select distinct p from Post p" +
+            " left join fetch p.member" +
+//            " left join fetch p.postImages" +
+            " left join fetch p.memberPostLikedList" +
+            " where p.id = :postId")
+    Optional<Post> findPostDetailById(@Param("postId") Long postId);
+
 }

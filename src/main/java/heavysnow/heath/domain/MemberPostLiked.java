@@ -2,10 +2,12 @@ package heavysnow.heath.domain;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
 @IdClass(MemberPostLikedPK.class)
 @Table(name = "member_post_liked")
+@Getter
 public class MemberPostLiked {
 
     @Id
