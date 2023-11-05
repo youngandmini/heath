@@ -118,6 +118,7 @@ class GoalServiceTest {
     @Test
     @Transactional
     public void updateGoal() throws Exception {
+        // given
         // 멤버 DTO
         MemberDto memberDto = MemberDto.builder()
                 .username("leejungbin")
@@ -159,4 +160,40 @@ class GoalServiceTest {
         assertThat(persistentGoal.getContent()).isEqualTo(updatedContent);
         assertThat(persistentGoal.isAchieved()).isEqualTo(isAchieved);
     }
+
+    @DisplayName("deleteGoalForMember : 특정 멤버에 대한 목표를 삭제한다. ")
+    @Test
+    @Transactional
+    public void deleteGoal() throws Exception {
+        // given
+        // 멤버 DTO
+        MemberDto memberDto = MemberDto.builder()
+                .username("leejungbin")
+                .nickname("ego2")
+                .userStatusMessage("fighting!!!")
+                .profileImgUrl("None")
+                .build();
+
+        // memberDto에 있는 정보 데베에 저장
+        Member member = memberService.createUser(memberDto);
+
+        // 멤버 id
+        Long userId = member.getId();
+
+        // Goal DTO
+        GoalCreationDto goalCreationDto = new GoalCreationDto("1일 1커밋 하기", false);
+
+        // 멤버의 목표 데베에 저장
+        Goal createdGoal = goalService.createGoalForMember(userId, goalCreationDto);
+
+        // when
+        // 생성한 목표를 삭제
+        goalService.deleteGoalForMember(userId, createdGoal.getId());
+
+        // then
+        // 삭제한 데이터가 데베에 존재하지 않는지 확인
+        boolean isPresent = goalRepository.findById(createdGoal.getId()).isPresent();
+        assertThat(isPresent).isFalse();
+    }
+
 }

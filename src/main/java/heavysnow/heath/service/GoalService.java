@@ -54,4 +54,14 @@ public class GoalService {
         return goal;
     }
 
+
+    // 삭제 : 특정 멤버에 대한 목표 삭제하는 메서드
+    @Transactional
+    public void deleteGoalForMember(Long memberId, Long goalId){
+        // 목표 조회
+        Goal goal = goalRepository.findByIdAndMemberId(goalId, memberId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 멤버에 대한 목표를 찾을 수 업습니다."));
+
+        goalRepository.delete(goal);
+    }
 }
