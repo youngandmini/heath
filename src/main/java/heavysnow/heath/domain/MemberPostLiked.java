@@ -26,6 +26,6 @@ public class MemberPostLiked {
     public MemberPostLiked(Member member, Post post) {
         this.member = member;
         this.post = post;
-        post.getMemberPostLikedList().add(this);
+//        post.getMemberPostLikedList().add(this);
     }
 }
