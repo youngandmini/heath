@@ -1,9 +1,13 @@
 package heavysnow.heath.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "post_image")
+@Getter
+@Setter
 public class PostImage {
 
     @Id
@@ -16,5 +20,11 @@ public class PostImage {
     private Post post;
 
     private String imgUrl;
+
+    public PostImage(Post post, String imgUrl) {
+        this.post = post;
+        this.imgUrl = imgUrl;
+        post.getPostImages().add(this);
+    }
 
 }
