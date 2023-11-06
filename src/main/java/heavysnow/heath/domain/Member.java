@@ -36,10 +36,10 @@ public class Member {
         this.profileImgUrl = profileImgUrl;
     }
 
-    public void update(String nickname, String userStatusMessage, String profileImgPath) {
+    public void update(String nickname, String userStatusMessage, String profileImgUrl) {
         this.nickname = nickname;
         this.userStatusMessage = userStatusMessage;
-        this.profileImgUrl = profileImgPath;
+        this.profileImgUrl = profileImgUrl;
         }
 
 
