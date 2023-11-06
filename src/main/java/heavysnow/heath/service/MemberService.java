@@ -20,9 +20,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void editMember(String userName, String nickName, String userStatusMessage, String profileImgUrl) {
-        Member entity = memberRepository.findByUsername(userName).orElseThrow();
-        entity.update(nickName, userStatusMessage, profileImgUrl);
+    public void editMember(Long memberId, MemberDto dto) {
+        Member entity = memberRepository.findById(memberId).orElseThrow();
+        entity.update(dto.getNickname(), dto.getUserStatusMessage(), dto.getProfileImgUrl());
     }
 
 //    fetch, join
