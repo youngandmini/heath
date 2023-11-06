@@ -17,21 +17,30 @@ public class Member {
 
     @Id
     @Column(name = "member_id")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
     private String nickname;
     private String userStatusMessage;
-    private String profileImgPath;
+    private String profileImgUrl;
 
     @OneToMany(mappedBy = "member")
     private List<Goal> goals = new ArrayList<>();
 
     @Builder
-    public Member(String username, String nickname, String userStatusMessage, String profileImgPath) {
+    public Member(String username, String nickname, String userStatusMessage, String profileImgUrl) {
         this.username = username;
         this.nickname = nickname;
         this.userStatusMessage = userStatusMessage;
-        this.profileImgPath = profileImgPath;
-    }}
+        this.profileImgUrl = profileImgUrl;
+    }
+
+    public void update(String nickname, String userStatusMessage, String profileImgUrl) {
+        this.nickname = nickname;
+        this.userStatusMessage = userStatusMessage;
+        this.profileImgUrl = profileImgUrl;
+        }
+
+
+}
