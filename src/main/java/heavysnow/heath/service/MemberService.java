@@ -24,4 +24,10 @@ public class MemberService {
         Member entity = memberRepository.findByUsername(userName).orElseThrow();
         entity.update(nickName, userStatusMessage, profileImgUrl);
     }
+
+//    fetch, join
+    public Member findMemberWithGoals(Long memberId){
+        Member member = memberRepository.findByIdWithGoals(memberId).orElseThrow();
+        return member;
+    }
 }
