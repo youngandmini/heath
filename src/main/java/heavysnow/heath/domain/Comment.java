@@ -2,11 +2,13 @@ package heavysnow.heath.domain;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.List;
 
 @Entity
 @Table(name = "comment")
+@Getter
 public class Comment extends BaseEntity {
 
     @Id
