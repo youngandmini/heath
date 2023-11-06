@@ -3,12 +3,12 @@ package heavysnow.heath.service;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.repository.MemberRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -20,12 +20,14 @@ public class MemberService {
     }
 
     @Transactional
-    public Member editMember(String userName, String nickName, String userStatusMessage, String profileImgUrl) {
-        Member entity = memberRepository.findByUsername(userName).orElse(null);
-        if (entity == null){
-            System.out.println("회원정보가 없습니다.");
-        }
+    public void editMember(String userName, String nickName, String userStatusMessage, String profileImgUrl) {
+        Member entity = memberRepository.findByUsername(userName).orElseThrow();
         entity.update(nickName, userStatusMessage, profileImgUrl);
-        return memberRepository.findByUsername("userName").orElse(null);
+    }
+
+//    fetch, join
+    public Member findMemberWithGoals(Long memberId){
+        Member member = memberRepository.findByIdWithGoals(memberId).orElseThrow();
+        return member;
     }
 }
