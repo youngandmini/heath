@@ -35,11 +35,6 @@ public class GoalService {
         return goalRepository.save(goal);
     }
 
-    // 조회 : 특정 멤버에 대한 모든 목표 조회하는 메서드
-    public List<Goal> findGoalsByMember(Long memberId) {
-        return goalRepository.findByMemberId(memberId);
-    }
-
     // 수정 : 특정 멤버에 대한 목표 수정하는 메서드
     @Transactional
     public Goal updateGoalForMember(Long memberId, Long goalId, GoalUpdateDto updateDto){
