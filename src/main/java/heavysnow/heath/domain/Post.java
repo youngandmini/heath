@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,24 +27,32 @@ public class Post extends BaseEntity {
     private int liked;
     private int consecutiveDays;
 
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "main_image_id")
     private PostImage mainImage;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<PostImage> postImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    public Post(Member member, String title, String content) {
+    public Post(Member member, String title, String content, int consecutiveDays, int liked) {
         this.member = member;
         this.title = title;
         this.content = content;
+        this.consecutiveDays = consecutiveDays;
+        this.liked = liked;
     }
 
     public void update(String title, String content) {
         this.title = title;
-        this. content = content;
+        this.content = content;
     }
+
+    public void setMainImage(PostImage mainImage) {
+        this.mainImage = mainImage;
+    }
+
 }

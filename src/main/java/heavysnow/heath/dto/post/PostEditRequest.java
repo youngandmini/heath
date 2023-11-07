@@ -13,6 +13,5 @@ public class PostEditRequest {
     private Long postId;
     private String title;
     private String content;
-    private List<String> images;
-    private List<PostImage> postImages;
+    private List<String> postImages;
 }

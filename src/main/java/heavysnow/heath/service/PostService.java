@@ -14,8 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,12 +32,30 @@ public class PostService {
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 멤버를 찾을 수 없습니다."));
 
+        // consecutiveDays 계산
+        int consecutiveDays;
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        Optional<Post> postOptional = postRepository.findByCreatedDate(yesterday);
+        if (postOptional.isPresent()) {
+            consecutiveDays = postOptional.get().getConsecutiveDays() + 1;
+        }
+        else {
+            consecutiveDays = 1;
+        }
+
         // title, content 생성
-        Post post = new Post(member, request.getTitle(), request.getContent());
+        Post post = new Post(member, request.getTitle(), request.getContent(), consecutiveDays, 0);
         postRepository.save(post);
 
         // image 생성
-        for (String imgUrl : request.getImages()) {
+        String mainImg = request.getImages().get(0);
+        PostImage postMainImage = new PostImage(post, mainImg);
+        postImageRepository.save(postMainImage);
+        post.setMainImage(postMainImage);
+
+        for (int i = 1; i < request.getImages().size(); i++) {
+            String imgUrl = request.getImages().get(i);
             PostImage postImage = new PostImage(post, imgUrl);
             postImageRepository.save(postImage);
         }
@@ -55,26 +72,64 @@ public class PostService {
         // title, content 수정
         post.update(request.getTitle(), request.getContent());
 
-        // 새로운 image 추가
-        for (String imgUrl : request.getImages()) {
+        List<PostImage> oldImages = post.getPostImages();
+        List<String> editImages = request.getPostImages();
+
+        // image 추가 및 삭제
+        imageUpdate(post, oldImages, editImages);
+
+        // mainImage 설정
+        if (post.getMainImage().getImgUrl() != editImages.get(0)) {
+            PostImage mainImage = postImageRepository.findByUrl(editImages.get(0));
+            post.setMainImage(mainImage);
+        }
+
+        // allDeleteAndAddImage(request, post);
+
+        postRepository.save(post);
+    }
+
+    private void imageUpdate(Post post, List<PostImage> oldImages, List<String> editImages) {
+        // image 삭제
+        List<PostImage> deleteImages = oldImages.stream().filter(
+                o -> !editImages.contains(o.getImgUrl())
+        ).collect(Collectors.toList());
+
+        postImageRepository.deletePostImages(deleteImages);
+
+        for (PostImage postImage : deleteImages) {
+            post.getPostImages().remove(postImage);
+        }
+
+        // image 추가
+        List<String> oldImgUrls = oldImages.stream()
+                .map(PostImage::getImgUrl)
+                .collect(Collectors.toList());
+
+        List<String> addImages = editImages.stream().filter(
+                e -> !oldImgUrls.contains(e)
+        ).collect(Collectors.toList());
+
+        for (String imgUrl : addImages) {
             PostImage postImage = new PostImage(post, imgUrl);
             postImageRepository.save(postImage);
         }
+    }
 
-        // 제거한 image 삭제
-        List<PostImage> oldImages = post.getPostImages();
-        List<PostImage> editImages = request.getPostImages();
+    private void allDeleteAndAddImage(PostEditRequest request, Post post) {
+        postImageRepository.deletePostImagesByPostId(post.getId());
+        post.getPostImages().clear();
 
-        List<PostImage> result = oldImages.stream().filter(o -> editImages.stream().noneMatch(e -> {
-            return o.getId().equals(e.getId());
-        })).collect(Collectors.toList());
+        String mainImg = request.getPostImages().get(0);
+        PostImage postMainImage = new PostImage(post, mainImg);
+        postImageRepository.save(postMainImage);
+        post.setMainImage(postMainImage);
 
-        for (PostImage postImage : result) {
-            post.getPostImages().remove(postImage);
-            postImageRepository.delete(postImage);
+        for (int i = 1; i < request.getPostImages().size(); i++) {
+            String imgUrl = request.getPostImages().get(i);
+            PostImage postImage = new PostImage(post, imgUrl);
+            postImageRepository.save(postImage);
         }
-
-        postRepository.save(post);
     }
 
     // 게시글 삭제
@@ -83,10 +138,14 @@ public class PostService {
         Optional<Post> postOptional = postRepository.findById(request.getPostId());
         Post post = postOptional.orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
 
-        for (PostImage postImage : post.getPostImages()) {
-            postImageRepository.delete(postImage);
-        }
+        /**
+         * 댓글 삭제 추후 수정 필요
+         */
 
+        // postImages도 같이 삭제 됨
         postRepository.delete(post);
     }
+
+
+
 }

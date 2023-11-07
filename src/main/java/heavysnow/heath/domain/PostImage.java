@@ -7,7 +7,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "post_image")
 @Getter
-@Setter
 public class PostImage {
 
     @Id
