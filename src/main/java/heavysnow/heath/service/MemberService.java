@@ -2,7 +2,9 @@ package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.MemberDto;
+import heavysnow.heath.dto.MemberResponseDto;
 import heavysnow.heath.repository.MemberRepository;
+import heavysnow.heath.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public Member createUser(MemberDto dto){
@@ -25,9 +28,11 @@ public class MemberService {
         entity.update(dto.getNickname(), dto.getUserStatusMessage(), dto.getProfileImgUrl());
     }
 
-//    fetch, join
-    public Member findMemberWithGoals(Long memberId){
+    //fetch, join
+    //Member를 반환하는 것에서 MemberResponseDto를 반환하도록 변경
+    public MemberResponseDto findMemberWithGoals(Long memberId){
         Member member = memberRepository.findByIdWithGoals(memberId).orElseThrow();
-        return member;
+
+        return MemberResponseDto.of(member);
     }
 }
