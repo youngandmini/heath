@@ -18,8 +18,9 @@ public class MemberService {
     private final PostRepository postRepository;
 
     @Transactional
-    public Member createUser(MemberDto dto){
-        return memberRepository.save(dto.toEntity());
+    public Long createUser(MemberDto dto){
+        Member savedMember = memberRepository.save(dto.toEntity());
+        return savedMember.getId();
     }
 
     @Transactional
