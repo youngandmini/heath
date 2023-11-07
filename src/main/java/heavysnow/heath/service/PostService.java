@@ -2,6 +2,7 @@ package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Post;
+import heavysnow.heath.dto.PostDatesResponseDto;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
 import heavysnow.heath.repository.CommentRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +23,6 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-
 
     /**
      * 마이페이지에 사용되는 게시글 리스트를 가져오는 메서드
@@ -58,6 +59,20 @@ public class PostService {
         List<Comment> findComments = commentRepository.findWithMemberByPostId(postId);
 //        boolean isLiked = isMemberPostLiked(postId, memberId);
         return PostDetailResponseDto.of(findPost, memberId, findComments);
+    }
+
+
+    /**
+     * 마이페이지에 사용되는 해당월 운동 일수를 가져오는 메서드
+     * memberId를 갖는 회원이 year년 month월에 쓴 게시글의 날짜들을 반환
+     * @param memberId
+     * @param year
+     * @param month
+     * @return
+     */
+    public PostDatesResponseDto getPostDates(Long memberId, int year, int month) {
+        List<LocalDateTime> postDatetimes = postRepository.findDatesByMemberAndYearMonth(memberId, year, month);
+        return PostDatesResponseDto.of(postDatetimes);
     }
 
 
