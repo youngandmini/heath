@@ -33,7 +33,7 @@ class MemberServiceTest {
                 .build();
 
         //when
-        Member saveId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberDto);
 
         //then
         Member findMember = memberRepository.findByUsername(memberDto.getUsername()).orElse(null);
