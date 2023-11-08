@@ -143,8 +143,8 @@ public class PostService {
 
     // 게시글 삭제
     @Transactional
-    public void deletePost(PostDeleteRequest request) {
-        Optional<Post> postOptional = postRepository.findById(request.getPostId());
+    public void deletePost(Long postId) {
+        Optional<Post> postOptional = postRepository.findById(postId);
         Post post = postOptional.orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
 
         /**
