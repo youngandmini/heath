@@ -80,18 +80,11 @@ public class PostService {
         List<PostImage> oldImages = post.getPostImages();
         List<String> editImages = request.getPostImages();
 
+        // image 추가 및 삭제
+        imageUpdate(post, oldImages, editImages);
 
-        post.setMainImage(null);
-//        // image 추가 및 삭제
-//        imageUpdate(post, oldImages, editImages);
-//
-//        // mainImage 설정
-//        if (post.getMainImage().getImgUrl() != editImages.get(0)) {
-//            PostImage mainImage = postImageRepository.findByUrl(editImages.get(0));
-//            post.setMainImage(mainImage);
-//        }
         //image 전부 삭제 후 다시 추가
-        allDeleteAndAddImage(request, post);
+//        allDeleteAndAddImage(request, post);
 
         postRepository.save(post);
     }
@@ -99,6 +92,7 @@ public class PostService {
     // 기존 이미지와 비교하여 image 추가 및 삭제
     private void imageUpdate(Post post, List<PostImage> oldImages, List<String> editImages) {
         // image 삭제
+        post.setMainImage(null);
         List<PostImage> deleteImages = oldImages.stream().filter(
                 o -> !editImages.contains(o.getImgUrl())
         ).collect(Collectors.toList());
@@ -122,10 +116,14 @@ public class PostService {
             PostImage postImage = new PostImage(post, imgUrl);
             postImageRepository.save(postImage);
         }
+
+        PostImage mainImage = postImageRepository.findByUrl(editImages.get(0));
+        post.setMainImage(mainImage);
     }
 
     // image 전부 삭제 후 다시 추가
     private void allDeleteAndAddImage(PostEditRequest request, Post post) {
+        post.setMainImage(null);
         postImageRepository.deletePostImagesByPostId(post.getId());
         post.getPostImages().clear();
 
