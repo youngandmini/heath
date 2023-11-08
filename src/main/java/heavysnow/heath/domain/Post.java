@@ -42,12 +42,11 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post")
     private List<MemberPostLiked> memberPostLikedList = new ArrayList<>();
 
-    public Post(Member member, String title, String content, int consecutiveDays, int liked) {
+    public Post(Member member, String title, String content, int consecutiveDays) {
         this.member = member;
         this.title = title;
         this.content = content;
         this.consecutiveDays = consecutiveDays;
-        this.liked = liked;
     }
 
     public void update(String title, String content) {

@@ -12,8 +12,7 @@ import java.util.Optional;
 
 public interface PostImageRepository extends JpaRepository<PostImage, Long> {
 
-    @Modifying()
-    @Transactional
+    @Modifying
     @Query("DELETE FROM PostImage postImage WHERE postImage IN :postImages")
     void deletePostImages(@Param("postImages") List<PostImage> postImages);
 

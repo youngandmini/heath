@@ -1,13 +1,12 @@
 package heavysnow.heath.dto.post;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
-@Data
-@Setter(AccessLevel.NONE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@Getter
 public class PostAddRequest {
     private Long memberId;
     private String title;
