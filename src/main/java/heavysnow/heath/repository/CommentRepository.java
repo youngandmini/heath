@@ -10,8 +10,6 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    Optional<Comment> findByCommentId(Long commentId);
-
     /**
      * lazy loading on child
      * @param postId
