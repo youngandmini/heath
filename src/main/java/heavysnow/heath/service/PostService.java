@@ -14,6 +14,10 @@ import heavysnow.heath.repository.PostImageRepository;
 import heavysnow.heath.repository.PostRepository;
 import heavysnow.heath.repository.CommentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,25 +37,20 @@ public class PostService {
     private final CommentRepository commentRepository;
 
     // 게시글 등록
+    // postId를 반환하도록 변경
     @Transactional
-    public Post writePost(PostAddRequest request) {
+    public Long writePost(PostAddRequest request) {
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 멤버를 찾을 수 없습니다."));
 
         // consecutiveDays 계산
         int consecutiveDays;
-
         LocalDate yesterday = LocalDate.now().minusDays(1);
         Optional<Post> postOptional = postRepository.findByCreatedDate(yesterday);
-        if (postOptional.isPresent()) {
-            consecutiveDays = postOptional.get().getConsecutiveDays() + 1;
-        }
-        else {
-            consecutiveDays = 1;
-        }
+        consecutiveDays = postOptional.map(post -> post.getConsecutiveDays() + 1).orElse(1);
 
         // post 생성
-        Post post = new Post(member, request.getTitle(), request.getContent(), consecutiveDays, 0);
+        Post post = new Post(member, request.getTitle(), request.getContent(), consecutiveDays);
         postRepository.save(post);
 
         // image 및 mainImage 생성
@@ -66,7 +65,7 @@ public class PostService {
             postImageRepository.save(postImage);
         }
 
-        return post;
+        return post.getId();
     }
 
     // 게시글 수정
