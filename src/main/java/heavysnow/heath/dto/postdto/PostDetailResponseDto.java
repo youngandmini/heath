@@ -29,6 +29,10 @@ public class PostDetailResponseDto {
     private List<PostImageInfo> imgs;
     private List<CommentResponseDto> comments;
 
+    public boolean isLiked() {
+        return isLiked;
+    }
+
     public static PostDetailResponseDto of(Post post, Long memberId, List<Comment> parentComments) {
         return new PostDetailResponseDto(
                 post.getMember().getId(),
@@ -49,5 +53,4 @@ public class PostDetailResponseDto {
     private static boolean isMemberPostLiked(Post post, Long memberId) {
         return post.getMemberPostLikedList().stream().anyMatch(mpl -> Objects.equals(mpl.getMember().getId(), memberId));
     }
-
 }
