@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUsername(String username);
-    @Query ("select m from Member m join fetch m.goals where m.id = :memberId")
+
+    @Query ("select distinct m from Member m left join fetch m.goals where m.id = :memberId")
     Optional<Member> findByIdWithGoals(@Param("memberId") Long memberId);
 }
