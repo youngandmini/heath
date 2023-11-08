@@ -80,16 +80,18 @@ public class PostService {
         List<PostImage> oldImages = post.getPostImages();
         List<String> editImages = request.getPostImages();
 
-        // image 추가 및 삭제
-        imageUpdate(post, oldImages, editImages);
 
-        // mainImage 설정
-        if (post.getMainImage().getImgUrl() != editImages.get(0)) {
-            PostImage mainImage = postImageRepository.findByUrl(editImages.get(0));
-            post.setMainImage(mainImage);
-        }
-
-        // allDeleteAndAddImage(request, post);
+        post.setMainImage(null);
+//        // image 추가 및 삭제
+//        imageUpdate(post, oldImages, editImages);
+//
+//        // mainImage 설정
+//        if (post.getMainImage().getImgUrl() != editImages.get(0)) {
+//            PostImage mainImage = postImageRepository.findByUrl(editImages.get(0));
+//            post.setMainImage(mainImage);
+//        }
+        //image 전부 삭제 후 다시 추가
+        allDeleteAndAddImage(request, post);
 
         postRepository.save(post);
     }
