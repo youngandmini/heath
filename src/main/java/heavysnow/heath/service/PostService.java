@@ -28,7 +28,7 @@ public class PostService {
 
     // 게시글 등록
     @Transactional
-    public Long writePost(PostAddRequest request) {
+    public Post writePost(PostAddRequest request) {
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 멤버를 찾을 수 없습니다."));
 
@@ -44,11 +44,11 @@ public class PostService {
             consecutiveDays = 1;
         }
 
-        // title, content 생성
+        // post 생성
         Post post = new Post(member, request.getTitle(), request.getContent(), consecutiveDays, 0);
         postRepository.save(post);
 
-        // image 생성
+        // image 및 mainImage 생성
         String mainImg = request.getImages().get(0);
         PostImage postMainImage = new PostImage(post, mainImg);
         postImageRepository.save(postMainImage);
@@ -60,7 +60,7 @@ public class PostService {
             postImageRepository.save(postImage);
         }
 
-        return post.getId();
+        return post;
     }
 
     // 게시글 수정
@@ -89,6 +89,7 @@ public class PostService {
         postRepository.save(post);
     }
 
+    // 기존 이미지와 비교하여 image 추가 및 삭제
     private void imageUpdate(Post post, List<PostImage> oldImages, List<String> editImages) {
         // image 삭제
         List<PostImage> deleteImages = oldImages.stream().filter(
@@ -116,6 +117,7 @@ public class PostService {
         }
     }
 
+    // image 전부 삭제 후 다시 추가
     private void allDeleteAndAddImage(PostEditRequest request, Post post) {
         postImageRepository.deletePostImagesByPostId(post.getId());
         post.getPostImages().clear();
