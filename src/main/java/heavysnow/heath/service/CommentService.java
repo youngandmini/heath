@@ -39,6 +39,8 @@ public class CommentService {
         return savedcomment.getId();
     }
 
-
-
+    public void deleteComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
+        commentRepository.delete(comment);
+    }
 }
