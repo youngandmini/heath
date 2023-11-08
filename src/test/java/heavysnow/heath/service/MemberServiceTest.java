@@ -5,6 +5,7 @@ import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -32,7 +33,7 @@ class MemberServiceTest {
                 .build();
 
         //when
-        Member saveId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberDto);
 
         //then
         Member findMember = memberRepository.findByUsername(memberDto.getUsername()).orElse(null);
@@ -52,12 +53,18 @@ class MemberServiceTest {
                 .profileImgUrl("None")
                 .build();
         memberService.createUser(memberDto);
-        memberService.editMember("aaa", "hwi", "good!", "Null");
-        Member result = memberRepository.findByUsername("aaa").orElse(null);
-        assertEquals(result.getUsername(), "aaa");
-        assertEquals(result.getNickname(), "hwi");
-        assertEquals(result.getUserStatusMessage(), "good!");
-        assertEquals(result.getProfileImgUrl(), "Null");
+        MemberDto dto = MemberDto.builder()
+                .username("aaa")
+                .nickname("hwi")
+                .userStatusMessage("good!")
+                .profileImgUrl("Null")
+                .build();
+        memberService.editMember(1L, dto);
+        Member result = memberRepository.findById(1L).orElse(null);
+        assertEquals(result.getUsername(), dto.getUsername());
+        assertEquals(result.getNickname(), dto.getNickname());
+        assertEquals(result.getUserStatusMessage(), dto.getUserStatusMessage());
+        assertEquals(result.getProfileImgUrl(), dto.getProfileImgUrl());
 
     }
 
