@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Post extends BaseEntity {
     private Member member;
     private String title;
     private String content;
-    private int liked;
+//    private int liked;
     private int consecutiveDays;
 
 
@@ -37,6 +38,9 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
+  
+    @OneToMany(mappedBy = "post")
+    private List<MemberPostLiked> memberPostLikedList = new ArrayList<>();
 
     public Post(Member member, String title, String content, int consecutiveDays, int liked) {
         this.member = member;
@@ -54,5 +58,4 @@ public class Post extends BaseEntity {
     public void setMainImage(PostImage mainImage) {
         this.mainImage = mainImage;
     }
-
 }
