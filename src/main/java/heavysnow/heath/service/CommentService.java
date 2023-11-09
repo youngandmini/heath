@@ -55,7 +55,7 @@ public class CommentService {
             throw new IllegalArgumentException("댓글을 수정할 수 없습니다.");
         }
         // 내용 업데이트
-        comment.updateComment(commentUpdateDto.getNewComment());
+        comment.updateComment(commentUpdateDto.getContent());
     }
 
     public void deleteComment(Long commentId) {

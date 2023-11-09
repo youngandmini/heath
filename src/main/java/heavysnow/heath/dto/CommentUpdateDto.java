@@ -11,5 +11,5 @@ public class CommentUpdateDto {
     private Long postId;
     private Long memberId;
     private Long commentId;
-    private String newComment;
+    private String content;
 }
