@@ -7,6 +7,7 @@ import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +27,10 @@ class PostServiceTest {
 
     @Autowired
     MemberService memberService;
+
+    @Autowired
+    MemberRepository memberRepository;
+
     @Autowired
     PostService postService;
 
@@ -33,8 +38,7 @@ class PostServiceTest {
     void getPostListByMember() {
         //given
         MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Member member = memberService.createUser(memberDto);
-        Long memberId = member.getId();
+        Long memberId = memberService.createUser(memberDto);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -66,8 +70,7 @@ class PostServiceTest {
     void getPostList() {
         //given
         MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Member member = memberService.createUser(memberDto);
-        Long memberId = member.getId();
+        Long memberId = memberService.createUser(memberDto);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -98,8 +101,7 @@ class PostServiceTest {
     void getPostWithDetail() {
         //given
         MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Member member = memberService.createUser(memberDto);
-        Long memberId = member.getId();
+        Long memberId = memberService.createUser(memberDto);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -137,8 +139,7 @@ class PostServiceTest {
     void postUpdateTest() {
         //given
         MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Member member = memberService.createUser(memberDto);
-        Long memberId = member.getId();
+        Long memberId = memberService.createUser(memberDto);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -177,8 +178,7 @@ class PostServiceTest {
     void postDeleteTest() {
         //given
         MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Member member = memberService.createUser(memberDto);
-        Long memberId = member.getId();
+        Long memberId = memberService.createUser(memberDto);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");

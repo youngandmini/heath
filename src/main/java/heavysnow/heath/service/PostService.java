@@ -4,6 +4,7 @@ import heavysnow.heath.domain.Member;
 import heavysnow.heath.domain.Post;
 import heavysnow.heath.domain.PostImage;
 import heavysnow.heath.domain.Comment;
+import heavysnow.heath.dto.PostDatesResponseDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostDeleteRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
