@@ -7,8 +7,6 @@ import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import net.jodah.expiringmap.ExpirationPolicy;
-import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,15 +16,11 @@ import java.util.Base64.Decoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class LoginService {
-
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final Decoder decoder = Base64.getDecoder();
 
     private final MemberRepository memberRepository;
     private final MemberService memberService;
@@ -75,6 +69,9 @@ public class LoginService {
     }
 
     private Map<String, String> decodeToken(String token) {
+        ObjectMapper mapper = new ObjectMapper();
+        Decoder decoder = Base64.getDecoder();
+
         String[] chunks = token.split("\\.");
         String payload = new String(decoder.decode(chunks[1]));
 
