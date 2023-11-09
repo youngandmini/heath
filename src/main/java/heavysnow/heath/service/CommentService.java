@@ -57,7 +57,7 @@ public class CommentService {
         // 내용 업데이트
         comment.updateComment(commentUpdateDto.getNewComment());
     }
-    @Transactional
+
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         commentRepository.delete(comment);
