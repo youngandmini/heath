@@ -13,4 +13,12 @@ public class CommentCreateDto {
     private Long memberId;
     private String content;
     private Long parentCommentId;   // 대댓글인 경우 부모 댓글의 ID
+
+    @Builder
+    public CommentCreateDto(Long postId, Long memberId, String content, Long parentCommentId) {
+        this.postId = postId;
+        this.memberId = memberId;
+        this.content = content;
+        this.parentCommentId = parentCommentId;
+    }
 }
