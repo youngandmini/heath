@@ -1,17 +1,16 @@
 package heavysnow.heath.domain;
 
 
-import heavysnow.heath.dto.CommentCreateDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "comment")
 @Getter
-@Builder
-@AllArgsConstructor
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
@@ -35,7 +34,7 @@ public class Comment extends BaseEntity {
     private Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.REMOVE)
-    private List<Comment> childComments;
+    private List<Comment> childComments = new ArrayList<>();
 
 
     // 빌더 패턴으로 엔티티 생성 메서드
@@ -50,5 +49,17 @@ public class Comment extends BaseEntity {
 
     public void updateComment(String newComment) {
         this.content = newComment;
+    }
+
+    @Builder
+    public Comment(Long id, Post post, Member member, String content, Comment parentComment) {
+        this.id = id;
+        this.post = post;
+        this.member = member;
+        this.content = content;
+        this.parentComment = parentComment;
+        if (parentComment != null) {
+            parentComment.getChildComments().add(this);
+        }
     }
 }

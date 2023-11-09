@@ -9,6 +9,7 @@ import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.repository.CommentRepository;
 import heavysnow.heath.repository.MemberRepository;
 import heavysnow.heath.repository.PostRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @Transactional
 public class CommentServiceTest {
-
 
 
     @Autowired
@@ -180,5 +180,38 @@ public class CommentServiceTest {
         // then
         assertThat(updatedComment.getContent()).isEqualTo(updateConntent);
     }
+
+    @DisplayName("deleteComment: 댓글 삭제 기능.")
+    @Test
+    void deleteCommentTest(){
+        //given
+        CommentCreateDto commentDto = new CommentCreateDto(savedPostId1, savedMemberId1, "안녕하세요.", null);
+        Long savedCommentId = commentService.createComment(commentDto);
+
+        // when
+        commentService.deleteComment(savedCommentId, savedMemberId1);
+        Comment comment = commentRepository.findById(savedCommentId).orElse(null);
+
+        // then
+        assertThat(comment).isNull();
+    }
+
+    @DisplayName("댓글이 삭제 되었을때, 답글이 삭제되었는지 확인.")
+    @Test
+    void deleteReplyTest() {
+        //given
+        CommentCreateDto commentDto = new CommentCreateDto(savedPostId1, savedMemberId1, "안녕하세요.", null);
+        Long savedCommentId = commentService.createComment(commentDto);
+        CommentCreateDto replyDto = new CommentCreateDto(savedPostId1, savedMemberId1, "안녕하세요.", savedCommentId);
+        Long savedReplyId = commentService.createComment(replyDto);
+
+        // when
+        commentService.deleteComment(savedCommentId, savedMemberId1);
+        Comment comment = commentRepository.findById(savedReplyId).orElse(null);
+
+        // then
+        assertThat(comment).isNull();
+    }
+
 }
 
