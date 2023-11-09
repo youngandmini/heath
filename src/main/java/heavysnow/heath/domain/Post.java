@@ -2,14 +2,12 @@ package heavysnow.heath.domain;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "post")
-@Getter
 public class Post extends BaseEntity {
 
     @Id
@@ -22,7 +20,7 @@ public class Post extends BaseEntity {
     private Member member;
     private String title;
     private String content;
-//    private int liked;
+    private int liked;
     private int consecutiveDays;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -34,7 +32,4 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post")
-    private List<MemberPostLiked> memberPostLikedList = new ArrayList<>();
 }
