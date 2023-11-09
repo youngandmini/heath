@@ -29,7 +29,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	implementation 'mysql:mysql-connector-java'
+	implementation 'com.mysql:mysql-connector-j'
 
 	//expiringMap
 	implementation 'net.jodah:expiringmap:0.5.11'
