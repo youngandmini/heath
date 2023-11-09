@@ -1,11 +1,9 @@
 package heavysnow.heath.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
 
 @Entity
 @Table(name = "post_image")
-@Getter
 public class PostImage {
 
     @Id
