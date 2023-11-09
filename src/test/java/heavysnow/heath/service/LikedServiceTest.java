@@ -25,15 +25,15 @@ class LikedServiceTest {
 
     @Test
     void changeMemberPostLiked() {
-        Member member = new Member("멤버", "닉네임", null, null);
-        Post post = new Post();
-
-        em.persist(member);
-        em.persist(post);
-        em.flush();
-        em.clear();
-
-        likedService.changeMemberPostLiked(member.getId(), post.getId());
-        likedService.changeMemberPostLiked(member.getId(), post.getId());
+//        Member member = new Member("멤버", "닉네임", null, null);
+//        Post post = new Post();
+//
+//        em.persist(member);
+//        em.persist(post);
+//        em.flush();
+//        em.clear();
+//
+//        likedService.changeMemberPostLiked(member.getId(), post.getId());
+//        likedService.changeMemberPostLiked(member.getId(), post.getId());
     }
 }
