@@ -33,4 +33,17 @@ public class PostController {
     }
 
 
+    /**
+     *게시글 삭제 요청
+     */
+    @DeleteMapping("/posts/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public String deletePost(@PathVariable("postId") Long postId, HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+
+        postService.deletePost(postId, loginMemberId);
+
+        return "ok";
+    }
 }
