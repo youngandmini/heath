@@ -8,6 +8,7 @@ import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.CommentRepository;
 import heavysnow.heath.repository.MemberPostLikedRepository;
 import heavysnow.heath.repository.MemberRepository;
@@ -206,7 +207,7 @@ class PostServiceTest {
 
         //then
         assertThatThrownBy(() -> postService.getPostWithDetail(savedPostId1, memberId))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(NotFoundException.class);
     }
 
 
@@ -226,12 +227,12 @@ class PostServiceTest {
         //댓글 달기
         CommentCreateDto commentDto1 = new CommentCreateDto(savedPostId1, memberId, "댓글1", null);
         CommentCreateDto commentDto2 = new CommentCreateDto(savedPostId1, memberId, "댓글2", null);
-        Long savedCommentId1 = commentService.createComment(commentDto1);
-        Long savedCommentId2 = commentService.createComment(commentDto2);
+        Long savedCommentId1 = commentService.createComment(commentDto1).getCommentId();
+        Long savedCommentId2 = commentService.createComment(commentDto2).getCommentId();
         CommentCreateDto replyDto1 = new CommentCreateDto(savedPostId1, memberId, "대댓글1", savedCommentId1);
         CommentCreateDto replyDto2 = new CommentCreateDto(savedPostId1, memberId, "대댓글2", savedCommentId2);
-        Long savedReply1 = commentService.createComment(replyDto1);
-        Long savedReply2 = commentService.createComment(replyDto2);
+        Long savedReplyId1 = commentService.createComment(replyDto1).getCommentId();
+        Long savedReplyId2 = commentService.createComment(replyDto2).getCommentId();
 
         em.flush();
         em.clear();
@@ -240,12 +241,12 @@ class PostServiceTest {
 
         //then
         assertThatThrownBy(() -> postService.getPostWithDetail(savedPostId1, memberId))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(NotFoundException.class);
 
         assertThat(commentRepository.findById(savedCommentId1).isEmpty()).isTrue();
         assertThat(commentRepository.findById(savedCommentId2).isEmpty()).isTrue();
-        assertThat(commentRepository.findById(savedReply1).isEmpty()).isTrue();
-        assertThat(commentRepository.findById(savedReply2).isEmpty()).isTrue();
+        assertThat(commentRepository.findById(savedReplyId1).isEmpty()).isTrue();
+        assertThat(commentRepository.findById(savedReplyId2).isEmpty()).isTrue();
     }
 
     @Test
@@ -302,12 +303,12 @@ class PostServiceTest {
         //댓글 달기
         CommentCreateDto commentDto1 = new CommentCreateDto(savedPostId1, memberId1, "댓글1", null);
         CommentCreateDto commentDto2 = new CommentCreateDto(savedPostId1, memberId2, "댓글2", null);
-        Long savedCommentId1 = commentService.createComment(commentDto1);
-        Long savedCommentId2 = commentService.createComment(commentDto2);
+        Long savedCommentId1 = commentService.createComment(commentDto1).getCommentId();
+        Long savedCommentId2 = commentService.createComment(commentDto2).getCommentId();
         CommentCreateDto replyDto1 = new CommentCreateDto(savedPostId1, memberId2, "대댓글1", savedCommentId1);
         CommentCreateDto replyDto2 = new CommentCreateDto(savedPostId1, memberId1, "대댓글2", savedCommentId2);
-        Long savedReply1 = commentService.createComment(replyDto1);
-        Long savedReply2 = commentService.createComment(replyDto2);
+        Long savedReplyId1 = commentService.createComment(replyDto1).getCommentId();
+        Long savedReplyId2 = commentService.createComment(replyDto2).getCommentId();
 
         em.flush();
         em.clear();
@@ -321,7 +322,7 @@ class PostServiceTest {
 
         assertThat(commentRepository.findById(savedCommentId1).isEmpty()).isTrue();
         assertThat(commentRepository.findById(savedCommentId2).isEmpty()).isTrue();
-        assertThat(commentRepository.findById(savedReply1).isEmpty()).isTrue();
-        assertThat(commentRepository.findById(savedReply2).isEmpty()).isTrue();
+        assertThat(commentRepository.findById(savedReplyId1).isEmpty()).isTrue();
+        assertThat(commentRepository.findById(savedReplyId2).isEmpty()).isTrue();
     }
 }
