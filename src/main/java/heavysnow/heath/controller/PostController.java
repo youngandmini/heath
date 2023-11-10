@@ -2,6 +2,7 @@ package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.CommentCreateDto;
+import heavysnow.heath.dto.CommentCreateResponseDto;
 import heavysnow.heath.dto.CommentUpdateDto;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.exception.UnauthorizedException;
@@ -66,14 +67,13 @@ public class PostController {
      */
     @PostMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.OK)
-    public Long addComment(@RequestBody CommentCreateDto commentDto, @PathVariable("postId") Long postId, HttpServletRequest request) {
+    public CommentCreateResponseDto addComment(@RequestBody CommentCreateDto commentDto, @PathVariable("postId") Long postId, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         commentDto.setIds(postId, null, loginMemberId);
 
-        Long savedCommentId = commentService.createComment(commentDto);
-        return savedCommentId;
+        return commentService.createComment(commentDto);
     }
 
     /**
@@ -81,14 +81,13 @@ public class PostController {
      */
     @PostMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public Long addReply(@RequestBody CommentCreateDto commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
+    public CommentCreateResponseDto addReply(@RequestBody CommentCreateDto commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         commentDto.setIds(postId, commentId, loginMemberId);
 
-        Long savedCommentId = commentService.createComment(commentDto);
-        return savedCommentId;
+        return commentService.createComment(commentDto);
     }
 
     /**

@@ -4,6 +4,7 @@ import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.domain.Post;
 import heavysnow.heath.dto.CommentCreateDto;
+import heavysnow.heath.dto.CommentCreateResponseDto;
 import heavysnow.heath.dto.CommentUpdateDto;
 import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.exception.ForbiddenException;
@@ -29,7 +30,7 @@ public class CommentService {
      * @param commentCreateDto
      * @return
      */
-    public Long createComment(CommentCreateDto commentCreateDto) {
+    public CommentCreateResponseDto createComment(CommentCreateDto commentCreateDto) {
         Post post = postRepository.findById(commentCreateDto.getPostId())
                 .orElseThrow(NotFoundException::new);
 
@@ -44,7 +45,7 @@ public class CommentService {
         Comment comment = Comment.createComment(post, member, commentCreateDto.getContent(), parentComment);
         Comment savedcomment = commentRepository.save(comment);
 
-        return savedcomment.getId();
+        return CommentCreateResponseDto.of(savedcomment.getId());
     }
 
     public void updateComment(CommentUpdateDto commentUpdateDto) {
