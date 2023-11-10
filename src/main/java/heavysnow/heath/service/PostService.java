@@ -187,7 +187,7 @@ public class PostService {
      * @return PostDetailResponseDto
      */
     public PostDetailResponseDto getPostWithDetail(Long postId, Long memberId) {
-        Post findPost = postRepository.findPostDetailById(postId).orElseThrow(); //커스텀 예외 추가하여 catch 해야함
+        Post findPost = postRepository.findPostDetailById(postId).orElseThrow(NotFoundException::new);
         List<Comment> findComments = commentRepository.findWithMemberByPostId(postId);
 //        boolean isLiked = isMemberPostLiked(postId, memberId);
         return PostDetailResponseDto.of(findPost, memberId, findComments);
