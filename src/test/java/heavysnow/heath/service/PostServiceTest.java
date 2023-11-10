@@ -189,7 +189,7 @@ class PostServiceTest {
         Long savedPostId1 = postService.writePost(postAddRequest1);
 
         //when
-        postService.deletePost(savedPostId1);
+        postService.deletePost(savedPostId1, memberId);
 
         //then
         assertThatThrownBy(() -> postService.getPostWithDetail(savedPostId1, memberId))

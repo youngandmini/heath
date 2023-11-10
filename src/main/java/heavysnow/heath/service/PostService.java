@@ -10,6 +10,7 @@ import heavysnow.heath.dto.post.PostDeleteRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
 import heavysnow.heath.repository.PostImageRepository;
@@ -147,10 +148,12 @@ public class PostService {
         Optional<Post> postOptional = postRepository.findById(postId);
         Post post = postOptional.orElseThrow(NotFoundException::new);
 
+        if (!post.getMember().getId().equals(memberId)) {
+            throw new ForbiddenException();
+        }
         /**
          * 댓글 삭제 추후 수정 필요
          */
-
         // postImages도 같이 삭제 됨
         postRepository.delete(post);
     }
