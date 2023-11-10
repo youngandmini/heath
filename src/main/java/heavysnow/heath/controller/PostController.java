@@ -23,7 +23,7 @@ public class PostController {
     /**
      * 게시글 상세 조회 요청
      */
-    @GetMapping("/posts/{postId}")
+    @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public PostDetailResponseDto detailedPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
@@ -36,7 +36,7 @@ public class PostController {
     /**
      *게시글 삭제 요청
      */
-    @DeleteMapping("/posts/{postId}")
+    @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public String deletePost(@PathVariable("postId") Long postId, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
