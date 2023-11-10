@@ -75,4 +75,20 @@ public class PostController {
         return savedCommentId;
     }
 
+    /**
+     * 답글 요청
+     */
+    @PostMapping("/{postId}/comments/{commentId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Long addReply(@RequestBody CommentCreateDto commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+
+        commentDto.setPostId(postId);
+        commentDto.setMemberId(loginMemberId);
+        commentDto.setParentCommentId(commentId);
+        Long savedCommentId = commentService.createComment(commentDto);
+        return savedCommentId;
+    }
+
 }
