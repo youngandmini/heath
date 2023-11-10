@@ -34,7 +34,8 @@ class LoginServiceTest {
 
         //when
         loginService.login(token);
-        Long loginMemberId = LoginMemberHolder.findLoginMemberId(token);
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(token);
+        Long loginMemberId = loginMemberIdOptional.get();
         Optional<Member> findMemberOptional = memberRepository.findById(loginMemberId);
         Member findMember = findMemberOptional.get();
 
@@ -60,8 +61,8 @@ class LoginServiceTest {
         loginService.logout(token);
 
         //then
-        Long loginMemberId = LoginMemberHolder.findLoginMemberId(token);
-        assertThat(loginMemberId).isNull();
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(token);
+        assertThat(loginMemberIdOptional.isEmpty()).isTrue();
 
     }
 }

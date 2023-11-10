@@ -4,6 +4,7 @@ import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 
@@ -25,8 +26,11 @@ public class LoginMemberHolder {
      * @param token
      * @return
      */
-    public static Long findLoginMemberId(String token) {
-        return loginMembers.get(token);
+    public static Optional<Long> findLoginMemberId(String token) {
+        if (token == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(loginMembers.get(token));
     }
 
     public void login(String token, Long memberId) {
