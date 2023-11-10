@@ -13,15 +13,9 @@ public class CommentUpdateDto {
     private Long commentId;
     private String content;
 
-    public void setPostId(Long postId) {
+    public void setIds(Long postId, Long commentId, Long memberId) {
         this.postId = postId;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-
-    public void setCommentId(Long commentId) {
         this.commentId = commentId;
+        this.memberId = memberId;
     }
 }
