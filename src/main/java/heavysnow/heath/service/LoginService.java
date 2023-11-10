@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.MemberDto;
+import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class LoginService {
      * @param token
      */
     public void logout(String token) {
+        if (token == null) {
+            return;
+        }
         loginMemberHolder.logout(token);
     }
 
@@ -41,6 +45,9 @@ public class LoginService {
      * @param token
      */
     public void login(String token) {
+        if (token == null) {
+            throw new BadRequestException();
+        }
         Map<String, String> map = decodeToken(token);
 
         String email = map.get("email");
@@ -72,15 +79,14 @@ public class LoginService {
         ObjectMapper mapper = new ObjectMapper();
         Decoder decoder = Base64.getDecoder();
 
-        String[] chunks = token.split("\\.");
-        String payload = new String(decoder.decode(chunks[1]));
-
-        Map<String, String> map = new HashMap<>();
         try {
-            map = mapper.readValue(payload, Map.class);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+            String[] chunks = token.split("\\.");
+            String payload = new String(decoder.decode(chunks[1]));
+
+            Map<String, String> map = mapper.readValue(payload, Map.class);
+            return map;
+        } catch (Exception e) {
+            throw new BadRequestException();
         }
-        return map;
     }
 }
