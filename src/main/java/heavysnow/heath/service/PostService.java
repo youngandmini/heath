@@ -46,10 +46,9 @@ public class PostService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 멤버를 찾을 수 없습니다."));
 
         // consecutiveDays 계산
-        int consecutiveDays;
         LocalDate yesterday = LocalDate.now().minusDays(1);
-        Optional<Post> postOptional = postRepository.findByCreatedDate(yesterday);
-        consecutiveDays = postOptional.map(post -> post.getConsecutiveDays() + 1).orElse(1);
+        Optional<Post> postOptional = postRepository.findByCreatedDate(member.getId(), yesterday);
+        int consecutiveDays = postOptional.map(post -> post.getConsecutiveDays() + 1).orElse(1);
 
         // post 생성
         Post post = new Post(member, request.getTitle(), request.getContent(), consecutiveDays);
