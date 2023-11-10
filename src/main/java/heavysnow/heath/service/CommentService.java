@@ -5,6 +5,7 @@ import heavysnow.heath.domain.Member;
 import heavysnow.heath.domain.Post;
 import heavysnow.heath.dto.CommentCreateDto;
 import heavysnow.heath.dto.CommentUpdateDto;
+import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.CommentRepository;
 import heavysnow.heath.repository.MemberRepository;
 import heavysnow.heath.repository.PostRepository;
@@ -28,16 +29,15 @@ public class CommentService {
      */
     public Long createComment(CommentCreateDto commentCreateDto) {
         Post post = postRepository.findById(commentCreateDto.getPostId())
-                .orElseThrow(() -> new EntityNotFoundException("포스트를 찾을 수 없습니다."));
+                .orElseThrow(NotFoundException::new);
 
         Member member = memberRepository.findById(commentCreateDto.getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException("멤버를 찾을 수 없습니다."));
+                .orElseThrow();
 
         Comment parentComment = null;
         if (commentCreateDto.getParentCommentId() != null) {
             parentComment = commentRepository.findById(commentCreateDto.getParentCommentId())
-                    .orElseThrow(() -> new EntityNotFoundException("댓글을 찾을 수 없습니다."));
-
+                    .orElseThrow(NotFoundException::new);
         }
         Comment comment = Comment.createComment(post, member, commentCreateDto.getContent(), parentComment);
         Comment savedcomment = commentRepository.save(comment);

@@ -1,6 +1,7 @@
 package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
+import heavysnow.heath.dto.CommentCreateDto;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.CommentService;
@@ -59,6 +60,19 @@ public class PostController {
         likedService.changeMemberPostLiked(postId, loginMemberId);
     }
 
+    /**
+     * 새로운 댓글 요청
+     */
+    @PostMapping("/{postId}/comments")
+    @ResponseStatus(HttpStatus.OK)
+    public Long addComment(@RequestBody CommentCreateDto commentDto, @PathVariable("postId") Long postId, HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
+        commentDto.setPostId(postId);
+        commentDto.setMemberId(loginMemberId);
+        Long savedCommentId = commentService.createComment(commentDto);
+        return savedCommentId;
+    }
 
 }
