@@ -3,6 +3,8 @@ package heavysnow.heath.service;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.dto.MemberResponseDto;
+import heavysnow.heath.exception.ForbiddenException;
+import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.repository.MemberRepository;
 import heavysnow.heath.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class MemberService {
 
     @Transactional
     public void editMember(Long memberId, MemberDto dto) {
-        Member entity = memberRepository.findById(memberId).orElseThrow();
+        Member entity = memberRepository.findById(memberId).orElseThrow(UnauthorizedException::new);
         entity.update(dto.getNickname(), dto.getUserStatusMessage(), dto.getProfileImgUrl());
     }
 

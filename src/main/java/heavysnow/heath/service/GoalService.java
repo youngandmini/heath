@@ -4,6 +4,7 @@ import heavysnow.heath.domain.Goal;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.GoalCreationDto;
 import heavysnow.heath.dto.GoalUpdateDto;
+import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.repository.GoalRepository;
 import heavysnow.heath.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,8 +25,8 @@ public class GoalService {
     // 반환 타입 Long(goalId)로 변경
     public Long createGoalForMember(Long memberId, GoalCreationDto goalDto){
         // JPA save()메서드로 GoalCreationDto에 저장된 값을 Goal 데이터 베이스에 저장
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을수 없습니다." + memberId));
+        Member member = memberRepository.findById(memberId).orElseThrow(UnauthorizedException::new);
+//                .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을수 없습니다." + memberId));
 
         Goal goal = Goal.builder()
                 .member(member)
