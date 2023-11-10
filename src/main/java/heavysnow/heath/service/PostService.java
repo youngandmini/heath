@@ -151,10 +151,8 @@ public class PostService {
         if (!post.getMember().getId().equals(memberId)) {
             throw new ForbiddenException();
         }
-        /**
-         * 댓글 삭제 추후 수정 필요
-         */
-        // postImages도 같이 삭제 됨
+
+        // postImages, comments, memberPostLikedList도 같이 삭제 됨
         postRepository.delete(post);
     }
   
