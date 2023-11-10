@@ -2,6 +2,7 @@ package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.CommentCreateDto;
+import heavysnow.heath.dto.CommentUpdateDto;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.CommentService;
@@ -76,7 +77,7 @@ public class PostController {
     }
 
     /**
-     * 답글 요청
+     * 새로운 답글 요청
      */
     @PostMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
@@ -92,7 +93,21 @@ public class PostController {
     }
 
     /**
-     * 댓글 삭제
+     * 댓글(답글) 수정
+     */
+    @PatchMapping("/{postId}/comments/{commentId}")
+    public void updateComment(@RequestBody CommentUpdateDto commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+
+        commentDto.setPostId(postId);
+        commentDto.setCommentId(commentId);
+        commentDto.setMemberId(loginMemberId);
+        commentService.updateComment(commentDto);
+    }
+
+    /**
+     * 댓글(답글) 삭제
      */
     @DeleteMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)

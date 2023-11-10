@@ -5,6 +5,7 @@ import heavysnow.heath.domain.Member;
 import heavysnow.heath.domain.Post;
 import heavysnow.heath.dto.CommentCreateDto;
 import heavysnow.heath.dto.CommentUpdateDto;
+import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.CommentRepository;
@@ -49,12 +50,16 @@ public class CommentService {
     public void updateComment(CommentUpdateDto commentUpdateDto) {
         // 댓글 존재 확인
         Comment comment = commentRepository.findById(commentUpdateDto.getCommentId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 댓글이 존재하지 않습니다."));
+                .orElseThrow(NotFoundException::new);
 
         // 댓글이 해당 멤버와 포스트에 속하는지 확인
-        if (!comment.getPost().getId().equals(commentUpdateDto.getPostId()) || !comment.getMember().getId().equals(commentUpdateDto.getMemberId())) {
-            throw new IllegalArgumentException("댓글을 수정할 수 없습니다.");
+        if (!comment.getPost().getId().equals(commentUpdateDto.getPostId())) {
+            throw new BadRequestException();
         }
+        if (!comment.getMember().getId().equals(commentUpdateDto.getMemberId())) {
+            throw new ForbiddenException();
+        }
+
         // 내용 업데이트
         comment.updateComment(commentUpdateDto.getContent());
     }
