@@ -85,9 +85,8 @@ public class PostController {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        commentDto.setPostId(postId);
-        commentDto.setMemberId(loginMemberId);
-        commentDto.setParentCommentId(commentId);
+        commentDto.setIds(postId, commentId, loginMemberId);
+
         Long savedCommentId = commentService.createComment(commentDto);
         return savedCommentId;
     }
