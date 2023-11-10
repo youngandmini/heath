@@ -5,6 +5,7 @@ import heavysnow.heath.domain.Member;
 import heavysnow.heath.domain.Post;
 import heavysnow.heath.dto.CommentCreateDto;
 import heavysnow.heath.dto.CommentUpdateDto;
+import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.CommentRepository;
 import heavysnow.heath.repository.MemberRepository;
@@ -59,9 +60,10 @@ public class CommentService {
     }
 
     public void deleteComment(Long commentId, Long memberId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow();
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundException::new);
+
         if (!comment.getMember().getId().equals(memberId)) {
-            throw new IllegalStateException("권한이 없습니다.");
+            throw new ForbiddenException();
         }
         commentRepository.delete(comment);
     }

@@ -91,4 +91,16 @@ public class PostController {
         return savedCommentId;
     }
 
+    /**
+     * 댓글 삭제
+     */
+    @DeleteMapping("/{postId}/comments/{commentId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteComment(@PathVariable("commentId") Long commentId, HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+
+        commentService.deleteComment(commentId, loginMemberId);
+    }
+
 }
