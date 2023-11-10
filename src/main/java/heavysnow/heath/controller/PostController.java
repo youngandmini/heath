@@ -47,6 +47,9 @@ public class PostController {
         postService.deletePost(postId, loginMemberId);
     }
 
+    /**
+     * 좋아요 요청
+     */
     @PostMapping("/{postId}/likes")
     @ResponseStatus(HttpStatus.OK)
     public void likesPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
@@ -55,4 +58,7 @@ public class PostController {
 
         likedService.changeMemberPostLiked(postId, loginMemberId);
     }
+
+
+
 }
