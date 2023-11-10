@@ -52,15 +52,15 @@ class MemberServiceTest {
                 .userStatusMessage("fighting!!!")
                 .profileImgUrl("None")
                 .build();
-        memberService.createUser(memberDto);
+        Long savedId = memberService.createUser(memberDto);
         MemberDto dto = MemberDto.builder()
                 .username("aaa")
                 .nickname("hwi")
                 .userStatusMessage("good!")
                 .profileImgUrl("Null")
                 .build();
-        memberService.editMember(1L, dto);
-        Member result = memberRepository.findById(1L).orElse(null);
+        memberService.editMember(savedId, dto);
+        Member result = memberRepository.findById(savedId).orElse(null);
         assertEquals(result.getUsername(), dto.getUsername());
         assertEquals(result.getNickname(), dto.getNickname());
         assertEquals(result.getUserStatusMessage(), dto.getUserStatusMessage());

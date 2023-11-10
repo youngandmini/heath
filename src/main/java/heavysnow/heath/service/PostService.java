@@ -4,11 +4,14 @@ import heavysnow.heath.domain.Member;
 import heavysnow.heath.domain.Post;
 import heavysnow.heath.domain.PostImage;
 import heavysnow.heath.domain.Comment;
+import heavysnow.heath.dto.PostDatesResponseDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostDeleteRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.exception.ForbiddenException;
+import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
 import heavysnow.heath.repository.PostImageRepository;
 import heavysnow.heath.repository.PostRepository;
@@ -45,10 +48,9 @@ public class PostService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 멤버를 찾을 수 없습니다."));
 
         // consecutiveDays 계산
-        int consecutiveDays;
         LocalDate yesterday = LocalDate.now().minusDays(1);
-        Optional<Post> postOptional = postRepository.findByCreatedDate(yesterday);
-        consecutiveDays = postOptional.map(post -> post.getConsecutiveDays() + 1).orElse(1);
+        Optional<Post> postOptional = postRepository.findByCreatedDate(member.getId(), yesterday);
+        int consecutiveDays = postOptional.map(post -> post.getConsecutiveDays() + 1).orElse(1);
 
         // post 생성
         Post post = new Post(member, request.getTitle(), request.getContent(), consecutiveDays);
@@ -142,15 +144,15 @@ public class PostService {
 
     // 게시글 삭제
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, Long memberId) {
         Optional<Post> postOptional = postRepository.findById(postId);
-        Post post = postOptional.orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+        Post post = postOptional.orElseThrow(NotFoundException::new);
 
-        /**
-         * 댓글 삭제 추후 수정 필요
-         */
+        if (!post.getMember().getId().equals(memberId)) {
+            throw new ForbiddenException();
+        }
 
-        // postImages도 같이 삭제 됨
+        // postImages, comments, memberPostLikedList도 같이 삭제 됨
         postRepository.delete(post);
     }
   
@@ -185,7 +187,7 @@ public class PostService {
      * @return PostDetailResponseDto
      */
     public PostDetailResponseDto getPostWithDetail(Long postId, Long memberId) {
-        Post findPost = postRepository.findPostDetailById(postId).orElseThrow(); //커스텀 예외 추가하여 catch 해야함
+        Post findPost = postRepository.findPostDetailById(postId).orElseThrow(NotFoundException::new);
         List<Comment> findComments = commentRepository.findWithMemberByPostId(postId);
 //        boolean isLiked = isMemberPostLiked(postId, memberId);
         return PostDetailResponseDto.of(findPost, memberId, findComments);
