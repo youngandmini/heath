@@ -10,6 +10,7 @@ import heavysnow.heath.dto.post.PostDeleteRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
 import heavysnow.heath.repository.PostImageRepository;
 import heavysnow.heath.repository.PostRepository;
@@ -142,9 +143,9 @@ public class PostService {
 
     // 게시글 삭제
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, Long memberId) {
         Optional<Post> postOptional = postRepository.findById(postId);
-        Post post = postOptional.orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+        Post post = postOptional.orElseThrow(NotFoundException::new);
 
         /**
          * 댓글 삭제 추후 수정 필요
