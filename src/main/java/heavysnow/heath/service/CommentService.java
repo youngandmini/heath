@@ -58,8 +58,11 @@ public class CommentService {
         comment.updateComment(commentUpdateDto.getContent());
     }
 
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long commentId, Long memberId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow();
+        if (!comment.getMember().getId().equals(memberId)) {
+            throw new IllegalStateException("권한이 없습니다.");
+        }
         commentRepository.delete(comment);
     }
 }
