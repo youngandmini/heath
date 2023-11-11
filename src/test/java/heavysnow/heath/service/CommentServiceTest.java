@@ -46,6 +46,8 @@ public class CommentServiceTest {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private EntityManager em;
 
     private Long savedMemberId1;
 
@@ -53,8 +55,13 @@ public class CommentServiceTest {
     private Long savedPostId1;
     private Long savedPostId2;
 
+
     @BeforeEach
     void before() {
+        //mysql의 date_format 형태의 sql 문법을 h2 DB에서 구동될 수 있도록 ALIAS를 등록
+        em.createNativeQuery("CREATE ALIAS IF NOT EXISTS date_format FOR \"heavysnow.heath.alias.H2DateFormatAlias.date_format\"")
+                .executeUpdate();
+
         /**
          * 멤버 생성
          * 멤버1(savedMemberId1)과 멤버2(savedMemberId2)를 생성한다.

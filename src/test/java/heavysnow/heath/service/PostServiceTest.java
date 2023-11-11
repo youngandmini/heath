@@ -13,6 +13,7 @@ import heavysnow.heath.repository.CommentRepository;
 import heavysnow.heath.repository.MemberPostLikedRepository;
 import heavysnow.heath.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,6 +48,12 @@ class PostServiceTest {
     @Autowired
     MemberPostLikedRepository memberPostLikedRepository;
 
+    @BeforeEach
+    void before() {
+        //mysql의 date_format 형태의 sql 문법을 h2 DB에서 구동될 수 있도록 ALIAS를 등록
+        em.createNativeQuery("CREATE ALIAS IF NOT EXISTS date_format FOR \"heavysnow.heath.alias.H2DateFormatAlias.date_format\"")
+                .executeUpdate();
+    }
 
     @Test
     void getPostListByMember() {
