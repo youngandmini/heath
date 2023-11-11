@@ -24,6 +24,7 @@ public class Goal {
 
     private String content;
 
+    @Column(columnDefinition = "tinyint(1)")
     private boolean isAchieved;
 
     @Builder    // 빌더 패턴으로 객체 생성
