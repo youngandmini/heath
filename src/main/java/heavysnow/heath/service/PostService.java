@@ -73,9 +73,12 @@ public class PostService {
 
     // 게시글 수정
     @Transactional
-    public void editPost(PostEditRequest request) {
-        Optional<Post> postOptional = postRepository.findById(request.getPostId());
-        Post post = postOptional.orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+    public void editPost(PostEditRequest request, Long memberId) {
+        Post post = postRepository.findById(request.getPostId()).orElseThrow(NotFoundException::new);
+
+        if (!post.getMember().getId().equals(memberId)) {
+            throw new ForbiddenException();
+        }
 
         // title, content 수정
         post.update(request.getTitle(), request.getContent());

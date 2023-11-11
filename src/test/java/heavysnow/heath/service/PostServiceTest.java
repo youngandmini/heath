@@ -169,7 +169,7 @@ class PostServiceTest {
         editImgUrls.add("수정 이미지3");
         editImgUrls.add("수정 이미지4");
         PostEditRequest editRequest = new PostEditRequest(savedPostId1, "수정 제목1", "수정 게시글 내용1", editImgUrls);
-        postService.editPost(editRequest);
+        postService.editPost(editRequest, memberId);
         PostDetailResponseDto responseDto = postService.getPostWithDetail(savedPostId1, memberId);
 
         //then

@@ -5,6 +5,7 @@ import heavysnow.heath.dto.CommentCreateDto;
 import heavysnow.heath.dto.CommentUpdateDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostAddResponse;
+import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.CommentService;
@@ -50,6 +51,20 @@ public class PostController {
         Long loginMemberId = loginMemberIdOptional.orElse(null);
 
         return postService.getPostWithDetail(postId, loginMemberId);
+    }
+
+    /**
+     * 게시글 수정 요청
+     */
+    @PatchMapping("/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void editPost(@PathVariable("postId") Long postId,
+                         @RequestBody PostEditRequest postEditRequest,
+                         HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+
+        postService.editPost(postEditRequest, loginMemberId);
     }
 
 
