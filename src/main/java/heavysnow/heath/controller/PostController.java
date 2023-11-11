@@ -3,6 +3,8 @@ package heavysnow.heath.controller;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.CommentCreateDto;
 import heavysnow.heath.dto.CommentUpdateDto;
+import heavysnow.heath.dto.post.PostAddRequest;
+import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.CommentService;
@@ -23,6 +25,20 @@ public class PostController {
     private final PostService postService;
     private final CommentService commentService;
     private final LikedService likedService;
+
+    /**
+     * 게시글 등록 요청
+     */
+    @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    public PostAddResponse writePost(@RequestBody PostAddRequest postAddRequest, HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+
+        postAddRequest.setMemberId(loginMemberId);
+        return postService.writePost(postAddRequest);
+    }
+
 
     /**
      * 게시글 상세 조회 요청
