@@ -4,6 +4,7 @@ package heavysnow.heath.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.domain.Member;
+import heavysnow.heath.dto.LoginResponseDto;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.repository.MemberRepository;
@@ -44,7 +45,7 @@ public class LoginService {
      * 처음 방문한 회원이라면 로그인 정보를 저장한 다음 로그인을 수행
      * @param token
      */
-    public void login(String token) {
+    public LoginResponseDto login(String token) {
         if (token == null) {
             throw new BadRequestException();
         }
@@ -54,13 +55,18 @@ public class LoginService {
         String nickname = map.get("name");
         String profileImage = map.get("image");
 
-        Optional<Member> findMember = memberRepository.findByUsername(email);
-        if (findMember.isPresent()) {
-            doLogin(token, findMember.get().getId());
+        Optional<Member> findMemberOptional = memberRepository.findByUsername(email);
+        if (findMemberOptional.isPresent()) {
+            Member findMember = findMemberOptional.get();
+            doLogin(token, findMember.getId());
+
+            return LoginResponseDto.of(findMember.getId());
         } else {
             //처음 방문한 회원이라면, 회원정보를 DB에 저장 후 로그인
-            Long memberId = joinMember(email, nickname, profileImage);
-            doLogin(token, memberId);
+            Long joinedMemberId = joinMember(email, nickname, profileImage);
+            doLogin(token, joinedMemberId);
+
+            return LoginResponseDto.of(joinedMemberId);
         }
     }
 

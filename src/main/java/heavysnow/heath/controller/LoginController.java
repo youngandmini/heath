@@ -2,6 +2,7 @@ package heavysnow.heath.controller;
 
 
 import heavysnow.heath.common.LoginMemberHolder;
+import heavysnow.heath.dto.LoginResponseDto;
 import heavysnow.heath.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,20 +21,16 @@ public class LoginController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public Long login(HttpServletRequest request) {
+    public LoginResponseDto login(HttpServletRequest request) {
         String token = request.getHeader("accessToken");
-        loginService.login(token);
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(token);
 
-        return loginMemberIdOptional.orElseThrow(IllegalStateException::new);
+        return loginService.login(token);
     }
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
-    public String logout(HttpServletRequest request) {
+    public void logout(HttpServletRequest request) {
         String token = request.getHeader("accessToken");
         loginService.logout(token);
-
-        return "ok";
     }
 }
