@@ -4,12 +4,17 @@ import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.CommentCreateDto;
 import heavysnow.heath.dto.CommentCreateResponseDto;
 import heavysnow.heath.dto.CommentUpdateDto;
+import heavysnow.heath.dto.post.PostAddRequest;
+import heavysnow.heath.dto.post.PostAddResponse;
+import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
+import heavysnow.heath.dto.postdto.PostListResponseDto;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.CommentService;
 import heavysnow.heath.service.LikedService;
 import heavysnow.heath.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +31,32 @@ public class PostController {
     private final LikedService likedService;
 
     /**
+     * 메인페이지
+     */
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public PostListResponseDto getPostList(
+            @RequestParam("page") int page,
+            @RequestParam("sort") String sort
+    ) {
+        return postService.getPostList(page, sort);
+    }
+
+    /**
+     * 게시글 등록 요청
+     */
+    @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    public PostAddResponse writePost(@RequestBody PostAddRequest postAddRequest, HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+
+        postAddRequest.setMemberId(loginMemberId);
+        return postService.writePost(postAddRequest);
+    }
+
+
+    /**
      * 게시글 상세 조회 요청
      */
     @GetMapping("/{postId}")
@@ -35,6 +66,20 @@ public class PostController {
         Long loginMemberId = loginMemberIdOptional.orElse(null);
 
         return postService.getPostWithDetail(postId, loginMemberId);
+    }
+
+    /**
+     * 게시글 수정 요청
+     */
+    @PatchMapping("/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void editPost(@PathVariable("postId") Long postId,
+                         @RequestBody PostEditRequest postEditRequest,
+                         HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+
+        postService.editPost(postEditRequest, loginMemberId);
     }
 
 

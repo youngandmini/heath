@@ -73,8 +73,8 @@ class PostServiceTest {
 
         PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
         PostAddRequest postAddRequest2 = new PostAddRequest(memberId, "게시글 제목2", "게시글 내용2", imgUrls2);
-        Long savedPostId1 = postService.writePost(postAddRequest1);
-        Long savedPostId2 = postService.writePost(postAddRequest2);
+        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        Long savedPostId2 = postService.writePost(postAddRequest2).getPostId();
 
         //when - 멤버별로 최신순으로 검색한다.
         PostListResponseDto responseDto = postService.getPostListByMember(memberId, 0);
@@ -105,8 +105,8 @@ class PostServiceTest {
 
         PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
         PostAddRequest postAddRequest2 = new PostAddRequest(memberId, "게시글 제목2", "게시글 내용2", imgUrls2);
-        Long savedPostId1 = postService.writePost(postAddRequest1);
-        Long savedPostId2 = postService.writePost(postAddRequest2);
+        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        Long savedPostId2 = postService.writePost(postAddRequest2).getPostId();
 
         //when
         PostListResponseDto responseDto = postService.getPostList(0, "createdDate");
@@ -136,8 +136,8 @@ class PostServiceTest {
 
         PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
         PostAddRequest postAddRequest2 = new PostAddRequest(memberId, "게시글 제목2", "게시글 내용2", imgUrls2);
-        Long savedPostId1 = postService.writePost(postAddRequest1);
-        Long savedPostId2 = postService.writePost(postAddRequest2);
+        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        Long savedPostId2 = postService.writePost(postAddRequest2).getPostId();
 
         //when
         PostDetailResponseDto responseDto = postService.getPostWithDetail(savedPostId1, memberId);
@@ -168,7 +168,7 @@ class PostServiceTest {
         imgUrls1.add("이미지3");
 
         PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1);
+        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
 
         //when
         List<String> editImgUrls = new ArrayList<>();
@@ -177,7 +177,7 @@ class PostServiceTest {
         editImgUrls.add("수정 이미지3");
         editImgUrls.add("수정 이미지4");
         PostEditRequest editRequest = new PostEditRequest(savedPostId1, "수정 제목1", "수정 게시글 내용1", editImgUrls);
-        postService.editPost(editRequest);
+        postService.editPost(editRequest, memberId);
         PostDetailResponseDto responseDto = postService.getPostWithDetail(savedPostId1, memberId);
 
         //then
@@ -207,7 +207,7 @@ class PostServiceTest {
         imgUrls1.add("이미지3");
 
         PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1);
+        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
 
         //when
         postService.deletePost(savedPostId1, memberId);
@@ -229,7 +229,7 @@ class PostServiceTest {
         imgUrls1.add("이미지2");
 
         PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1);
+        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
 
         //댓글 달기
         CommentCreateDto commentDto1 = new CommentCreateDto(savedPostId1, memberId, "댓글1", null);
@@ -270,7 +270,7 @@ class PostServiceTest {
         imgUrls1.add("이미지3");
 
         PostAddRequest postAddRequest1 = new PostAddRequest(memberId1, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1);
+        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
 
         //좋아요
         likedService.changeMemberPostLiked(savedPostId1, memberId1);
@@ -301,7 +301,7 @@ class PostServiceTest {
         imgUrls1.add("이미지3");
 
         PostAddRequest postAddRequest1 = new PostAddRequest(memberId1, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1);
+        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
 
         //좋아요
         likedService.changeMemberPostLiked(savedPostId1, memberId1);
