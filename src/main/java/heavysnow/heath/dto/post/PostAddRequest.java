@@ -12,4 +12,8 @@ public class PostAddRequest {
     private String title;
     private String content;
     private List<String> images;
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
 }

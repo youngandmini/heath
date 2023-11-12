@@ -94,8 +94,8 @@ public class CommentServiceTest {
 
         PostAddRequest postAddRequest1 = new PostAddRequest(member.getId(), "게시글 제목1", "게시글 내용1", imgUrls1);
         PostAddRequest postAddRequest2 = new PostAddRequest(member.getId(), "게시글 제목2", "게시글 내용2", imgUrls1);
-        savedPostId1 = postService.writePost(postAddRequest1);
-        savedPostId2 = postService.writePost(postAddRequest2);
+        savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        savedPostId2 = postService.writePost(postAddRequest2).getPostId();
     }
 
 
