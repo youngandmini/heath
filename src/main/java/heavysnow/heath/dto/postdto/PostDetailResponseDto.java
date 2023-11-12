@@ -2,6 +2,7 @@ package heavysnow.heath.dto.postdto;
 
 import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Post;
+import heavysnow.heath.domain.PostImage;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -26,7 +28,7 @@ public class PostDetailResponseDto {
     private int consecutiveDays;
     private int liked;
     private boolean isLiked;
-    private List<PostImageInfo> imgs;
+    private List<String> postImgUrls;
     private List<CommentResponseDto> comments;
 
     public boolean isLiked() {
@@ -45,7 +47,8 @@ public class PostDetailResponseDto {
                 post.getConsecutiveDays(),
                 post.getMemberPostLikedList().size(),
                 isMemberPostLiked(post, memberId),
-                PostImageInfo.listOf(post.getPostImages()),
+                post.getPostImages().stream().map(PostImage::getImgUrl).collect(Collectors.toList()),
+//                PostImageInfo.listOf(post.getPostImages()),
                 CommentResponseDto.listOf(parentComments)
         );
     }
