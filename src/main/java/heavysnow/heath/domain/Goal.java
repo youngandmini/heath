@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Goal {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "goal_id")
     private Long id;
 
@@ -24,6 +24,7 @@ public class Goal {
 
     private String content;
 
+    @Column(columnDefinition = "tinyint")
     private boolean isAchieved;
 
     @Builder    // 빌더 패턴으로 객체 생성

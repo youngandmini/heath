@@ -13,6 +13,7 @@ import heavysnow.heath.repository.CommentRepository;
 import heavysnow.heath.repository.MemberPostLikedRepository;
 import heavysnow.heath.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,6 +48,12 @@ class PostServiceTest {
     @Autowired
     MemberPostLikedRepository memberPostLikedRepository;
 
+    @BeforeEach
+    void before() {
+        //mysql의 date_format 형태의 sql 문법을 h2 DB에서 구동될 수 있도록 ALIAS를 등록
+        em.createNativeQuery("CREATE ALIAS IF NOT EXISTS date_format FOR \"heavysnow.heath.alias.H2DateFormatAlias.date_format\"")
+                .executeUpdate();
+    }
 
     @Test
     void getPostListByMember() {
@@ -142,8 +149,8 @@ class PostServiceTest {
         assertThat(responseDto.getContent()).isEqualTo("게시글 내용1");
         assertThat(responseDto.getLiked()).isEqualTo(0);
         assertThat(responseDto.getConsecutiveDays()).isEqualTo(1);
-        assertThat(responseDto.getImgs().size()).isEqualTo(3);
-        assertThat(responseDto.getImgs().get(0).getImgUrl()).isEqualTo("이미지1");
+        assertThat(responseDto.getPostImgUrls().size()).isEqualTo(3);
+        assertThat(responseDto.getPostImgUrls().get(0)).isEqualTo("이미지1");
         assertThat(responseDto.isLiked()).isFalse();
 
     }
@@ -180,11 +187,11 @@ class PostServiceTest {
         assertThat(responseDto.getContent()).isEqualTo("수정 게시글 내용1");
         assertThat(responseDto.getLiked()).isEqualTo(0);
         assertThat(responseDto.getConsecutiveDays()).isEqualTo(1);
-        assertThat(responseDto.getImgs().size()).isEqualTo(4);
-        assertThat(responseDto.getImgs().get(0).getImgUrl()).isEqualTo("수정 이미지1");
-        assertThat(responseDto.getImgs().get(1).getImgUrl()).isEqualTo("수정 이미지2");
-        assertThat(responseDto.getImgs().get(2).getImgUrl()).isEqualTo("수정 이미지3");
-        assertThat(responseDto.getImgs().get(3).getImgUrl()).isEqualTo("수정 이미지4");
+        assertThat(responseDto.getPostImgUrls().size()).isEqualTo(4);
+        assertThat(responseDto.getPostImgUrls().get(0)).isEqualTo("수정 이미지1");
+        assertThat(responseDto.getPostImgUrls().get(1)).isEqualTo("수정 이미지2");
+        assertThat(responseDto.getPostImgUrls().get(2)).isEqualTo("수정 이미지3");
+        assertThat(responseDto.getPostImgUrls().get(3)).isEqualTo("수정 이미지4");
 
     }
 

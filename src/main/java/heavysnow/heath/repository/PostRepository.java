@@ -16,9 +16,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
     //MySQL 버전
-//    @Query("select p from Post p where p.member.id = :memberId and date_format(p.createdDate, '%Y-%m-%d') = :yesterday order by p.id limit 1")
+    @Query("select p from Post p where p.member.id = :memberId and date_format(p.createdDate, '%Y-%m-%d') = :yesterday order by p.id limit 1")
     //H2 버전
-    @Query("SELECT p FROM Post p WHERE p.member.id = :memberId and FORMATDATETIME(p.createdDate, 'yyyy-MM-dd') = :yesterday order by p.id limit 1")
+//    @Query("SELECT p FROM Post p WHERE p.member.id = :memberId and FORMATDATETIME(p.createdDate, 'yyyy-MM-dd') = :yesterday order by p.id limit 1")
     Optional<Post> findByCreatedDate(@Param("memberId") Long memberId, @Param("yesterday") LocalDate yesterday);
 
 
@@ -41,16 +41,16 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
     //MySQL 버전
-//    @Query("select distinct p.createdDate from Post p" +
-//            " where p.member.id = :memberId" +
-//            " and date_format(p.createdDate, '%y') = :year" +
-//            " and date_format(p.createdDate, '%m') = :month" +
-//            " order by p.createdDate")
-    //H2database 버전
     @Query("select distinct p.createdDate from Post p" +
             " where p.member.id = :memberId" +
-            " and FORMATDATETIME(p.createdDate, 'yyyy') = :year" +
-            " and FORMATDATETIME(p.createdDate, 'MM') = :month" +
+            " and date_format(p.createdDate, '%y') = :year" +
+            " and date_format(p.createdDate, '%m') = :month" +
             " order by p.createdDate")
+    //H2database 버전
+//    @Query("select distinct p.createdDate from Post p" +
+//            " where p.member.id = :memberId" +
+//            " and FORMATDATETIME(p.createdDate, 'yyyy') = :year" +
+//            " and FORMATDATETIME(p.createdDate, 'MM') = :month" +
+//            " order by p.createdDate")
     List<LocalDateTime> findDatesByMemberAndYearMonth(@Param("memberId") Long memberId, @Param("year") int year, @Param("month") int month);
 }

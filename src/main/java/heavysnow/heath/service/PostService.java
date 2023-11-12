@@ -7,7 +7,6 @@ import heavysnow.heath.domain.Comment;
 import heavysnow.heath.dto.PostDatesResponseDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostAddResponse;
-import heavysnow.heath.dto.post.PostDeleteRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
@@ -17,7 +16,6 @@ import heavysnow.heath.repository.MemberRepository;
 import heavysnow.heath.repository.PostImageRepository;
 import heavysnow.heath.repository.PostRepository;
 import heavysnow.heath.repository.CommentRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -57,13 +55,13 @@ public class PostService {
         postRepository.save(post);
 
         // image 및 mainImage 생성
-        String mainImg = request.getImages().get(0);
+        String mainImg = request.getPostImgUrls().get(0);
         PostImage postMainImage = new PostImage(post, mainImg);
         postImageRepository.save(postMainImage);
         post.setMainImage(postMainImage);
 
-        for (int i = 1; i < request.getImages().size(); i++) {
-            String imgUrl = request.getImages().get(i);
+        for (int i = 1; i < request.getPostImgUrls().size(); i++) {
+            String imgUrl = request.getPostImgUrls().get(i);
             PostImage postImage = new PostImage(post, imgUrl);
             postImageRepository.save(postImage);
         }
@@ -84,7 +82,7 @@ public class PostService {
         post.update(request.getTitle(), request.getContent());
 
         List<PostImage> oldImages = post.getPostImages();
-        List<String> editImages = request.getPostImages();
+        List<String> editImages = request.getPostImgUrls();
 
         // image 추가 및 삭제
         imageUpdate(post, oldImages, editImages);
@@ -133,13 +131,13 @@ public class PostService {
         postImageRepository.deletePostImagesByPostId(post.getId());
         post.getPostImages().clear();
 
-        String mainImg = request.getPostImages().get(0);
+        String mainImg = request.getPostImgUrls().get(0);
         PostImage postMainImage = new PostImage(post, mainImg);
         postImageRepository.save(postMainImage);
         post.setMainImage(postMainImage);
 
-        for (int i = 1; i < request.getPostImages().size(); i++) {
-            String imgUrl = request.getPostImages().get(i);
+        for (int i = 1; i < request.getPostImgUrls().size(); i++) {
+            String imgUrl = request.getPostImgUrls().get(i);
             PostImage postImage = new PostImage(post, imgUrl);
             postImageRepository.save(postImage);
         }
