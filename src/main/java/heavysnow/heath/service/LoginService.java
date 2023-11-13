@@ -28,7 +28,7 @@ public class LoginService {
 
     /**
      * token을 받아서 로그아웃 수행
-     * @param token
+     * @param token: 해당 토큰으로 로그아웃 수행
      */
     public void logout(String token) {
         if (token == null) {
@@ -41,7 +41,7 @@ public class LoginService {
      * 로그인 요청이 들어왔을때, 토큰을 파싱하여 회원을 식별한다음,
      * 이미 존재한 회원이라면 로그인하고
      * 처음 방문한 회원이라면 로그인 정보를 저장한 다음 로그인을 수행
-     * @param token
+     * @param token: 해당 토큰으로 로그인을 수행
      */
     public LoginResponse login(String token) {
         if (token == null) {
@@ -79,6 +79,7 @@ public class LoginService {
         return memberService.createUser(memberRequest);
     }
 
+    // 토큰 파싱
     private Map<String, String> decodeToken(String token) {
         ObjectMapper mapper = new ObjectMapper();
         Decoder decoder = Base64.getDecoder();
