@@ -59,7 +59,8 @@ class MemberServiceTest {
                 .userStatusMessage("good!")
                 .profileImgUrl("Null")
                 .build();
-        memberService.editMember(savedId, dto);
+        Long tokenId = memberRepository.findById(savedId).orElseThrow().getId();
+        memberService.editMember(tokenId, savedId, dto);
         Member result = memberRepository.findById(savedId).orElse(null);
         assertEquals(result.getUsername(), dto.getUsername());
         assertEquals(result.getNickname(), dto.getNickname());

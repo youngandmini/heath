@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.domain.Goal;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.GoalCreationDto;
+import heavysnow.heath.dto.GoalIdResponseDto;
 import heavysnow.heath.dto.GoalUpdateDto;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.repository.GoalRepository;
@@ -57,8 +58,8 @@ class GoalServiceTest {
 
         // when
         // 해당 멤버의 목표 데베 저장
-        Long savedGoalId = goalService.createGoalForMember(savedMemberId, goalCreationDto);
-        Goal findGoal = goalRepository.findById(savedGoalId).get();
+        GoalIdResponseDto savedGoalId = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreationDto);
+        Goal findGoal = goalRepository.findById(savedGoalId.getGoalId()).get();
 
         // then
         assertThat(findGoal.getMember().getId()).isEqualTo(savedMemberId);  // 같은 멤버인지 검증
@@ -89,8 +90,8 @@ class GoalServiceTest {
 
 
         // 해당 멤버의 목표 데베 저장
-        Long savedGoalId1 = goalService.createGoalForMember(savedMemberId, goalCreationDto1);
-        Long savedGoalId2 = goalService.createGoalForMember(savedMemberId, goalCreationDto2);
+        GoalIdResponseDto savedGoalId1 = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreationDto1);
+        GoalIdResponseDto savedGoalId2 = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreationDto2);
 
         String updatedContent = "update content 1";
         Boolean isAchieved = true;
@@ -99,8 +100,8 @@ class GoalServiceTest {
 
 
         // when
-        goalService.updateGoalForMember(savedMemberId, savedGoalId1, updateDto);
-        Goal findGoal1 = goalRepository.findById(savedGoalId1).get();
+        goalService.updateGoalForMember(savedMemberId, savedGoalId1.getGoalId(), updateDto);
+        Goal findGoal1 = goalRepository.findById(savedGoalId1.getGoalId()).get();
 
         // then
         assertThat(findGoal1.getContent()).isEqualTo(updatedContent);
@@ -128,15 +129,15 @@ class GoalServiceTest {
         GoalCreationDto goalCreationDto = new GoalCreationDto("1일 1커밋 하기", false);
 
         // 멤버의 목표 데베에 저장
-        Long savedGoalId = goalService.createGoalForMember(savedMemberId, goalCreationDto);
+        GoalIdResponseDto savedGoalId = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreationDto);
 
         // when
         // 생성한 목표를 삭제
-        goalService.deleteGoalForMember(savedMemberId, savedGoalId);
+        goalService.deleteGoalForMember(savedMemberId, savedGoalId.getGoalId());
 
         // then
         // 삭제한 데이터가 데베에 존재하지 않는지 확인
-        boolean isPresent = goalRepository.findById(savedGoalId).isPresent();
+        boolean isPresent = goalRepository.findById(savedGoalId.getGoalId()).isPresent();
         assertThat(isPresent).isFalse();
     }
 
