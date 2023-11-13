@@ -6,15 +6,16 @@ import heavysnow.heath.domain.PostImage;
 import heavysnow.heath.domain.Comment;
 import heavysnow.heath.dto.PostDatesResponseDto;
 import heavysnow.heath.dto.post.PostAddRequest;
-import heavysnow.heath.dto.post.PostDeleteRequest;
+import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.exception.ForbiddenException;
+import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
 import heavysnow.heath.repository.PostImageRepository;
 import heavysnow.heath.repository.PostRepository;
 import heavysnow.heath.repository.CommentRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -39,11 +40,10 @@ public class PostService {
     private final CommentRepository commentRepository;
 
     // 게시글 등록
-    // postId를 반환하도록 변경
     @Transactional
-    public Long writePost(PostAddRequest request) {
+    public PostAddResponse writePost(PostAddRequest request) {
         Member member = memberRepository.findById(request.getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 멤버를 찾을 수 없습니다."));
+                .orElseThrow();
 
         // consecutiveDays 계산
         LocalDate yesterday = LocalDate.now().minusDays(1);
@@ -55,31 +55,34 @@ public class PostService {
         postRepository.save(post);
 
         // image 및 mainImage 생성
-        String mainImg = request.getImages().get(0);
+        String mainImg = request.getPostImgUrls().get(0);
         PostImage postMainImage = new PostImage(post, mainImg);
         postImageRepository.save(postMainImage);
         post.setMainImage(postMainImage);
 
-        for (int i = 1; i < request.getImages().size(); i++) {
-            String imgUrl = request.getImages().get(i);
+        for (int i = 1; i < request.getPostImgUrls().size(); i++) {
+            String imgUrl = request.getPostImgUrls().get(i);
             PostImage postImage = new PostImage(post, imgUrl);
             postImageRepository.save(postImage);
         }
 
-        return post.getId();
+        return PostAddResponse.of(post);
     }
 
     // 게시글 수정
     @Transactional
-    public void editPost(PostEditRequest request) {
-        Optional<Post> postOptional = postRepository.findById(request.getPostId());
-        Post post = postOptional.orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+    public void editPost(PostEditRequest request, Long memberId) {
+        Post post = postRepository.findById(request.getPostId()).orElseThrow(NotFoundException::new);
+
+        if (!post.getMember().getId().equals(memberId)) {
+            throw new ForbiddenException();
+        }
 
         // title, content 수정
         post.update(request.getTitle(), request.getContent());
 
         List<PostImage> oldImages = post.getPostImages();
-        List<String> editImages = request.getPostImages();
+        List<String> editImages = request.getPostImgUrls();
 
         // image 추가 및 삭제
         imageUpdate(post, oldImages, editImages);
@@ -128,13 +131,13 @@ public class PostService {
         postImageRepository.deletePostImagesByPostId(post.getId());
         post.getPostImages().clear();
 
-        String mainImg = request.getPostImages().get(0);
+        String mainImg = request.getPostImgUrls().get(0);
         PostImage postMainImage = new PostImage(post, mainImg);
         postImageRepository.save(postMainImage);
         post.setMainImage(postMainImage);
 
-        for (int i = 1; i < request.getPostImages().size(); i++) {
-            String imgUrl = request.getPostImages().get(i);
+        for (int i = 1; i < request.getPostImgUrls().size(); i++) {
+            String imgUrl = request.getPostImgUrls().get(i);
             PostImage postImage = new PostImage(post, imgUrl);
             postImageRepository.save(postImage);
         }
@@ -142,15 +145,15 @@ public class PostService {
 
     // 게시글 삭제
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, Long memberId) {
         Optional<Post> postOptional = postRepository.findById(postId);
-        Post post = postOptional.orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+        Post post = postOptional.orElseThrow(NotFoundException::new);
 
-        /**
-         * 댓글 삭제 추후 수정 필요
-         */
+        if (!post.getMember().getId().equals(memberId)) {
+            throw new ForbiddenException();
+        }
 
-        // postImages도 같이 삭제 됨
+        // postImages, comments, memberPostLikedList도 같이 삭제 됨
         postRepository.delete(post);
     }
   
@@ -185,7 +188,7 @@ public class PostService {
      * @return PostDetailResponseDto
      */
     public PostDetailResponseDto getPostWithDetail(Long postId, Long memberId) {
-        Post findPost = postRepository.findPostDetailById(postId).orElseThrow(); //커스텀 예외 추가하여 catch 해야함
+        Post findPost = postRepository.findPostDetailById(postId).orElseThrow(NotFoundException::new);
         List<Comment> findComments = commentRepository.findWithMemberByPostId(postId);
 //        boolean isLiked = isMemberPostLiked(postId, memberId);
         return PostDetailResponseDto.of(findPost, memberId, findComments);
