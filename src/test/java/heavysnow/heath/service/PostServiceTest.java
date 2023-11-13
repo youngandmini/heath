@@ -12,8 +12,10 @@ import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.CommentRepository;
 import heavysnow.heath.repository.MemberPostLikedRepository;
 import heavysnow.heath.repository.MemberRepository;
+import heavysnow.heath.repository.PostRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +39,8 @@ class PostServiceTest {
     MemberRepository memberRepository;
     @Autowired
     PostService postService;
+    @Autowired
+    PostRepository postRepository;
     @Autowired
     CommentService commentService;
     @Autowired
@@ -282,6 +286,9 @@ class PostServiceTest {
         //when
         postService.deletePost(savedPostId1, memberId1);
 
+        em.flush();
+        em.clear();
+
         //then
         assertThat(memberPostLikedRepository.findByMemberIdAndPostId(memberId1, savedPostId1).isEmpty()).isTrue();
         assertThat(memberPostLikedRepository.findByMemberIdAndPostId(memberId2, savedPostId1).isEmpty()).isTrue();
@@ -331,5 +338,37 @@ class PostServiceTest {
         assertThat(commentRepository.findById(savedCommentId2).isEmpty()).isTrue();
         assertThat(commentRepository.findById(savedReplyId1).isEmpty()).isTrue();
         assertThat(commentRepository.findById(savedReplyId2).isEmpty()).isTrue();
+    }
+
+    @Test
+    @DisplayName("회원을 삭제하면 post도 함께 문제 없이 삭제되어야한다.")
+    void deleteMemberWithPosts() {
+        MemberDto memberDto = MemberDto.builder()
+                .username("aaaa@example.com")
+                .nickname("gwan")
+                .userStatusMessage("")
+                .profileImgUrl("imgUrl")
+                .build();
+        Long savedMemberId = memberService.createUser(memberDto);
+
+        List<String> imgUrls1 = new ArrayList<>();
+        imgUrls1.add("이미지1");
+        imgUrls1.add("이미지2");
+        imgUrls1.add("이미지3");
+
+        PostAddRequest postAddRequest1 = new PostAddRequest(savedMemberId, "게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+
+
+        em.flush();
+        em.clear();
+
+        memberService.deleteMember(savedMemberId, savedMemberId);
+
+        assertThatThrownBy(() -> memberService.findMemberWithGoals(savedMemberId))
+                .isInstanceOf(NotFoundException.class);
+
+        assertThat(postRepository.findById(savedPostId1).isEmpty()).isTrue();
+
     }
 }
