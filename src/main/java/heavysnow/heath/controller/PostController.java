@@ -3,7 +3,7 @@ package heavysnow.heath.controller;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.comment.CommentCreateRequest;
 import heavysnow.heath.dto.comment.CommentCreateResponse;
-import heavysnow.heath.dto.comment.CommentUpdateDto;
+import heavysnow.heath.dto.comment.CommentUpdateRequest;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;
@@ -159,7 +159,7 @@ public class PostController {
      * @param request: 로그인 정보
      */
     @PatchMapping("/{postId}/comments/{commentId}")
-    public void updateComment(@RequestBody CommentUpdateDto commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
+    public void updateComment(@RequestBody CommentUpdateRequest commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 

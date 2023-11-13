@@ -3,7 +3,7 @@ package heavysnow.heath.service;
 import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.comment.CommentCreateRequest;
-import heavysnow.heath.dto.comment.CommentUpdateDto;
+import heavysnow.heath.dto.comment.CommentUpdateRequest;
 import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.repository.CommentRepository;
@@ -178,8 +178,8 @@ public class CommentServiceTest {
         Long savedCommentId = commentService.createComment(savedPostId1, commentCreateRequest, null, savedMemberId1).getCommentId();
 
         // when
-        CommentUpdateDto commentUpdateDto = new CommentUpdateDto(updateContent);
-        commentService.updateComment(savedPostId1, savedCommentId, commentUpdateDto, savedMemberId1);
+        CommentUpdateRequest commentUpdateRequest = new CommentUpdateRequest(updateContent);
+        commentService.updateComment(savedPostId1, savedCommentId, commentUpdateRequest, savedMemberId1);
 
         Comment updatedComment = commentRepository.findById(savedCommentId).get();
 

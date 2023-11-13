@@ -5,7 +5,7 @@ import heavysnow.heath.domain.Member;
 import heavysnow.heath.domain.Post;
 import heavysnow.heath.dto.comment.CommentCreateRequest;
 import heavysnow.heath.dto.comment.CommentCreateResponse;
-import heavysnow.heath.dto.comment.CommentUpdateDto;
+import heavysnow.heath.dto.comment.CommentUpdateRequest;
 import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
@@ -45,7 +45,7 @@ public class CommentService {
         return CommentCreateResponse.of(savedcomment.getId());
     }
 
-    public void updateComment(Long postId, Long commentId, CommentUpdateDto commentUpdateDto, Long loginMemberId) {
+    public void updateComment(Long postId, Long commentId, CommentUpdateRequest commentUpdateRequest, Long loginMemberId) {
         // 댓글 존재 확인
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundException::new);
 
@@ -58,7 +58,7 @@ public class CommentService {
         }
 
         // 내용 업데이트
-        comment.updateComment(commentUpdateDto.getContent());
+        comment.updateComment(commentUpdateRequest.getContent());
     }
 
     public void deleteComment(Long commentId, Long memberId) {
