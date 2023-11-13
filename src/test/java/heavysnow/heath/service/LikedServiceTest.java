@@ -5,19 +5,21 @@ import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.repository.MemberPostLikedRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
+@Transactional
 class LikedServiceTest {
 
     @Autowired
@@ -28,6 +30,10 @@ class LikedServiceTest {
     LikedService likedService;
     @Autowired
     MemberPostLikedRepository memberPostLikedRepository;
+
+    @Autowired
+    private EntityManager em;
+
 
     @Test
     void changeMemberPostLiked() {
@@ -41,16 +47,26 @@ class LikedServiceTest {
 
         //when - then -> 좋아요를 한번 누르면 좋아요가 반영된다.
         likedService.changeMemberPostLiked(savedPostId, savedMemberId);
+
+        em.flush();
+        em.clear();
+
         PostDetailResponseDto responseDto1 = postService.getPostWithDetail(savedPostId, savedMemberId);
         Optional<MemberPostLiked> memberPostLikedOptional1 = memberPostLikedRepository.findByMemberIdAndPostId(savedMemberId, savedPostId);
+
 
         assertThat(memberPostLikedOptional1).isNotEmpty();
         assertThat(responseDto1.isLiked()).isTrue();
 
         //when - then -> 이미 좋아요가 눌린 상태에서 한번 더 누르면 좋아요가 취소된다.
         likedService.changeMemberPostLiked(savedPostId, savedMemberId);
+
+        em.flush();
+        em.clear();
+
         PostDetailResponseDto responseDto2 = postService.getPostWithDetail(savedPostId, savedMemberId);
         Optional<MemberPostLiked> memberPostLikedOptional2 = memberPostLikedRepository.findByMemberIdAndPostId(savedMemberId, savedPostId);
+
 
         assertThat(memberPostLikedOptional2).isEmpty();
         assertThat(responseDto2.isLiked()).isFalse();
