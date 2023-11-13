@@ -4,7 +4,7 @@ package heavysnow.heath.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.domain.Member;
-import heavysnow.heath.dto.login.LoginResponseDto;
+import heavysnow.heath.dto.login.LoginResponse;
 import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.repository.MemberRepository;
@@ -43,7 +43,7 @@ public class LoginService {
      * 처음 방문한 회원이라면 로그인 정보를 저장한 다음 로그인을 수행
      * @param token
      */
-    public LoginResponseDto login(String token) {
+    public LoginResponse login(String token) {
         if (token == null) {
             throw new BadRequestException();
         }
@@ -58,13 +58,13 @@ public class LoginService {
             Member findMember = findMemberOptional.get();
             doLogin(token, findMember.getId());
 
-            return LoginResponseDto.of(findMember.getId());
+            return LoginResponse.of(findMember.getId());
         } else {
             //처음 방문한 회원이라면, 회원정보를 DB에 저장 후 로그인
             Long joinedMemberId = joinMember(email, nickname, profileImage);
             doLogin(token, joinedMemberId);
 
-            return LoginResponseDto.of(joinedMemberId);
+            return LoginResponse.of(joinedMemberId);
         }
     }
 

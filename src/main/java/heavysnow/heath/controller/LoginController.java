@@ -1,7 +1,7 @@
 package heavysnow.heath.controller;
 
 
-import heavysnow.heath.dto.login.LoginResponseDto;
+import heavysnow.heath.dto.login.LoginResponse;
 import heavysnow.heath.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class LoginController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public LoginResponseDto login(HttpServletRequest request) {
+    public LoginResponse login(HttpServletRequest request) {
         String token = request.getHeader("accessToken");
 
         return loginService.login(token);
