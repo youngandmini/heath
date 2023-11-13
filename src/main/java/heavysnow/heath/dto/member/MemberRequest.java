@@ -1,13 +1,10 @@
 package heavysnow.heath.dto.member;
 
 import heavysnow.heath.domain.Member;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Setter;
+import lombok.*;
 
-@Data
-@Setter(AccessLevel.NONE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public class MemberRequest {
 
     private String username;
