@@ -3,7 +3,7 @@ package heavysnow.heath.service;
 import heavysnow.heath.domain.Goal;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.goal.GoalCreateRequest;
-import heavysnow.heath.dto.goal.GoalIdResponseDto;
+import heavysnow.heath.dto.goal.GoalCreateResponse;
 import heavysnow.heath.dto.goal.GoalUpdateDto;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
@@ -22,7 +22,7 @@ public class GoalService {
     @Transactional
     // 특정 멤버에 대한 목표를 생성하는 메서드
     // 반환 타입 Long(goalId)로 변경
-    public GoalIdResponseDto createGoalForMember(Long loginMemberId, Long memberId, GoalCreateRequest goalDto){
+    public GoalCreateResponse createGoalForMember(Long loginMemberId, Long memberId, GoalCreateRequest goalDto){
 
         // JPA save()메서드로 GoalCreationDto에 저장된 값을 Goal 데이터 베이스에 저장
         Member member = memberRepository.findById(memberId).orElseThrow();
@@ -38,7 +38,7 @@ public class GoalService {
                 .build();
 
         Goal savedGoal = goalRepository.save(goal);
-        return new GoalIdResponseDto(savedGoal.getId());
+        return new GoalCreateResponse(savedGoal.getId());
     }
 
     // 수정 : 특정 멤버에 대한 목표 수정하는 메서드

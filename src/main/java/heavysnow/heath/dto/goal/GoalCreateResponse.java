@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
-public class GoalIdResponseDto {
+public class GoalCreateResponse {
     private Long goalId;
 }

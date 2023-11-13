@@ -2,7 +2,7 @@ package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.goal.GoalCreateRequest;
-import heavysnow.heath.dto.goal.GoalIdResponseDto;
+import heavysnow.heath.dto.goal.GoalCreateResponse;
 import heavysnow.heath.dto.goal.GoalUpdateDto;
 import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.dto.member.MemberResponseDto;
@@ -110,12 +110,12 @@ public class MemberController {
      */
     @PostMapping("/{memberId}/goals")
     @ResponseStatus(HttpStatus.OK)
-    public GoalIdResponseDto addGoal(@PathVariable("memberId") Long memberId, @RequestBody GoalCreateRequest goalCreateRequest,
-                                     HttpServletRequest request) {
+    public GoalCreateResponse addGoal(@PathVariable("memberId") Long memberId, @RequestBody GoalCreateRequest goalCreateRequest,
+                                      HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        GoalIdResponseDto response = goalService.createGoalForMember(loginMemberId, memberId, goalCreateRequest);
+        GoalCreateResponse response = goalService.createGoalForMember(loginMemberId, memberId, goalCreateRequest);
         return response;
     }
 
