@@ -58,21 +58,11 @@ public class PostController {
         return postService.writePost(loginMemberId, postAddRequest);
     }
 
-
-    /**
-     * 게시글 상세 조회 요청
-     */
-    @GetMapping("/{postId}")
-    @ResponseStatus(HttpStatus.OK)
-    public PostDetailResponseDto detailedPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
-        Long loginMemberId = loginMemberIdOptional.orElse(null);
-
-        return postService.getPostWithDetail(postId, loginMemberId);
-    }
-
     /**
      * 게시글 수정 요청
+     * @param postId
+     * @param postEditRequest
+     * @param request
      */
     @PatchMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
@@ -82,7 +72,22 @@ public class PostController {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        postService.editPost(postEditRequest, loginMemberId);
+        postService.editPost(postId, postEditRequest, loginMemberId);
+    }
+
+    /**
+     * 게시글 상세 조회 요청
+     * @param postId
+     * @param request
+     * @return
+     */
+    @GetMapping("/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public PostDetailResponseDto detailedPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElse(null);
+
+        return postService.getPostWithDetail(postId, loginMemberId);
     }
 
 

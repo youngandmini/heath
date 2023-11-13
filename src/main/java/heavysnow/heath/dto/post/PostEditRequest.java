@@ -8,7 +8,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class PostEditRequest {
-    private Long postId;
     private String title;
     private String content;
     private List<String> postImgUrls;

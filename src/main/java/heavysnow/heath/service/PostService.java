@@ -79,8 +79,8 @@ public class PostService {
      * @param memberId
      */
     @Transactional
-    public void editPost(PostEditRequest request, Long memberId) {
-        Post post = postRepository.findById(request.getPostId()).orElseThrow(NotFoundException::new);
+    public void editPost(Long postId, PostEditRequest request, Long memberId) {
+        Post post = postRepository.findById(postId).orElseThrow(NotFoundException::new);
 
         if (!post.getMember().getId().equals(memberId)) {
             throw new ForbiddenException();
