@@ -1,7 +1,7 @@
 package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Member;
-import heavysnow.heath.dto.goal.GoalCreationDto;
+import heavysnow.heath.dto.goal.GoalCreateRequest;
 import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.GoalRepository;
@@ -106,8 +106,8 @@ class MemberServiceTest {
                 .build();
         Long savedId = memberService.createUser(memberDto);
 
-        Long goalId1 = goalService.createGoalForMember(savedId, savedId, new GoalCreationDto("목표1", false)).getGoalId();
-        Long goalId2 = goalService.createGoalForMember(savedId, savedId, new GoalCreationDto("목표2", false)).getGoalId();
+        Long goalId1 = goalService.createGoalForMember(savedId, savedId, new GoalCreateRequest("목표1", false)).getGoalId();
+        Long goalId2 = goalService.createGoalForMember(savedId, savedId, new GoalCreateRequest("목표2", false)).getGoalId();
 
         em.flush();
         em.clear();

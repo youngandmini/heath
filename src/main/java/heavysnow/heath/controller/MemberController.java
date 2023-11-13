@@ -1,7 +1,7 @@
 package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
-import heavysnow.heath.dto.goal.GoalCreationDto;
+import heavysnow.heath.dto.goal.GoalCreateRequest;
 import heavysnow.heath.dto.goal.GoalIdResponseDto;
 import heavysnow.heath.dto.goal.GoalUpdateDto;
 import heavysnow.heath.dto.member.MemberDto;
@@ -104,18 +104,18 @@ public class MemberController {
     /**
      * 특정 회원의 새로운 목표를 생성하기 위한 요청
      * @param memberId: 멤버 아이디
-     * @param goalCreationDto: 목표 내용
+     * @param goalCreateRequest: 목표 내용
      * @param request: 로그인 정보
      * @return: 생성된 목표의 아이디
      */
     @PostMapping("/{memberId}/goals")
     @ResponseStatus(HttpStatus.OK)
-    public GoalIdResponseDto addGoal(@PathVariable("memberId") Long memberId, @RequestBody GoalCreationDto goalCreationDto,
+    public GoalIdResponseDto addGoal(@PathVariable("memberId") Long memberId, @RequestBody GoalCreateRequest goalCreateRequest,
                                      HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        GoalIdResponseDto response = goalService.createGoalForMember(loginMemberId, memberId, goalCreationDto);
+        GoalIdResponseDto response = goalService.createGoalForMember(loginMemberId, memberId, goalCreateRequest);
         return response;
     }
 
