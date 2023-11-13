@@ -30,10 +30,10 @@ public class PostController {
     private final LikedService likedService;
 
     /**
-     * 메인페이지에서 게시글 리스트를 3개씩 요청
-     * @param page
-     * @param sort
-     * @return
+     * 메인페이지에서 게시글 리스트를 요청
+     * @param page: 페이지 번호
+     * @param sort: 정렬 조건
+     * @return: 게시글 리스트를 3개씩 반환
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -43,10 +43,10 @@ public class PostController {
     }
 
     /**
-     * 새로운 게시글을 등록 요청
-     * @param postAddRequest
-     * @param request
-     * @return
+     * 새로운 게시글을 등록하기 위한 요청
+     * @param postAddRequest: 등록할 게시글 정보
+     * @param request: 로그인 정보
+     * @return: 등록한 게시글의 아이디
      */
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
@@ -58,10 +58,10 @@ public class PostController {
     }
 
     /**
-     * 게시글 수정 요청
-     * @param postId
-     * @param postEditRequest
-     * @param request
+     * 게시글을 수정하기 위한 요청
+     * @param postId: 수정할 게시글 아이디
+     * @param postEditRequest: 수정할 게시글 정보
+     * @param request: 로그인 정보
      */
     @PatchMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
@@ -75,10 +75,10 @@ public class PostController {
     }
 
     /**
-     * 게시글 상세 조회 요청
-     * @param postId
-     * @param request
-     * @return
+     * 게시글 상세를 조회하기 위한 요청
+     * @param postId: 조회할 게시글 아이디
+     * @param request: 로그인 정보
+     * @return: 게시글 상세 정보
      */
     @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
@@ -91,9 +91,9 @@ public class PostController {
 
 
     /**
-     * 게시글을 삭제 요청
-     * @param postId
-     * @param request
+     * 게시글을 삭제하기 위한 요청
+     * @param postId: 삭제할 게시글 아이디
+     * @param request: 로그인 정보
      */
     @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
@@ -105,9 +105,9 @@ public class PostController {
     }
 
     /**
-     * 좋아요 요청
-     * @param postId
-     * @param request
+     * 좋아요 상태를 수정하기 위한 요청
+     * @param postId: 좋아요를 달 게시글 아이디
+     * @param request: 로그인 정보
      */
     @PostMapping("/{postId}/likes")
     @ResponseStatus(HttpStatus.OK)
@@ -119,11 +119,11 @@ public class PostController {
     }
 
     /**
-     * 새로운 댓글 삭제 요청
-     * @param commentDto
-     * @param postId
-     * @param request
-     * @return
+     * 새로운 댓글을 달기 위한 요청
+     * @param commentDto: 댓글 내용
+     * @param postId: 댓글을 달 게시글 아이디
+     * @param request: 로그인 정보
+     * @return: 댓글 아이디
      */
     @PostMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.OK)
@@ -135,7 +135,12 @@ public class PostController {
     }
 
     /**
-     * 새로운 답글 요청
+     * 특정 댓글에 답글을 달기 위한 요청
+     * @param commentDto: 답글 내용
+     * @param postId: 답글을 달 댓글이 존재하는 게시글 아이디
+     * @param commentId: 답글을 달 댓글 아이디
+     * @param request: 로그인 정보
+     * @return: 답글 아이디
      */
     @PostMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
@@ -147,7 +152,11 @@ public class PostController {
     }
 
     /**
-     * 댓글(답글) 수정
+     * 특정 댓글을 수정하기 위한 요청
+     * @param commentDto: 수정할 댓글 내용
+     * @param postId: 수정할 댓글이 속한 게시글 아이디
+     * @param commentId: 수정할 댓글 아이디
+     * @param request: 로그인 정보
      */
     @PatchMapping("/{postId}/comments/{commentId}")
     public void updateComment(@RequestBody CommentUpdateDto commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
@@ -158,7 +167,9 @@ public class PostController {
     }
 
     /**
-     * 댓글(답글) 삭제
+     * 특정 댓글을 삭제하기 위한 요청
+     * @param commentId: 삭제할 댓글 아이디
+     * @param request: 로그인 정보
      */
     @DeleteMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
