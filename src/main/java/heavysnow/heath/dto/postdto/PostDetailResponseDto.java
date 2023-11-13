@@ -29,7 +29,7 @@ public class PostDetailResponseDto {
     private int liked;
     private boolean isLiked;
     private List<String> postImgUrls;
-    private List<CommentResponseDto> comments;
+    private List<CommentResponse> comments;
 
     public boolean isLiked() {
         return isLiked;
@@ -49,7 +49,7 @@ public class PostDetailResponseDto {
                 isMemberPostLiked(post, memberId),
                 post.getPostImages().stream().map(PostImage::getImgUrl).collect(Collectors.toList()),
 //                PostImageInfo.listOf(post.getPostImages()),
-                CommentResponseDto.listOf(parentComments)
+                CommentResponse.listOf(parentComments)
         );
     }
 
