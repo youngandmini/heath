@@ -31,19 +31,23 @@ public class PostController {
     private final LikedService likedService;
 
     /**
-     * 메인페이지
+     * 메인페이지에서 게시글 리스트를 3개씩 불러오는 메서드
+     * @param page
+     * @param sort
+     * @return
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PostListResponseDto getPostList(
-            @RequestParam("page") int page,
-            @RequestParam("sort") String sort
-    ) {
+    public PostListResponseDto getPostList(@RequestParam("page") int page, @RequestParam("sort") String sort) {
+
         return postService.getPostList(page, sort);
     }
 
     /**
-     * 게시글 등록 요청
+     * 새로운 게시글을 등록하는 메서드
+     * @param postAddRequest
+     * @param request
+     * @return
      */
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
@@ -51,8 +55,7 @@ public class PostController {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        postAddRequest.setMemberId(loginMemberId);
-        return postService.writePost(postAddRequest);
+        return postService.writePost(loginMemberId, postAddRequest);
     }
 
 

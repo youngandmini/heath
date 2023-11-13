@@ -75,10 +75,10 @@ class PostServiceTest {
         imgUrls2.add("이미지22");
         imgUrls2.add("이미지23");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        PostAddRequest postAddRequest2 = new PostAddRequest(memberId, "게시글 제목2", "게시글 내용2", imgUrls2);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
-        Long savedPostId2 = postService.writePost(postAddRequest2).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        PostAddRequest postAddRequest2 = new PostAddRequest("게시글 제목2", "게시글 내용2", imgUrls2);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
+        Long savedPostId2 = postService.writePost(memberId, postAddRequest2).getPostId();
 
         //when - 멤버별로 최신순으로 검색한다.
         PostListResponseDto responseDto = postService.getPostListByMember(memberId, 0);
@@ -107,10 +107,10 @@ class PostServiceTest {
         imgUrls2.add("이미지22");
         imgUrls2.add("이미지23");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        PostAddRequest postAddRequest2 = new PostAddRequest(memberId, "게시글 제목2", "게시글 내용2", imgUrls2);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
-        Long savedPostId2 = postService.writePost(postAddRequest2).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        PostAddRequest postAddRequest2 = new PostAddRequest("게시글 제목2", "게시글 내용2", imgUrls2);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
+        Long savedPostId2 = postService.writePost(memberId, postAddRequest2).getPostId();
 
         //when
         PostListResponseDto responseDto = postService.getPostList(0, "createdDate");
@@ -138,10 +138,10 @@ class PostServiceTest {
         imgUrls2.add("이미지22");
         imgUrls2.add("이미지23");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        PostAddRequest postAddRequest2 = new PostAddRequest(memberId, "게시글 제목2", "게시글 내용2", imgUrls2);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
-        Long savedPostId2 = postService.writePost(postAddRequest2).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        PostAddRequest postAddRequest2 = new PostAddRequest("게시글 제목2", "게시글 내용2", imgUrls2);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
+        Long savedPostId2 = postService.writePost(memberId, postAddRequest2).getPostId();
 
         //when
         PostDetailResponseDto responseDto = postService.getPostWithDetail(savedPostId1, memberId);
@@ -171,8 +171,8 @@ class PostServiceTest {
         imgUrls1.add("이미지2");
         imgUrls1.add("이미지3");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
 
         //when
         List<String> editImgUrls = new ArrayList<>();
@@ -210,8 +210,8 @@ class PostServiceTest {
         imgUrls1.add("이미지2");
         imgUrls1.add("이미지3");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
 
         //when
         postService.deletePost(savedPostId1, memberId);
@@ -232,8 +232,8 @@ class PostServiceTest {
         imgUrls1.add("이미지1");
         imgUrls1.add("이미지2");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
 
         //댓글 달기
         CommentCreateDto commentDto1 = new CommentCreateDto(savedPostId1, memberId, "댓글1", null);
@@ -273,8 +273,8 @@ class PostServiceTest {
         imgUrls1.add("이미지2");
         imgUrls1.add("이미지3");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId1, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(memberId1, postAddRequest1).getPostId();
 
         //좋아요
         likedService.changeMemberPostLiked(savedPostId1, memberId1);
@@ -307,8 +307,8 @@ class PostServiceTest {
         imgUrls1.add("이미지2");
         imgUrls1.add("이미지3");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId1, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(memberId1, postAddRequest1).getPostId();
 
         //좋아요
         likedService.changeMemberPostLiked(savedPostId1, memberId1);
@@ -356,8 +356,8 @@ class PostServiceTest {
         imgUrls1.add("이미지2");
         imgUrls1.add("이미지3");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(savedMemberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(savedMemberId, postAddRequest1).getPostId();
 
 
         em.flush();

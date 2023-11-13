@@ -99,10 +99,10 @@ public class CommentServiceTest {
         imgUrls1.add("이미지2");
         imgUrls1.add("이미지3");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(member.getId(), "게시글 제목1", "게시글 내용1", imgUrls1);
-        PostAddRequest postAddRequest2 = new PostAddRequest(member.getId(), "게시글 제목2", "게시글 내용2", imgUrls1);
-        savedPostId1 = postService.writePost(postAddRequest1).getPostId();
-        savedPostId2 = postService.writePost(postAddRequest2).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        PostAddRequest postAddRequest2 = new PostAddRequest("게시글 제목2", "게시글 내용2", imgUrls1);
+        savedPostId1 = postService.writePost(member.getId(), postAddRequest1).getPostId();
+        savedPostId2 = postService.writePost(member.getId(), postAddRequest2).getPostId();
     }
 
 

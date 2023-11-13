@@ -10,6 +10,7 @@ import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponseDto;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
@@ -39,11 +40,14 @@ public class PostService {
     private final PostImageRepository postImageRepository;
     private final CommentRepository commentRepository;
 
-    // 게시글 등록
+    /**
+     * 게시글을 등록하는 메서드
+     * @param request
+     * @return
+     */
     @Transactional
-    public PostAddResponse writePost(PostAddRequest request) {
-        Member member = memberRepository.findById(request.getMemberId())
-                .orElseThrow();
+    public PostAddResponse writePost(Long loginMemberId, PostAddRequest request) {
+        Member member = memberRepository.findById(loginMemberId).orElseThrow();
 
         // consecutiveDays 계산
         LocalDate yesterday = LocalDate.now().minusDays(1);
@@ -69,7 +73,11 @@ public class PostService {
         return PostAddResponse.of(post);
     }
 
-    // 게시글 수정
+    /**
+     * 게시글을 수정하는 메서드
+     * @param request
+     * @param memberId
+     */
     @Transactional
     public void editPost(PostEditRequest request, Long memberId) {
         Post post = postRepository.findById(request.getPostId()).orElseThrow(NotFoundException::new);
@@ -81,19 +89,20 @@ public class PostService {
         // title, content 수정
         post.update(request.getTitle(), request.getContent());
 
+        // 이미지 수정
         List<PostImage> oldImages = post.getPostImages();
         List<String> editImages = request.getPostImgUrls();
-
-        // image 추가 및 삭제
         imageUpdate(post, oldImages, editImages);
-
-        //image 전부 삭제 후 다시 추가
-//        allDeleteAndAddImage(request, post);
 
         postRepository.save(post);
     }
 
-    // 기존 이미지와 비교하여 image 추가 및 삭제
+    /**
+     * 기존에 저장된 이미지와 새로 요청된 이미지를 비교하여, 추가 및 삭제
+     * @param post
+     * @param oldImages
+     * @param editImages
+     */
     private void imageUpdate(Post post, List<PostImage> oldImages, List<String> editImages) {
         // image 삭제
         post.setMainImage(null);
@@ -125,35 +134,20 @@ public class PostService {
         post.setMainImage(mainImage);
     }
 
-    // image 전부 삭제 후 다시 추가
-    private void allDeleteAndAddImage(PostEditRequest request, Post post) {
-        post.setMainImage(null);
-        postImageRepository.deletePostImagesByPostId(post.getId());
-        post.getPostImages().clear();
-
-        String mainImg = request.getPostImgUrls().get(0);
-        PostImage postMainImage = new PostImage(post, mainImg);
-        postImageRepository.save(postMainImage);
-        post.setMainImage(postMainImage);
-
-        for (int i = 1; i < request.getPostImgUrls().size(); i++) {
-            String imgUrl = request.getPostImgUrls().get(i);
-            PostImage postImage = new PostImage(post, imgUrl);
-            postImageRepository.save(postImage);
-        }
-    }
-
-    // 게시글 삭제
+    /**
+     * 게시글을 삭제하는 메서드
+     * @param postId
+     * @param loginMemberId
+     */
     @Transactional
-    public void deletePost(Long postId, Long memberId) {
+    public void deletePost(Long postId, Long loginMemberId) {
         Optional<Post> postOptional = postRepository.findById(postId);
         Post post = postOptional.orElseThrow(NotFoundException::new);
 
-        if (!post.getMember().getId().equals(memberId)) {
+        if (!post.getMember().getId().equals(loginMemberId)) {
             throw new ForbiddenException();
         }
 
-        // postImages, comments, memberPostLikedList도 같이 삭제 됨
         postRepository.delete(post);
     }
   
@@ -184,14 +178,13 @@ public class PostService {
     /**
      * 게시글 상세 페이지에 사용되는 게시글 상세 정보를 가져오는 메서드
      * @param postId: postId가 일치하는 하나의 게시글을 가져옴
-     * @param memberId: 이때 현재 접속한 회원이 이 게시글에 좋아요를 눌렀는지 확인할 수 있어야함
+     * @param loginMemberId: 이때 현재 접속한 회원이 이 게시글에 좋아요를 눌렀는지 확인할 수 있어야함
      * @return PostDetailResponseDto
      */
-    public PostDetailResponseDto getPostWithDetail(Long postId, Long memberId) {
+    public PostDetailResponseDto getPostWithDetail(Long postId, Long loginMemberId) {
         Post findPost = postRepository.findPostDetailById(postId).orElseThrow(NotFoundException::new);
         List<Comment> findComments = commentRepository.findWithMemberByPostId(postId);
-//        boolean isLiked = isMemberPostLiked(postId, memberId);
-        return PostDetailResponseDto.of(findPost, memberId, findComments);
+        return PostDetailResponseDto.of(findPost, loginMemberId, findComments);
     }
 
 
@@ -206,21 +199,6 @@ public class PostService {
     public PostDatesResponseDto getPostDates(Long memberId, int year, int month) {
         List<LocalDateTime> postDatetimes = postRepository.findDatesByMemberAndYearMonth(memberId, year, month);
         return PostDatesResponseDto.of(postDatetimes);
-    }
-
-
-    /**
-     * 미완성 - MemberPostLikedRepository가 생성된 후에 추가 구현 필요
-     * findPost의 MemberPostLikedList에서 memberId가 있는지를 비교하는 것과 쿼리 한번을 더 하는 것의 성능 차이 확인 필요
-     *
-     * memberId를 가진 회원이 postId인 게시글에 좋아요를 눌렀는지를 반환
-     * @param postId
-     * @param memberId
-     * @return
-     */
-    private boolean isMemberPostLiked(Long postId, Long memberId) {
-        //MemberPostLikedRepository가 생성된 후에 다시 구현
-        return true;
     }
   
 }
