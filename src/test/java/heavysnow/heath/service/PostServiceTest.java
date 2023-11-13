@@ -1,12 +1,10 @@
 package heavysnow.heath.service;
 
-import heavysnow.heath.domain.Member;
-import heavysnow.heath.domain.Post;
 import heavysnow.heath.dto.CommentCreateDto;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
-import heavysnow.heath.dto.postdto.PostDetailResponseDto;
+import heavysnow.heath.dto.postdto.PostDetailResponse;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.CommentRepository;
@@ -23,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -144,7 +141,7 @@ class PostServiceTest {
         Long savedPostId2 = postService.writePost(memberId, postAddRequest2).getPostId();
 
         //when
-        PostDetailResponseDto responseDto = postService.getPostWithDetail(savedPostId1, memberId);
+        PostDetailResponse responseDto = postService.getPostWithDetail(savedPostId1, memberId);
 
         //then
         assertThat(responseDto.getPostId()).isEqualTo(savedPostId1);
@@ -182,7 +179,7 @@ class PostServiceTest {
         editImgUrls.add("수정 이미지4");
         PostEditRequest editRequest = new PostEditRequest("수정 제목1", "수정 게시글 내용1", editImgUrls);
         postService.editPost(savedPostId1, editRequest, memberId);
-        PostDetailResponseDto responseDto = postService.getPostWithDetail(savedPostId1, memberId);
+        PostDetailResponse responseDto = postService.getPostWithDetail(savedPostId1, memberId);
 
         //then
         assertThat(responseDto.getPostId()).isEqualTo(savedPostId1);

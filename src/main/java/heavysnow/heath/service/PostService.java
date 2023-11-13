@@ -8,9 +8,8 @@ import heavysnow.heath.dto.PostDatesResponseDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;
-import heavysnow.heath.dto.postdto.PostDetailResponseDto;
+import heavysnow.heath.dto.postdto.PostDetailResponse;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
-import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
@@ -181,10 +180,10 @@ public class PostService {
      * @param loginMemberId: 이때 현재 접속한 회원이 이 게시글에 좋아요를 눌렀는지 확인할 수 있어야함
      * @return PostDetailResponseDto
      */
-    public PostDetailResponseDto getPostWithDetail(Long postId, Long loginMemberId) {
+    public PostDetailResponse getPostWithDetail(Long postId, Long loginMemberId) {
         Post findPost = postRepository.findPostDetailById(postId).orElseThrow(NotFoundException::new);
         List<Comment> findComments = commentRepository.findWithMemberByPostId(postId);
-        return PostDetailResponseDto.of(findPost, loginMemberId, findComments);
+        return PostDetailResponse.of(findPost, loginMemberId, findComments);
     }
 
 

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class PostDetailResponseDto {
+public class PostDetailResponse {
     private Long memberId;
     private String profileImgUrl;
     private String nickname;
@@ -35,8 +35,8 @@ public class PostDetailResponseDto {
         return isLiked;
     }
 
-    public static PostDetailResponseDto of(Post post, Long memberId, List<Comment> parentComments) {
-        return new PostDetailResponseDto(
+    public static PostDetailResponse of(Post post, Long memberId, List<Comment> parentComments) {
+        return new PostDetailResponse(
                 post.getMember().getId(),
                 post.getMember().getProfileImgUrl(),
                 post.getMember().getNickname(),

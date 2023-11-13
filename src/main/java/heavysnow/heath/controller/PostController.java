@@ -7,7 +7,7 @@ import heavysnow.heath.dto.CommentUpdateDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;
-import heavysnow.heath.dto.postdto.PostDetailResponseDto;
+import heavysnow.heath.dto.postdto.PostDetailResponse;
 import heavysnow.heath.dto.postdto.PostListResponseDto;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.CommentService;
@@ -82,7 +82,7 @@ public class PostController {
      */
     @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public PostDetailResponseDto detailedPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
+    public PostDetailResponse detailedPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElse(null);
 
