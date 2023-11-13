@@ -31,7 +31,7 @@ public class PostController {
     private final LikedService likedService;
 
     /**
-     * 메인페이지에서 게시글 리스트를 3개씩 불러오는 메서드
+     * 메인페이지에서 게시글 리스트를 3개씩 요청
      * @param page
      * @param sort
      * @return
@@ -44,7 +44,7 @@ public class PostController {
     }
 
     /**
-     * 새로운 게시글을 등록하는 메서드
+     * 새로운 게시글을 등록 요청
      * @param postAddRequest
      * @param request
      * @return
@@ -92,7 +92,9 @@ public class PostController {
 
 
     /**
-     * 게시글 삭제 요청
+     * 게시글을 삭제 요청
+     * @param postId
+     * @param request
      */
     @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
@@ -105,6 +107,8 @@ public class PostController {
 
     /**
      * 좋아요 요청
+     * @param postId
+     * @param request
      */
     @PostMapping("/{postId}/likes")
     @ResponseStatus(HttpStatus.OK)
@@ -116,7 +120,11 @@ public class PostController {
     }
 
     /**
-     * 새로운 댓글 요청
+     * 새로운 댓글 삭제 요청
+     * @param commentDto
+     * @param postId
+     * @param request
+     * @return
      */
     @PostMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.OK)
