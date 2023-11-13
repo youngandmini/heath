@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberResponseDto {
+public class MemberResponse {
 
     private Long memberId;
     private String profileImgUrl;
@@ -20,9 +20,9 @@ public class MemberResponseDto {
     private String userStatusMessage;
     private List<MemberGoalInfo> goals;
 
-    public static MemberResponseDto of(Member member) {
+    public static MemberResponse of(Member member) {
 
-        return new MemberResponseDto(
+        return new MemberResponse(
                 member.getId(),
                 member.getProfileImgUrl(),
                 member.getNickname(),

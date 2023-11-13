@@ -5,7 +5,7 @@ import heavysnow.heath.dto.goal.GoalCreateRequest;
 import heavysnow.heath.dto.goal.GoalCreateResponse;
 import heavysnow.heath.dto.goal.GoalUpdateRequest;
 import heavysnow.heath.dto.member.MemberRequest;
-import heavysnow.heath.dto.member.MemberResponseDto;
+import heavysnow.heath.dto.member.MemberResponse;
 import heavysnow.heath.dto.post.PostDatesResponseDto;
 import heavysnow.heath.dto.post.PostListResponse;
 import heavysnow.heath.exception.UnauthorizedException;
@@ -35,8 +35,8 @@ public class MemberController {
      */
     @GetMapping("/{memberId}")
     @ResponseStatus(HttpStatus.OK)
-    public MemberResponseDto getMember(@PathVariable("memberId") Long memberId) {
-        MemberResponseDto response = memberService.findMemberWithGoals(memberId);
+    public MemberResponse getMember(@PathVariable("memberId") Long memberId) {
+        MemberResponse response = memberService.findMemberWithGoals(memberId);
         return response;
     }
 

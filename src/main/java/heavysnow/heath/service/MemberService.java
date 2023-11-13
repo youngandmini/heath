@@ -2,7 +2,7 @@ package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.member.MemberRequest;
-import heavysnow.heath.dto.member.MemberResponseDto;
+import heavysnow.heath.dto.member.MemberResponse;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
@@ -46,9 +46,9 @@ public class MemberService {
 
     //fetch, join
     //Member를 반환하는 것에서 MemberResponseDto를 반환하도록 변경
-    public MemberResponseDto findMemberWithGoals(Long memberId){
+    public MemberResponse findMemberWithGoals(Long memberId){
         Member member = memberRepository.findByIdWithGoals(memberId).orElseThrow(NotFoundException::new);
 
-        return MemberResponseDto.of(member);
+        return MemberResponse.of(member);
     }
 }
