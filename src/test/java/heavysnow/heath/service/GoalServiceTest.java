@@ -3,7 +3,7 @@ package heavysnow.heath.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.domain.Goal;
 import heavysnow.heath.dto.goal.GoalCreateRequest;
-import heavysnow.heath.dto.goal.GoalUpdateDto;
+import heavysnow.heath.dto.goal.GoalUpdateRequest;
 import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.repository.GoalRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -90,7 +90,7 @@ class GoalServiceTest {
 
         Boolean isAchieved = true;
 
-        GoalUpdateDto updateDto = new GoalUpdateDto(isAchieved);
+        GoalUpdateRequest updateDto = new GoalUpdateRequest(isAchieved);
 
 
         // when

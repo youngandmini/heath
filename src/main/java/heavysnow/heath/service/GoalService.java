@@ -4,7 +4,7 @@ import heavysnow.heath.domain.Goal;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.goal.GoalCreateRequest;
 import heavysnow.heath.dto.goal.GoalCreateResponse;
-import heavysnow.heath.dto.goal.GoalUpdateDto;
+import heavysnow.heath.dto.goal.GoalUpdateRequest;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.GoalRepository;
@@ -44,7 +44,7 @@ public class GoalService {
     // 수정 : 특정 멤버에 대한 목표 수정하는 메서드
     // 반환 타입 void로 변경
     @Transactional
-    public void updateGoalForMember(Long loginMemberId, Long memberId, Long goalId, GoalUpdateDto updateDto){
+    public void updateGoalForMember(Long loginMemberId, Long memberId, Long goalId, GoalUpdateRequest updateDto){
         // 목표 조회
         Goal goal = goalRepository.findByIdAndMemberId(goalId, memberId).orElseThrow(NotFoundException::new);
 

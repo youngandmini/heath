@@ -3,7 +3,7 @@ package heavysnow.heath.controller;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.goal.GoalCreateRequest;
 import heavysnow.heath.dto.goal.GoalCreateResponse;
-import heavysnow.heath.dto.goal.GoalUpdateDto;
+import heavysnow.heath.dto.goal.GoalUpdateRequest;
 import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.dto.member.MemberResponseDto;
 import heavysnow.heath.dto.post.PostDatesResponseDto;
@@ -123,17 +123,17 @@ public class MemberController {
      * 회원 목표를 성공 / 미성공으로 변경하기 위한 요청
      * @param memberId: 수정할 목표가 속한 멤버 아이디
      * @param goalId: 수정할 목표 아이디
-     * @param goalUpdateDto: 달성 여부
+     * @param goalUpdateRequest: 달성 여부
      * @param request: 로그인 정보
      */
     @PatchMapping("/{memberId}/goals/{goalId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateGoal(@PathVariable("memberId") Long memberId, @PathVariable("goalId") Long goalId, @RequestBody GoalUpdateDto goalUpdateDto, HttpServletRequest request) {
+    public void updateGoal(@PathVariable("memberId") Long memberId, @PathVariable("goalId") Long goalId, @RequestBody GoalUpdateRequest goalUpdateRequest, HttpServletRequest request) {
         // 인증 토큰 확인
         Optional<Long> loginMemberOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberOptional.orElseThrow(UnauthorizedException::new);
 
-        goalService.updateGoalForMember(loginMemberId, memberId, goalId, goalUpdateDto);
+        goalService.updateGoalForMember(loginMemberId, memberId, goalId, goalUpdateRequest);
     }
 
     /**

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class GoalUpdateDto {
+public class GoalUpdateRequest {
     private boolean isAchieved;
 }
