@@ -9,6 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class GoalUpdateDto {
-    private String content;
     private boolean isAchieved;
 }

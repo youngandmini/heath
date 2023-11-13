@@ -35,8 +35,7 @@ public class Goal {
     }
 
     // 엔티티 내부 udpate 메서드
-    public void update(String content, boolean isAchieved){
-        this.content = content;
+    public void update(boolean isAchieved){
         this.isAchieved = isAchieved;
     }
 

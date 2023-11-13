@@ -90,6 +90,7 @@ public class MemberController {
                                              HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+
         memberService.editMember(loginMemberId, memberId, memberDto);
         return ResponseEntity.ok().build();
     }

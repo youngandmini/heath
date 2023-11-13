@@ -57,7 +57,7 @@ public class GoalService {
 
 
         // 값 변경
-        goal.update(updateDto.getContent(), updateDto.isAchieved());
+        goal.update(updateDto.isAchieved());
     }
 
 

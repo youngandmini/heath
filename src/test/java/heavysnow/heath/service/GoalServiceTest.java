@@ -67,7 +67,7 @@ class GoalServiceTest {
         assertThat(findGoal.isAchieved()).isEqualTo(goalCreationDto.isAchieved());
     }
 
-    @DisplayName("updateGoalForMember : 특정 멤버에 대한 목표를 수정한다.")
+    @DisplayName("updateGoalForMember : 특정 멤버에 대한 목표의 달성 상태를 수정한다.")
     @Test
     @Transactional
     public void updateGoal() throws Exception {
@@ -93,10 +93,9 @@ class GoalServiceTest {
         Long savedGoalId1 = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreationDto1).getGoalId();
         Long savedGoalId2 = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreationDto2).getGoalId();
 
-        String updatedContent = "update content 1";
         Boolean isAchieved = true;
 
-        GoalUpdateDto updateDto = new GoalUpdateDto(updatedContent, isAchieved);
+        GoalUpdateDto updateDto = new GoalUpdateDto(isAchieved);
 
 
         // when
@@ -104,7 +103,6 @@ class GoalServiceTest {
         Goal findGoal1 = goalRepository.findById(savedGoalId1).get();
 
         // then
-        assertThat(findGoal1.getContent()).isEqualTo(updatedContent);
         assertThat(findGoal1.isAchieved()).isEqualTo(isAchieved);
 
     }
