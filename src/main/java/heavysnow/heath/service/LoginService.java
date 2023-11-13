@@ -4,7 +4,7 @@ package heavysnow.heath.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.domain.Member;
-import heavysnow.heath.dto.LoginResponseDto;
+import heavysnow.heath.dto.login.LoginResponseDto;
 import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.repository.MemberRepository;
