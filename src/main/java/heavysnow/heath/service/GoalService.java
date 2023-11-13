@@ -15,13 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class GoalService {
     private final GoalRepository goalRepository;
     private final MemberRepository memberRepository;
 
-    @Transactional
-    // 특정 멤버에 대한 목표를 생성하는 메서드
-    // 반환 타입 Long(goalId)로 변경
+    /**
+     * 특정 멤버에 대한 목표를 생성하는 메서드
+     * @param loginMemberId: 해당 멤버가 접속하여
+     * @param memberId: 해당 멤버에
+     * @param goalDto: 해당 내용으로 목표를 등록한다.
+     * @return: 목표의 id 값을 반환
+     */
     public GoalCreateResponse createGoalForMember(Long loginMemberId, Long memberId, GoalCreateRequest goalDto){
 
         // JPA save()메서드로 GoalCreationDto에 저장된 값을 Goal 데이터 베이스에 저장
@@ -41,9 +46,13 @@ public class GoalService {
         return new GoalCreateResponse(savedGoal.getId());
     }
 
-    // 수정 : 특정 멤버에 대한 목표 수정하는 메서드
-    // 반환 타입 void로 변경
-    @Transactional
+    /**
+     * 특정 멤버에 대한 목표 수정하는 메서드
+     * @param loginMemberId: 해당 멤버로 접속하여
+     * @param memberId: 해당 멤버의
+     * @param goalId: 해당 목표를
+     * @param updateDto: 해당 내용으로 수정한다.
+     */
     public void updateGoalForMember(Long loginMemberId, Long memberId, Long goalId, GoalUpdateRequest updateDto){
         // 목표 조회
         Goal goal = goalRepository.findByIdAndMemberId(goalId, memberId).orElseThrow(NotFoundException::new);
@@ -52,14 +61,16 @@ public class GoalService {
             throw new ForbiddenException();
         }
 
-
         // 값 변경
         goal.update(updateDto.isAchieved());
     }
 
-
-    // 삭제 : 특정 멤버에 대한 목표 삭제하는 메서드
-    @Transactional
+    /**
+     * 특정 멤버에 대한 목표 삭제하는 메서드
+     * @param loginMemberId: 해당 멤버가 접속하여
+     * @param memberId: 해당 멤버의
+     * @param goalId:해당 목표를 삭제한다.
+     */
     public void deleteGoalForMember(Long loginMemberId, Long memberId, Long goalId){
 
         Member member = memberRepository.findById(memberId).orElseThrow();
