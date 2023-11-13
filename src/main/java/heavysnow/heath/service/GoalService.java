@@ -3,7 +3,11 @@ package heavysnow.heath.service;
 import heavysnow.heath.domain.Goal;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.GoalCreationDto;
+import heavysnow.heath.dto.GoalIdResponseDto;
 import heavysnow.heath.dto.GoalUpdateDto;
+import heavysnow.heath.exception.ForbiddenException;
+import heavysnow.heath.exception.NotFoundException;
+import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.repository.GoalRepository;
 import heavysnow.heath.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,41 +25,44 @@ public class GoalService {
 
     @Transactional
     // 특정 멤버에 대한 목표를 생성하는 메서드
-    public Goal createGoalForMember(Long memberId, GoalCreationDto goalDto){
+    // 반환 타입 Long(goalId)로 변경
+    public GoalIdResponseDto createGoalForMember(Long tokenId, Long memberId, GoalCreationDto goalDto) {
         // JPA save()메서드로 GoalCreationDto에 저장된 값을 Goal 데이터 베이스에 저장
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을수 없습니다." + memberId));
-
+        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundException::new);
+        if (!tokenId.equals(memberId)) {
+            throw new ForbiddenException();
+        }
         Goal goal = Goal.builder()
                 .member(member)
                 .content(goalDto.getContent())
                 .isAchieved(goalDto.isAchieved())
                 .build();
 
-        return goalRepository.save(goal);
+        Goal savedGoal = goalRepository.save(goal);
+        return new GoalIdResponseDto(savedGoal.getId());
     }
 
     // 수정 : 특정 멤버에 대한 목표 수정하는 메서드
+    // 반환 타입 void로 변경
     @Transactional
-    public Goal updateGoalForMember(Long memberId, Long goalId, GoalUpdateDto updateDto){
+    public void updateGoalForMember(Long memberId, Long goalId, GoalUpdateDto updateDto){
         // 목표 조회
         Goal goal = goalRepository.findByIdAndMemberId(goalId, memberId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 멤버에 대한 목표를 찾을 수 업습니다."));
 
         // 값 변경
         goal.update(updateDto.getContent(), updateDto.isAchieved());
-
-        // 변경 사항 데베 반영
-        return goal;
     }
 
 
     // 삭제 : 특정 멤버에 대한 목표 삭제하는 메서드
     @Transactional
-    public void deleteGoalForMember(Long memberId, Long goalId){
+    public void deleteGoalForMember(Long tokenId, Long memberId, Long goalId){
+        if (!tokenId.equals(memberId)) {
+            throw new ForbiddenException();
+        }
         // 목표 조회
-        Goal goal = goalRepository.findByIdAndMemberId(goalId, memberId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 멤버에 대한 목표를 찾을 수 업습니다."));
+        Goal goal = goalRepository.findByIdAndMemberId(goalId, memberId).orElseThrow(NotFoundException::new);
 
         goalRepository.delete(goal);
     }

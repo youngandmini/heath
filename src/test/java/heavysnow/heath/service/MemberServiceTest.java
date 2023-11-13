@@ -33,7 +33,7 @@ class MemberServiceTest {
                 .build();
 
         //when
-        Member saveId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberDto);
 
         //then
         Member findMember = memberRepository.findByUsername(memberDto.getUsername()).orElse(null);
@@ -52,15 +52,16 @@ class MemberServiceTest {
                 .userStatusMessage("fighting!!!")
                 .profileImgUrl("None")
                 .build();
-        memberService.createUser(memberDto);
+        Long savedId = memberService.createUser(memberDto);
         MemberDto dto = MemberDto.builder()
                 .username("aaa")
                 .nickname("hwi")
                 .userStatusMessage("good!")
                 .profileImgUrl("Null")
                 .build();
-        memberService.editMember(1L, dto);
-        Member result = memberRepository.findById(1L).orElse(null);
+        Long tokenId = memberRepository.findById(savedId).orElseThrow().getId();
+        memberService.editMember(tokenId, savedId, dto);
+        Member result = memberRepository.findById(savedId).orElse(null);
         assertEquals(result.getUsername(), dto.getUsername());
         assertEquals(result.getNickname(), dto.getNickname());
         assertEquals(result.getUserStatusMessage(), dto.getUserStatusMessage());
