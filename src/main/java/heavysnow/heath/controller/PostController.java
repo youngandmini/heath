@@ -1,7 +1,7 @@
 package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
-import heavysnow.heath.dto.comment.CommentCreateDto;
+import heavysnow.heath.dto.comment.CommentCreateRequest;
 import heavysnow.heath.dto.comment.CommentCreateResponseDto;
 import heavysnow.heath.dto.comment.CommentUpdateDto;
 import heavysnow.heath.dto.post.PostAddRequest;
@@ -127,7 +127,7 @@ public class PostController {
      */
     @PostMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.OK)
-    public CommentCreateResponseDto addComment(@RequestBody CommentCreateDto commentDto, @PathVariable("postId") Long postId, HttpServletRequest request) {
+    public CommentCreateResponseDto addComment(@RequestBody CommentCreateRequest commentDto, @PathVariable("postId") Long postId, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
@@ -144,7 +144,7 @@ public class PostController {
      */
     @PostMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public CommentCreateResponseDto addReply(@RequestBody CommentCreateDto commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
+    public CommentCreateResponseDto addReply(@RequestBody CommentCreateRequest commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 

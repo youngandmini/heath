@@ -3,7 +3,7 @@ package heavysnow.heath.service;
 import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.domain.Post;
-import heavysnow.heath.dto.comment.CommentCreateDto;
+import heavysnow.heath.dto.comment.CommentCreateRequest;
 import heavysnow.heath.dto.comment.CommentCreateResponseDto;
 import heavysnow.heath.dto.comment.CommentUpdateDto;
 import heavysnow.heath.exception.BadRequestException;
@@ -26,10 +26,10 @@ public class CommentService {
 
     /**
      * 생성 : 맴버의 게시글에 대한 댓글 생성하는 메서드
-     * @param commentCreateDto
+     * @param commentCreateRequest
      * @return
      */
-    public CommentCreateResponseDto createComment(Long postId, CommentCreateDto commentCreateDto, Long parentCommentId, Long loginMemberId) {
+    public CommentCreateResponseDto createComment(Long postId, CommentCreateRequest commentCreateRequest, Long parentCommentId, Long loginMemberId) {
         Post post = postRepository.findById(postId).orElseThrow(NotFoundException::new);
 
         Member member = memberRepository.findById(loginMemberId).orElseThrow();
@@ -39,7 +39,7 @@ public class CommentService {
             parentComment = commentRepository.findById(parentCommentId)
                     .orElseThrow(NotFoundException::new);
         }
-        Comment comment = Comment.createComment(post, member, commentCreateDto.getContent(), parentComment);
+        Comment comment = Comment.createComment(post, member, commentCreateRequest.getContent(), parentComment);
         Comment savedcomment = commentRepository.save(comment);
 
         return CommentCreateResponseDto.of(savedcomment.getId());

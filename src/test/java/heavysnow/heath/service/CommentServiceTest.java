@@ -2,7 +2,7 @@ package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Member;
-import heavysnow.heath.dto.comment.CommentCreateDto;
+import heavysnow.heath.dto.comment.CommentCreateRequest;
 import heavysnow.heath.dto.comment.CommentUpdateDto;
 import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.dto.post.PostAddRequest;
@@ -112,14 +112,14 @@ public class CommentServiceTest {
         String commentContent1 = "제 게시글 입니다.";
         String commentContent2 = "잘 보고 갑니다~";
         // 자기 자신 댓글
-        CommentCreateDto commentCreateDto1 = new CommentCreateDto(commentContent1);
+        CommentCreateRequest commentCreateRequest1 = new CommentCreateRequest(commentContent1);
         // 타인 댓글
-        CommentCreateDto commentCreateDto2 = new CommentCreateDto(commentContent2);
+        CommentCreateRequest commentCreateRequest2 = new CommentCreateRequest(commentContent2);
 
 
         // when
-        Long savedcommentId1 = commentService.createComment(savedPostId1, commentCreateDto1, null, savedMemberId1).getCommentId();
-        Long savedcommentId2 = commentService.createComment(savedPostId1, commentCreateDto2, null, savedMemberId2).getCommentId();
+        Long savedcommentId1 = commentService.createComment(savedPostId1, commentCreateRequest1, null, savedMemberId1).getCommentId();
+        Long savedcommentId2 = commentService.createComment(savedPostId1, commentCreateRequest2, null, savedMemberId2).getCommentId();
 
         // then
         Comment foundComment1 = commentRepository.findById(savedcommentId1)
@@ -148,10 +148,10 @@ public class CommentServiceTest {
         String replyComment = "대댓글 입니다.";
 
         //댓글 저장
-        CommentCreateDto commentCreateDto = new CommentCreateDto(commentContent1);
-        Long parentCommentId = commentService.createComment(savedPostId1, commentCreateDto, null, savedMemberId1).getCommentId();
+        CommentCreateRequest commentCreateRequest = new CommentCreateRequest(commentContent1);
+        Long parentCommentId = commentService.createComment(savedPostId1, commentCreateRequest, null, savedMemberId1).getCommentId();
 
-        CommentCreateDto childCommentDto = new CommentCreateDto(replyComment);
+        CommentCreateRequest childCommentDto = new CommentCreateRequest(replyComment);
 
         // when
         Long replyCommentId = commentService.createComment(savedPostId1, childCommentDto, parentCommentId, savedMemberId1).getCommentId();
@@ -174,8 +174,8 @@ public class CommentServiceTest {
         // given
         String updateContent = "수정된 댓글 입니다.";
 
-        CommentCreateDto commentCreateDto = new CommentCreateDto("원래 댓글입니다.");
-        Long savedCommentId = commentService.createComment(savedPostId1, commentCreateDto, null, savedMemberId1).getCommentId();
+        CommentCreateRequest commentCreateRequest = new CommentCreateRequest("원래 댓글입니다.");
+        Long savedCommentId = commentService.createComment(savedPostId1, commentCreateRequest, null, savedMemberId1).getCommentId();
 
         // when
         CommentUpdateDto commentUpdateDto = new CommentUpdateDto(updateContent);
@@ -191,8 +191,8 @@ public class CommentServiceTest {
     @Test
     void deleteCommentTest(){
         //given
-        CommentCreateDto commentCreateDto = new CommentCreateDto("안녕하세요.");
-        Long savedCommentId = commentService.createComment(savedPostId1, commentCreateDto, null, savedMemberId1).getCommentId();
+        CommentCreateRequest commentCreateRequest = new CommentCreateRequest("안녕하세요.");
+        Long savedCommentId = commentService.createComment(savedPostId1, commentCreateRequest, null, savedMemberId1).getCommentId();
 
         // when
         commentService.deleteComment(savedCommentId, savedMemberId1);
@@ -206,9 +206,9 @@ public class CommentServiceTest {
     @Test
     void deleteReplyTest() {
         //given
-        CommentCreateDto commentCreateDto = new CommentCreateDto("안녕하세요.");
-        Long savedCommentId = commentService.createComment(savedPostId1, commentCreateDto, null, savedMemberId1).getCommentId();
-        CommentCreateDto replyCreateDto = new CommentCreateDto("안녕하세요.");
+        CommentCreateRequest commentCreateRequest = new CommentCreateRequest("안녕하세요.");
+        Long savedCommentId = commentService.createComment(savedPostId1, commentCreateRequest, null, savedMemberId1).getCommentId();
+        CommentCreateRequest replyCreateDto = new CommentCreateRequest("안녕하세요.");
         Long savedReplyId = commentService.createComment(savedPostId1, replyCreateDto, savedCommentId, savedMemberId1).getCommentId();
 
         // when

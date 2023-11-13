@@ -1,6 +1,6 @@
 package heavysnow.heath.service;
 
-import heavysnow.heath.dto.comment.CommentCreateDto;
+import heavysnow.heath.dto.comment.CommentCreateRequest;
 import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
@@ -233,14 +233,14 @@ class PostServiceTest {
         Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
 
         //댓글 달기
-        CommentCreateDto commentDto1 = new CommentCreateDto("댓글1");
-        CommentCreateDto commentDto2 = new CommentCreateDto("댓글2");
+        CommentCreateRequest commentDto1 = new CommentCreateRequest("댓글1");
+        CommentCreateRequest commentDto2 = new CommentCreateRequest("댓글2");
 
         Long savedCommentId1 = commentService.createComment(savedPostId1, commentDto1, null, memberId).getCommentId();
         Long savedCommentId2 = commentService.createComment(savedPostId1, commentDto2, null, memberId).getCommentId();
 
-        CommentCreateDto replyDto1 = new CommentCreateDto("대댓글1");
-        CommentCreateDto replyDto2 = new CommentCreateDto("대댓글2");
+        CommentCreateRequest replyDto1 = new CommentCreateRequest("대댓글1");
+        CommentCreateRequest replyDto2 = new CommentCreateRequest("대댓글2");
         Long savedReplyId1 = commentService.createComment(savedPostId1, replyDto1, savedCommentId1, memberId).getCommentId();
         Long savedReplyId2 = commentService.createComment(savedPostId1, replyDto2, savedCommentId2, memberId).getCommentId();
 
@@ -314,14 +314,14 @@ class PostServiceTest {
         likedService.changeMemberPostLiked(savedPostId1, memberId2);
 
         //댓글 달기
-        CommentCreateDto commentDto1 = new CommentCreateDto("댓글1");
-        CommentCreateDto commentDto2 = new CommentCreateDto("댓글2");
+        CommentCreateRequest commentDto1 = new CommentCreateRequest("댓글1");
+        CommentCreateRequest commentDto2 = new CommentCreateRequest("댓글2");
 
         Long savedCommentId1 = commentService.createComment(savedPostId1, commentDto1, null, memberId1).getCommentId();
         Long savedCommentId2 = commentService.createComment(savedPostId1, commentDto2, null, memberId2).getCommentId();
 
-        CommentCreateDto replyDto1 = new CommentCreateDto("대댓글1");
-        CommentCreateDto replyDto2 = new CommentCreateDto("대댓글2");
+        CommentCreateRequest replyDto1 = new CommentCreateRequest("대댓글1");
+        CommentCreateRequest replyDto2 = new CommentCreateRequest("대댓글2");
         Long savedReplyId1 = commentService.createComment(savedPostId1, replyDto1, savedCommentId1, memberId2).getCommentId();
         Long savedReplyId2 = commentService.createComment(savedPostId1, replyDto2, savedCommentId2, memberId1).getCommentId();
 
