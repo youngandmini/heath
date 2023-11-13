@@ -4,7 +4,7 @@ import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.comment.CommentCreateDto;
 import heavysnow.heath.dto.comment.CommentUpdateDto;
-import heavysnow.heath.dto.MemberDto;
+import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.repository.CommentRepository;
 import heavysnow.heath.repository.MemberRepository;

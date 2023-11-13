@@ -1,4 +1,4 @@
-package heavysnow.heath.dto;
+package heavysnow.heath.dto.member;
 
 import heavysnow.heath.domain.Goal;
 import heavysnow.heath.domain.Member;

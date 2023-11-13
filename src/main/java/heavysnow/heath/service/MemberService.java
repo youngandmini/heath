@@ -1,12 +1,11 @@
 package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Member;
-import heavysnow.heath.dto.MemberDto;
-import heavysnow.heath.dto.MemberResponseDto;
+import heavysnow.heath.dto.member.MemberDto;
+import heavysnow.heath.dto.member.MemberResponseDto;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
-import heavysnow.heath.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

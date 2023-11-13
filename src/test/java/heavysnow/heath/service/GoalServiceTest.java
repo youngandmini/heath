@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.domain.Goal;
 import heavysnow.heath.dto.goal.GoalCreationDto;
 import heavysnow.heath.dto.goal.GoalUpdateDto;
-import heavysnow.heath.dto.MemberDto;
+import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.repository.GoalRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

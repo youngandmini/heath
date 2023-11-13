@@ -2,7 +2,7 @@ package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.goal.GoalCreationDto;
-import heavysnow.heath.dto.MemberDto;
+import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.GoalRepository;
 import heavysnow.heath.repository.MemberRepository;

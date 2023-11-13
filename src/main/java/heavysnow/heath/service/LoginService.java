@@ -5,17 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.LoginResponseDto;
-import heavysnow.heath.dto.MemberDto;
+import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.Base64;
 import java.util.Base64.Decoder;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
