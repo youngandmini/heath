@@ -1,4 +1,4 @@
-package heavysnow.heath.dto;
+package heavysnow.heath.dto.goal;
 
 import heavysnow.heath.domain.Goal;
 import lombok.AllArgsConstructor;

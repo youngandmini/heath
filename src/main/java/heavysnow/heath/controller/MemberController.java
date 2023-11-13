@@ -2,6 +2,9 @@ package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.*;
+import heavysnow.heath.dto.goal.GoalCreationDto;
+import heavysnow.heath.dto.goal.GoalIdResponseDto;
+import heavysnow.heath.dto.goal.GoalUpdateDto;
 import heavysnow.heath.dto.post.PostListResponse;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.GoalService;
@@ -106,7 +109,7 @@ public class MemberController {
     @PostMapping("/{memberId}/goals")
     @ResponseStatus(HttpStatus.OK)
     public GoalIdResponseDto addGoal(@PathVariable("memberId") Long memberId, @RequestBody GoalCreationDto goalCreationDto,
-                                                     HttpServletRequest request) {
+                                     HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 

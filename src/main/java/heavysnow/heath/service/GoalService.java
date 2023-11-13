@@ -2,19 +2,16 @@ package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Goal;
 import heavysnow.heath.domain.Member;
-import heavysnow.heath.dto.GoalCreationDto;
-import heavysnow.heath.dto.GoalIdResponseDto;
-import heavysnow.heath.dto.GoalUpdateDto;
+import heavysnow.heath.dto.goal.GoalCreationDto;
+import heavysnow.heath.dto.goal.GoalIdResponseDto;
+import heavysnow.heath.dto.goal.GoalUpdateDto;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.GoalRepository;
 import heavysnow.heath.repository.MemberRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
