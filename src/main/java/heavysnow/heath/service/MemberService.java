@@ -29,6 +29,7 @@ public class MemberService {
         entity.update(dto.getNickname(), dto.getUserStatusMessage(), dto.getProfileImgUrl());
     }
 
+
     //fetch, join
     //Member를 반환하는 것에서 MemberResponseDto를 반환하도록 변경
     public MemberResponseDto findMemberWithGoals(Long memberId){
@@ -36,4 +37,6 @@ public class MemberService {
 
         return MemberResponseDto.of(member);
     }
+
+
 }
