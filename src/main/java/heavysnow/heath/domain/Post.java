@@ -33,13 +33,13 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "main_image_id")
     private PostImage mainImage;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post")
     private List<PostImage> postImages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
   
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post")
     private List<MemberPostLiked> memberPostLikedList = new ArrayList<>();
 
     public Post(Member member, String title, String content, int consecutiveDays) {

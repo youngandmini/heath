@@ -214,10 +214,13 @@ public class CommentServiceTest {
 
         // when
         commentService.deleteComment(savedCommentId, savedMemberId1);
-        Comment comment = commentRepository.findById(savedReplyId).orElse(null);
+//        Comment comment = commentRepository.findById(savedReplyId).orElse(null);
+        em.flush();
+        em.clear();
 
         // then
-        assertThat(comment).isNull();
+        assertThat(commentRepository.findById(savedReplyId).isEmpty()).isTrue();
+//        assertThat(comment).isNull();
     }
 
 }

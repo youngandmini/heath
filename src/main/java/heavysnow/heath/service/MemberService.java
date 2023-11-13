@@ -3,6 +3,8 @@ package heavysnow.heath.service;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.dto.MemberResponseDto;
+import heavysnow.heath.exception.ForbiddenException;
+import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
 import heavysnow.heath.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +31,20 @@ public class MemberService {
         entity.update(dto.getNickname(), dto.getUserStatusMessage(), dto.getProfileImgUrl());
     }
 
+    @Transactional
+    public void deleteMember(Long memberId, Long LoginMemberId) {
+        Member findMember = memberRepository.findById(memberId).orElseThrow(NotFoundException::new);
+        if (!findMember.getId().equals(LoginMemberId)) {
+            throw new ForbiddenException();
+        }
+
+        memberRepository.delete(findMember);
+    }
+
     //fetch, join
     //Member를 반환하는 것에서 MemberResponseDto를 반환하도록 변경
     public MemberResponseDto findMemberWithGoals(Long memberId){
-        Member member = memberRepository.findByIdWithGoals(memberId).orElseThrow();
+        Member member = memberRepository.findByIdWithGoals(memberId).orElseThrow(NotFoundException::new);
 
         return MemberResponseDto.of(member);
     }
