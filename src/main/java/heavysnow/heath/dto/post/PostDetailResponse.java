@@ -36,7 +36,7 @@ public class PostDetailResponse {
         return isLiked;
     }
 
-    public static PostDetailResponse of(Post post, Long memberId, List<Comment> parentComments) {
+    public static PostDetailResponse of(Post post, Long loginMemberId, List<Comment> parentComments) {
         return new PostDetailResponse(
                 post.getMember().getId(),
                 post.getMember().getProfileImgUrl(),
@@ -47,14 +47,17 @@ public class PostDetailResponse {
                 post.getCreatedDate().toLocalDate(),
                 post.getConsecutiveDays(),
                 post.getMemberPostLikedList().size(),
-                isMemberPostLiked(post, memberId),
+                isMemberPostLiked(post, loginMemberId),
                 post.getPostImages().stream().map(PostImage::getImgUrl).collect(Collectors.toList()),
 //                PostImageInfo.listOf(post.getPostImages()),
                 CommentResponse.listOf(parentComments)
         );
     }
 
-    private static boolean isMemberPostLiked(Post post, Long memberId) {
-        return post.getMemberPostLikedList().stream().anyMatch(mpl -> Objects.equals(mpl.getMember().getId(), memberId));
+    private static boolean isMemberPostLiked(Post post, Long loginMemberId) {
+        if (loginMemberId == null) {
+            return false;
+        }
+        return post.getMemberPostLikedList().stream().anyMatch(mpl -> Objects.equals(mpl.getMember().getId(), loginMemberId));
     }
 }
