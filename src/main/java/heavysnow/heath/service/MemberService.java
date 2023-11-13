@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PostRepository postRepository;
 
     @Transactional
     public Long createUser(MemberDto dto){
@@ -26,9 +25,14 @@ public class MemberService {
     }
 
     @Transactional
-    public void editMember(Long memberId, MemberDto dto) {
-        Member entity = memberRepository.findById(memberId).orElseThrow();
-        entity.update(dto.getNickname(), dto.getUserStatusMessage(), dto.getProfileImgUrl());
+    public void editMember(Long loginMemberId, Long memberId, MemberDto dto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundException::new);
+
+        if (!loginMemberId.equals(memberId)) {
+            throw new ForbiddenException();
+        }
+
+        member.update(dto.getNickname(), dto.getUserStatusMessage(), dto.getProfileImgUrl());
     }
 
     @Transactional

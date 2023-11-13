@@ -74,7 +74,7 @@ class MemberServiceTest {
                 .userStatusMessage("good!")
                 .profileImgUrl("Null")
                 .build();
-        memberService.editMember(savedId, dto);
+        memberService.editMember(savedId, savedId, dto);
         Member result = memberRepository.findById(savedId).orElse(null);
         assertEquals(result.getUsername(), dto.getUsername());
         assertEquals(result.getNickname(), dto.getNickname());
@@ -110,8 +110,8 @@ class MemberServiceTest {
                 .build();
         Long savedId = memberService.createUser(memberDto);
 
-        Long goalId1 = goalService.createGoalForMember(savedId, new GoalCreationDto("목표1", false));
-        Long goalId2 = goalService.createGoalForMember(savedId, new GoalCreationDto("목표2", false));
+        Long goalId1 = goalService.createGoalForMember(savedId, savedId, new GoalCreationDto("목표1", false)).getGoalId();
+        Long goalId2 = goalService.createGoalForMember(savedId, savedId, new GoalCreationDto("목표2", false)).getGoalId();
 
         em.flush();
         em.clear();
