@@ -46,6 +46,8 @@ public class CommentServiceTest {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private EntityManager em;
 
     private Long savedMemberId1;
 
@@ -53,8 +55,13 @@ public class CommentServiceTest {
     private Long savedPostId1;
     private Long savedPostId2;
 
+
     @BeforeEach
     void before() {
+        //mysql의 date_format 형태의 sql 문법을 h2 DB에서 구동될 수 있도록 ALIAS를 등록
+        em.createNativeQuery("CREATE ALIAS IF NOT EXISTS date_format FOR \"heavysnow.heath.alias.H2DateFormatAlias.date_format\"")
+                .executeUpdate();
+
         /**
          * 멤버 생성
          * 멤버1(savedMemberId1)과 멤버2(savedMemberId2)를 생성한다.
@@ -94,8 +101,8 @@ public class CommentServiceTest {
 
         PostAddRequest postAddRequest1 = new PostAddRequest(member.getId(), "게시글 제목1", "게시글 내용1", imgUrls1);
         PostAddRequest postAddRequest2 = new PostAddRequest(member.getId(), "게시글 제목2", "게시글 내용2", imgUrls1);
-        savedPostId1 = postService.writePost(postAddRequest1);
-        savedPostId2 = postService.writePost(postAddRequest2);
+        savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        savedPostId2 = postService.writePost(postAddRequest2).getPostId();
     }
 
 
@@ -112,8 +119,8 @@ public class CommentServiceTest {
 
 
         // when
-        Long savedcommentId1 = commentService.createComment(commentCreateDto1);
-        Long savedcommentId2 = commentService.createComment(commentCreateDto2);
+        Long savedcommentId1 = commentService.createComment(commentCreateDto1).getCommentId();
+        Long savedcommentId2 = commentService.createComment(commentCreateDto2).getCommentId();
 
         // then
         Comment foundComment1 = commentRepository.findById(savedcommentId1)
@@ -143,12 +150,12 @@ public class CommentServiceTest {
 
         //댓글 저장
         CommentCreateDto parentCommentDto = new CommentCreateDto(savedPostId1, savedMemberId1, commentContent1, null);
-        Long parentCommentId = commentService.createComment(parentCommentDto);
+        Long parentCommentId = commentService.createComment(parentCommentDto).getCommentId();
 
         CommentCreateDto chiledCommentDto = new CommentCreateDto(savedPostId1, savedMemberId1, replayComment, parentCommentId);
 
         // when
-        Long replayCommentId = commentService.createComment(chiledCommentDto);
+        Long replayCommentId = commentService.createComment(chiledCommentDto).getCommentId();
 
         // then
         Comment foundReplyComment = commentRepository.findById(replayCommentId)
@@ -169,7 +176,7 @@ public class CommentServiceTest {
         String updateConntent = "수정된 댓글 입니다.";
 
         CommentCreateDto commentDto = new CommentCreateDto(savedPostId1, savedMemberId1, "원래 댓글입니다.", null);
-        Long savedCommentId = commentService.createComment(commentDto);
+        Long savedCommentId = commentService.createComment(commentDto).getCommentId();
 
         // when
         CommentUpdateDto commentUpdateDto = new CommentUpdateDto(savedPostId1, savedMemberId1, savedCommentId, updateConntent);
@@ -186,7 +193,7 @@ public class CommentServiceTest {
     void deleteCommentTest(){
         //given
         CommentCreateDto commentDto = new CommentCreateDto(savedPostId1, savedMemberId1, "안녕하세요.", null);
-        Long savedCommentId = commentService.createComment(commentDto);
+        Long savedCommentId = commentService.createComment(commentDto).getCommentId();
 
         // when
         commentService.deleteComment(savedCommentId, savedMemberId1);
@@ -201,16 +208,19 @@ public class CommentServiceTest {
     void deleteReplyTest() {
         //given
         CommentCreateDto commentDto = new CommentCreateDto(savedPostId1, savedMemberId1, "안녕하세요.", null);
-        Long savedCommentId = commentService.createComment(commentDto);
+        Long savedCommentId = commentService.createComment(commentDto).getCommentId();
         CommentCreateDto replyDto = new CommentCreateDto(savedPostId1, savedMemberId1, "안녕하세요.", savedCommentId);
-        Long savedReplyId = commentService.createComment(replyDto);
+        Long savedReplyId = commentService.createComment(replyDto).getCommentId();
 
         // when
         commentService.deleteComment(savedCommentId, savedMemberId1);
-        Comment comment = commentRepository.findById(savedReplyId).orElse(null);
+//        Comment comment = commentRepository.findById(savedReplyId).orElse(null);
+        em.flush();
+        em.clear();
 
         // then
-        assertThat(comment).isNull();
+        assertThat(commentRepository.findById(savedReplyId).isEmpty()).isTrue();
+//        assertThat(comment).isNull();
     }
 
 }

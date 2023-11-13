@@ -4,6 +4,7 @@ package heavysnow.heath.service;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.domain.MemberPostLiked;
 import heavysnow.heath.domain.Post;
+import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberPostLikedRepository;
 import heavysnow.heath.repository.MemberRepository;
 import heavysnow.heath.repository.PostRepository;
@@ -28,7 +29,7 @@ public class LikedService {
      * @param memberId
      */
     public void changeMemberPostLiked(Long postId, Long memberId) {
-        Post findPost = postRepository.findById(postId).orElseThrow();
+        Post findPost = postRepository.findById(postId).orElseThrow(NotFoundException::new);
         Member findMember = memberRepository.findById(memberId).orElseThrow();
 
         Optional<MemberPostLiked> memberPostLikedOptional = memberPostLikedRepository.findByMemberIdAndPostId(memberId, postId);
