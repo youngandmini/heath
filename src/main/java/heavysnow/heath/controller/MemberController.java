@@ -2,7 +2,7 @@ package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.*;
-import heavysnow.heath.dto.postdto.PostListResponse;
+import heavysnow.heath.dto.post.PostListResponse;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.GoalService;
 import heavysnow.heath.service.MemberService;

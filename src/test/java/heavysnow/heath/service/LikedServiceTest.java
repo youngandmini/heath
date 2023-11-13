@@ -3,7 +3,7 @@ package heavysnow.heath.service;
 import heavysnow.heath.domain.MemberPostLiked;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.dto.post.PostAddRequest;
-import heavysnow.heath.dto.postdto.PostDetailResponse;
+import heavysnow.heath.dto.post.PostDetailResponse;
 import heavysnow.heath.repository.MemberPostLikedRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

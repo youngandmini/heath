@@ -1,4 +1,4 @@
-package heavysnow.heath.dto.postdto;
+package heavysnow.heath.dto.post;
 
 import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Post;
