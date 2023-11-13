@@ -5,5 +5,4 @@ package heavysnow.heath.exception;
  * ex) 타인의 게시글을 삭제하는 등
  */
 public class ForbiddenException extends RuntimeException {
-
 }
