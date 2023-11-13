@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class PostDatesResponseDto {
+public class PostDatesResponse {
 
     private List<LocalDate> postDates;
 
-    public static PostDatesResponseDto of(List<LocalDateTime> postDatetimes) {
+    public static PostDatesResponse of(List<LocalDateTime> postDatetimes) {
 
-        return new PostDatesResponseDto(postDatetimes.stream().map(LocalDate::from).collect(Collectors.toList()));
+        return new PostDatesResponse(postDatetimes.stream().map(LocalDate::from).collect(Collectors.toList()));
     }
 }

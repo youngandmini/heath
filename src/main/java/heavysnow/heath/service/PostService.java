@@ -4,7 +4,7 @@ import heavysnow.heath.domain.Member;
 import heavysnow.heath.domain.Post;
 import heavysnow.heath.domain.PostImage;
 import heavysnow.heath.domain.Comment;
-import heavysnow.heath.dto.post.PostDatesResponseDto;
+import heavysnow.heath.dto.post.PostDatesResponse;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;
@@ -195,9 +195,9 @@ public class PostService {
      * @param month
      * @return
      */
-    public PostDatesResponseDto getPostDates(Long memberId, int year, int month) {
+    public PostDatesResponse getPostDates(Long memberId, int year, int month) {
         List<LocalDateTime> postDatetimes = postRepository.findDatesByMemberAndYearMonth(memberId, year, month);
-        return PostDatesResponseDto.of(postDatetimes);
+        return PostDatesResponse.of(postDatetimes);
     }
   
 }
