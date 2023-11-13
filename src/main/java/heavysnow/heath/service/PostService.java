@@ -39,10 +39,12 @@ public class PostService {
     private final PostImageRepository postImageRepository;
     private final CommentRepository commentRepository;
 
+
     /**
      * 게시글을 등록하는 메서드
-     * @param request
-     * @return
+     * @param loginMemberId: 해당 멤버로 접속하여
+     * @param request: 해당 정보로 게시글을 등록
+     * @return: 게시글의 id를 반환
      */
     @Transactional
     public PostAddResponse writePost(Long loginMemberId, PostAddRequest request) {
@@ -72,16 +74,18 @@ public class PostService {
         return PostAddResponse.of(post);
     }
 
+
     /**
      * 게시글을 수정하는 메서드
-     * @param request
-     * @param memberId
+     * @param postId: 해당 게시글을
+     * @param request: 해당 정보를 이용해
+     * @param loginMemberId: 해당 접속한 멤버가 게시글을 수정 요청
      */
     @Transactional
-    public void editPost(Long postId, PostEditRequest request, Long memberId) {
+    public void editPost(Long postId, PostEditRequest request, Long loginMemberId) {
         Post post = postRepository.findById(postId).orElseThrow(NotFoundException::new);
 
-        if (!post.getMember().getId().equals(memberId)) {
+        if (!post.getMember().getId().equals(loginMemberId)) {
             throw new ForbiddenException();
         }
 
@@ -98,9 +102,9 @@ public class PostService {
 
     /**
      * 기존에 저장된 이미지와 새로 요청된 이미지를 비교하여, 추가 및 삭제
-     * @param post
-     * @param oldImages
-     * @param editImages
+     * @param post: 해당 게시글에
+     * @param oldImages: 기존의 이미지와
+     * @param editImages: 새로 요청된 이미지를 비교하여 추가 / 삭제를 수행
      */
     private void imageUpdate(Post post, List<PostImage> oldImages, List<String> editImages) {
         // image 삭제
@@ -135,8 +139,8 @@ public class PostService {
 
     /**
      * 게시글을 삭제하는 메서드
-     * @param postId
-     * @param loginMemberId
+     * @param postId: 해당 게시글을
+     * @param loginMemberId: 해당 접속한 멤버가 삭제 요청
      */
     @Transactional
     public void deletePost(Long postId, Long loginMemberId) {
@@ -152,9 +156,9 @@ public class PostService {
   
     /**
      * 마이페이지에 사용되는 게시글 리스트를 가져오는 메서드
-     * @param memberId: 회원 아이디
-     * @param page: 페이지 넘버
-     * @return PostListResponseDto
+     * @param memberId: 해당 회원의
+     * @param page: 게시글의 해당 페이지를 요청
+     * @return 게시글 리스트를 반환
      */
     public PostListResponse getPostListByMember(Long memberId, int page) {
         Pageable pageable = PageRequest.of(page, 9);
@@ -164,9 +168,9 @@ public class PostService {
 
     /**
      * 메인페이지에 사용되는 게시글 리스트를 가져오는 메서드
-     * @param page: 페이지 넘버
-     * @param sort: 정렬할 컬럼
-     * @return PostListResponseDto
+     * @param page: 게시글의 해당 페이지를
+     * @param sort: 해당 컬럼으로 정렬하여 조회하도록 요청
+     * @return 게시글 리스트를 반환
      */
     public PostListResponse getPostList(int page, String sort) {
         Pageable pageable = PageRequest.of(page, 3, Sort.by(Sort.Direction.DESC, sort));
@@ -176,9 +180,9 @@ public class PostService {
 
     /**
      * 게시글 상세 페이지에 사용되는 게시글 상세 정보를 가져오는 메서드
-     * @param postId: postId가 일치하는 하나의 게시글을 가져옴
-     * @param loginMemberId: 이때 현재 접속한 회원이 이 게시글에 좋아요를 눌렀는지 확인할 수 있어야함
-     * @return PostDetailResponseDto
+     * @param postId: 해당 게시글에 대한 상세 정보를
+     * @param loginMemberId: 해당 접속한 멤버가 요청 (좋아요 여부를 알기 위해)
+     * @return 게시글 상세정보를 반환
      */
     public PostDetailResponse getPostWithDetail(Long postId, Long loginMemberId) {
         Post findPost = postRepository.findPostDetailById(postId).orElseThrow(NotFoundException::new);
@@ -189,11 +193,10 @@ public class PostService {
 
     /**
      * 마이페이지에 사용되는 해당월 운동 일수를 가져오는 메서드
-     * memberId를 갖는 회원이 year년 month월에 쓴 게시글의 날짜들을 반환
-     * @param memberId
-     * @param year
-     * @param month
-     * @return
+     * @param memberId: 해당 멤버의
+     * @param year: 해당 년
+     * @param month: 해당 월에 쓴  게시글의 날짜들을 반환
+     * @return: 날짜 리스트를 반환
      */
     public PostDatesResponse getPostDates(Long memberId, int year, int month) {
         List<LocalDateTime> postDatetimes = postRepository.findDatesByMemberAndYearMonth(memberId, year, month);
