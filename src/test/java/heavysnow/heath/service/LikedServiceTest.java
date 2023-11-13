@@ -37,7 +37,7 @@ class LikedServiceTest {
         List<String> imgUrls = new ArrayList<>();
         imgUrls.add("이미지1");
         PostAddRequest addRequest = new PostAddRequest(savedMemberId, "제목1", "내용1", imgUrls);
-        Long savedPostId = postService.writePost(addRequest).getPostId();
+        Long savedPostId = postService.writePost(addRequest);
 
         //when - then -> 좋아요를 한번 누르면 좋아요가 반영된다.
         likedService.changeMemberPostLiked(savedPostId, savedMemberId);

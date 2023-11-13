@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class PostImage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "post_image_id")
     private Long id;
 
