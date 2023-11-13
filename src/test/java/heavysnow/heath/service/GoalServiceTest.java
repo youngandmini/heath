@@ -2,6 +2,7 @@ package heavysnow.heath.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.domain.Goal;
+import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.GoalCreationDto;
 import heavysnow.heath.dto.GoalIdResponseDto;
 import heavysnow.heath.dto.GoalUpdateDto;
@@ -12,6 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

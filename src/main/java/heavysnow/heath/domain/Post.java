@@ -16,7 +16,7 @@ import java.util.List;
 public class Post extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "post_id")
     private Long id;
 
@@ -33,7 +33,7 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "main_image_id")
     private PostImage mainImage;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<PostImage> postImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")

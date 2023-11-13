@@ -7,12 +7,15 @@ import heavysnow.heath.dto.GoalIdResponseDto;
 import heavysnow.heath.dto.GoalUpdateDto;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
+import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.repository.GoalRepository;
 import heavysnow.heath.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -38,7 +41,6 @@ public class GoalService {
         Goal savedGoal = goalRepository.save(goal);
         return new GoalIdResponseDto(savedGoal.getId());
     }
-
 
     // 수정 : 특정 멤버에 대한 목표 수정하는 메서드
     // 반환 타입 void로 변경
