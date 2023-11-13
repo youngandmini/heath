@@ -1,12 +1,12 @@
 package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
-import heavysnow.heath.dto.*;
 import heavysnow.heath.dto.goal.GoalCreationDto;
 import heavysnow.heath.dto.goal.GoalIdResponseDto;
 import heavysnow.heath.dto.goal.GoalUpdateDto;
 import heavysnow.heath.dto.member.MemberDto;
 import heavysnow.heath.dto.member.MemberResponseDto;
+import heavysnow.heath.dto.post.PostDatesResponseDto;
 import heavysnow.heath.dto.post.PostListResponse;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.GoalService;
