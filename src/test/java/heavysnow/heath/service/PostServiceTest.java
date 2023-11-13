@@ -1,6 +1,6 @@
 package heavysnow.heath.service;
 
-import heavysnow.heath.dto.CommentCreateDto;
+import heavysnow.heath.dto.comment.CommentCreateDto;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostEditRequest;

@@ -1,9 +1,9 @@
 package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
-import heavysnow.heath.dto.CommentCreateDto;
-import heavysnow.heath.dto.CommentCreateResponseDto;
-import heavysnow.heath.dto.CommentUpdateDto;
+import heavysnow.heath.dto.comment.CommentCreateDto;
+import heavysnow.heath.dto.comment.CommentCreateResponseDto;
+import heavysnow.heath.dto.comment.CommentUpdateDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;

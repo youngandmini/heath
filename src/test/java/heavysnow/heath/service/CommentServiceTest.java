@@ -2,8 +2,8 @@ package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Member;
-import heavysnow.heath.dto.CommentCreateDto;
-import heavysnow.heath.dto.CommentUpdateDto;
+import heavysnow.heath.dto.comment.CommentCreateDto;
+import heavysnow.heath.dto.comment.CommentUpdateDto;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.repository.CommentRepository;
@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

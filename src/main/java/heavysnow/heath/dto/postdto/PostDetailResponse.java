@@ -3,6 +3,7 @@ package heavysnow.heath.dto.postdto;
 import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Post;
 import heavysnow.heath.domain.PostImage;
+import heavysnow.heath.dto.comment.CommentResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
