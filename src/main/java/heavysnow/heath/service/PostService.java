@@ -9,7 +9,7 @@ import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponse;
-import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.dto.postdto.PostListResponse;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
@@ -156,10 +156,10 @@ public class PostService {
      * @param page: 페이지 넘버
      * @return PostListResponseDto
      */
-    public PostListResponseDto getPostListByMember(Long memberId, int page) {
+    public PostListResponse getPostListByMember(Long memberId, int page) {
         Pageable pageable = PageRequest.of(page, 9);
         Slice<Post> postSlice = postRepository.findPageByMember(memberId, pageable);
-        return PostListResponseDto.of(postSlice);
+        return PostListResponse.of(postSlice);
     }
 
     /**
@@ -168,10 +168,10 @@ public class PostService {
      * @param sort: 정렬할 컬럼
      * @return PostListResponseDto
      */
-    public PostListResponseDto getPostList(int page, String sort) {
+    public PostListResponse getPostList(int page, String sort) {
         Pageable pageable = PageRequest.of(page, 3, Sort.by(Sort.Direction.DESC, sort));
         Slice<Post> postSlice = postRepository.findPage(pageable);
-        return PostListResponseDto.of(postSlice);
+        return PostListResponse.of(postSlice);
     }
 
     /**

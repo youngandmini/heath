@@ -2,7 +2,7 @@ package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.*;
-import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.dto.postdto.PostListResponse;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.GoalService;
 import heavysnow.heath.service.MemberService;
@@ -10,7 +10,6 @@ import heavysnow.heath.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -59,8 +58,8 @@ public class MemberController {
      */
     @GetMapping("/{memberId}/posts")
     @ResponseStatus(HttpStatus.OK)
-    public PostListResponseDto getMemberPosts(@PathVariable("memberId") Long memberId, @RequestParam(value = "page", defaultValue = "0") int page) {
-        PostListResponseDto response = postService.getPostListByMember(memberId, page);
+    public PostListResponse getMemberPosts(@PathVariable("memberId") Long memberId, @RequestParam(value = "page", defaultValue = "0") int page) {
+        PostListResponse response = postService.getPostListByMember(memberId, page);
         return response;
     }
 

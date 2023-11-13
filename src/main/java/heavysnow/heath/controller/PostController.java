@@ -8,7 +8,7 @@ import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponse;
-import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.dto.postdto.PostListResponse;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.CommentService;
 import heavysnow.heath.service.LikedService;
@@ -37,7 +37,7 @@ public class PostController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PostListResponseDto getPostList(@RequestParam("page") int page, @RequestParam("sort") String sort) {
+    public PostListResponse getPostList(@RequestParam("page") int page, @RequestParam("sort") String sort) {
 
         return postService.getPostList(page, sort);
     }

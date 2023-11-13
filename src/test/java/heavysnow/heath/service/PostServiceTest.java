@@ -5,7 +5,7 @@ import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.postdto.PostDetailResponse;
-import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.dto.postdto.PostListResponse;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.CommentRepository;
 import heavysnow.heath.repository.MemberPostLikedRepository;
@@ -78,7 +78,7 @@ class PostServiceTest {
         Long savedPostId2 = postService.writePost(memberId, postAddRequest2).getPostId();
 
         //when - 멤버별로 최신순으로 검색한다.
-        PostListResponseDto responseDto = postService.getPostListByMember(memberId, 0);
+        PostListResponse responseDto = postService.getPostListByMember(memberId, 0);
 
         //then
         assertThat(responseDto.getPageInfo().getNumberOfElements()).isEqualTo(2);
@@ -110,7 +110,7 @@ class PostServiceTest {
         Long savedPostId2 = postService.writePost(memberId, postAddRequest2).getPostId();
 
         //when
-        PostListResponseDto responseDto = postService.getPostList(0, "createdDate");
+        PostListResponse responseDto = postService.getPostList(0, "createdDate");
 
         //then
         assertThat(responseDto.getPosts().get(0).getPostId()).isEqualTo(savedPostId2);
