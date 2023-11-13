@@ -133,7 +133,8 @@ public class PostService {
             postImageRepository.save(postImage);
         }
 
-        PostImage mainImage = postImageRepository.findByUrl(editImages.get(0));
+        Optional<PostImage> mainImageOptional = postImageRepository.findByUrl(editImages.get(0));
+        PostImage mainImage = mainImageOptional.orElseThrow();
         post.setMainImage(mainImage);
     }
 
