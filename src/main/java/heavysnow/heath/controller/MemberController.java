@@ -42,4 +42,13 @@ public class MemberController {
         GoalIdResponseDto dto = goalService.createGoalForMember(loginMemberId, memberId, goalCreationDto);
         return ResponseEntity.ok(dto);
     }
+
+    @DeleteMapping("members/{memberId}/goals/{goalId}")
+    public ResponseEntity<Void> deleteGoal(@PathVariable Long memberId, @PathVariable Long goalId,
+                                           HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+        goalService.deleteGoalForMember(loginMemberId, memberId, goalId);
+        return ResponseEntity.ok().build();
+    }
 }
