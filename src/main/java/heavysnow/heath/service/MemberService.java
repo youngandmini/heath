@@ -3,8 +3,9 @@ package heavysnow.heath.service;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.dto.MemberResponseDto;
+import heavysnow.heath.exception.ForbiddenException;
+import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
-import heavysnow.heath.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PostRepository postRepository;
 
     @Transactional
     public Long createUser(MemberDto dto){

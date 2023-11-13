@@ -70,7 +70,7 @@ public class MemberController {
      * @param goalId 수정할 목표 아이디
      * @param goalUpdateDto content, isAchieved
      * @param request 로그인 정보
-     * @return ResponseEntity<Void></>
+     * @return ResponseEntity<Void>
      */
     @PatchMapping("/{memberId}/goals/{goalId}")
     public ResponseEntity<Void> updateGoal(@PathVariable Long memberId, @PathVariable Long goalId, @RequestBody GoalUpdateDto goalUpdateDto, HttpServletRequest request) {
@@ -84,6 +84,24 @@ public class MemberController {
         }
 
         goalService.updateGoalForMember(memberId, goalId, goalUpdateDto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 회원 탈퇴
+     * @param memberId 삭제할 멤버 아이디
+     * @param request 로그인 정보
+     * @return ResponseEntity<Void>
+     */
+    @DeleteMapping("/{memberId}")
+    public ResponseEntity<Void> deleteMember(@PathVariable Long memberId, HttpServletRequest request) {
+        // 인증 토큰 확인
+        Optional<Long> loginMemberOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberOptional.orElseThrow(UnauthorizedException::new);
+
+        // 회원 탈퇴
+        memberService.deleteMember(memberId, loginMemberId);
 
         return ResponseEntity.ok().build();
     }
@@ -106,7 +124,7 @@ public class MemberController {
         return ResponseEntity.ok(dto);
     }
 
-    @DeleteMapping("members/{memberId}/goals/{goalId}")
+    @DeleteMapping("/{memberId}/goals/{goalId}")
     public ResponseEntity<Void> deleteGoal(@PathVariable Long memberId, @PathVariable Long goalId,
                                            HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));

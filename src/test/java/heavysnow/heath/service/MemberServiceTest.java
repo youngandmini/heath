@@ -2,6 +2,7 @@ package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.GoalCreationDto;
+import heavysnow.heath.dto.GoalIdResponseDto;
 import heavysnow.heath.dto.MemberDto;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.GoalRepository;
@@ -10,12 +11,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -111,8 +109,9 @@ class MemberServiceTest {
                 .build();
         Long savedId = memberService.createUser(memberDto);
 
-        Long goalId1 = goalService.createGoalForMember(savedId, new GoalCreationDto("목표1", false));
-        Long goalId2 = goalService.createGoalForMember(savedId, new GoalCreationDto("목표2", false));
+        GoalIdResponseDto goalId1 = goalService.createGoalForMember(savedId, savedId, new GoalCreationDto("목표1", false));
+        GoalIdResponseDto goalId2 = goalService.createGoalForMember(savedId, savedId, new GoalCreationDto("목표2", false));
+
 
         em.flush();
         em.clear();
@@ -122,8 +121,8 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.findMemberWithGoals(savedId))
                 .isInstanceOf(NotFoundException.class);
 
-        assertThat(goalRepository.findById(goalId1).isEmpty()).isTrue();
-        assertThat(goalRepository.findById(goalId2).isEmpty()).isTrue();
+        assertThat(goalRepository.findById(goalId1.getGoalId()).isEmpty()).isTrue();
+        assertThat(goalRepository.findById(goalId2.getGoalId()).isEmpty()).isTrue();
 
     }
 
