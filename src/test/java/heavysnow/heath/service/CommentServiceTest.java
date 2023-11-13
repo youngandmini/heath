@@ -173,19 +173,19 @@ public class CommentServiceTest {
     @Test
     public void updateComment() throws Exception {
         // given
-        String updateConntent = "수정된 댓글 입니다.";
+        String updateContent = "수정된 댓글 입니다.";
 
         CommentCreateDto commentCreateDto = new CommentCreateDto("원래 댓글입니다.");
         Long savedCommentId = commentService.createComment(savedPostId1, commentCreateDto, null, savedMemberId1).getCommentId();
 
         // when
-        CommentUpdateDto commentUpdateDto = new CommentUpdateDto(savedPostId1, savedMemberId1, savedCommentId, updateConntent);
-        commentService.updateComment(commentUpdateDto);
+        CommentUpdateDto commentUpdateDto = new CommentUpdateDto(updateContent);
+        commentService.updateComment(savedPostId1, savedCommentId, commentUpdateDto, savedMemberId1);
 
         Comment updatedComment = commentRepository.findById(savedCommentId).get();
 
         // then
-        assertThat(updatedComment.getContent()).isEqualTo(updateConntent);
+        assertThat(updatedComment.getContent()).isEqualTo(updateContent);
     }
 
     @DisplayName("deleteComment: 댓글 삭제 기능.")

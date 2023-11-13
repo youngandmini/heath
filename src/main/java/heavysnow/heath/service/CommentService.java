@@ -46,16 +46,15 @@ public class CommentService {
         return CommentCreateResponseDto.of(savedcomment.getId());
     }
 
-    public void updateComment(CommentUpdateDto commentUpdateDto) {
+    public void updateComment(Long postId, Long commentId, CommentUpdateDto commentUpdateDto, Long loginMemberId) {
         // 댓글 존재 확인
-        Comment comment = commentRepository.findById(commentUpdateDto.getCommentId())
-                .orElseThrow(NotFoundException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundException::new);
 
         // 댓글이 해당 멤버와 포스트에 속하는지 확인
-        if (!comment.getPost().getId().equals(commentUpdateDto.getPostId())) {
+        if (!comment.getPost().getId().equals(postId)) {
             throw new BadRequestException();
         }
-        if (!comment.getMember().getId().equals(commentUpdateDto.getMemberId())) {
+        if (!comment.getMember().getId().equals(loginMemberId)) {
             throw new ForbiddenException();
         }
 
