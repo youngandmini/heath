@@ -30,16 +30,14 @@ public class CommentService {
      * @param commentCreateDto
      * @return
      */
-    public CommentCreateResponseDto createComment(CommentCreateDto commentCreateDto) {
-        Post post = postRepository.findById(commentCreateDto.getPostId())
-                .orElseThrow(NotFoundException::new);
+    public CommentCreateResponseDto createComment(Long postId, CommentCreateDto commentCreateDto, Long parentCommentId, Long loginMemberId) {
+        Post post = postRepository.findById(postId).orElseThrow(NotFoundException::new);
 
-        Member member = memberRepository.findById(commentCreateDto.getMemberId())
-                .orElseThrow();
+        Member member = memberRepository.findById(loginMemberId).orElseThrow();
 
         Comment parentComment = null;
-        if (commentCreateDto.getParentCommentId() != null) {
-            parentComment = commentRepository.findById(commentCreateDto.getParentCommentId())
+        if (parentCommentId != null) {
+            parentComment = commentRepository.findById(parentCommentId)
                     .orElseThrow(NotFoundException::new);
         }
         Comment comment = Comment.createComment(post, member, commentCreateDto.getContent(), parentComment);

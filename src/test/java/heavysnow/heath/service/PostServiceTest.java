@@ -236,14 +236,16 @@ class PostServiceTest {
         Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
 
         //댓글 달기
-        CommentCreateDto commentDto1 = new CommentCreateDto(savedPostId1, memberId, "댓글1", null);
-        CommentCreateDto commentDto2 = new CommentCreateDto(savedPostId1, memberId, "댓글2", null);
-        Long savedCommentId1 = commentService.createComment(commentDto1).getCommentId();
-        Long savedCommentId2 = commentService.createComment(commentDto2).getCommentId();
-        CommentCreateDto replyDto1 = new CommentCreateDto(savedPostId1, memberId, "대댓글1", savedCommentId1);
-        CommentCreateDto replyDto2 = new CommentCreateDto(savedPostId1, memberId, "대댓글2", savedCommentId2);
-        Long savedReplyId1 = commentService.createComment(replyDto1).getCommentId();
-        Long savedReplyId2 = commentService.createComment(replyDto2).getCommentId();
+        CommentCreateDto commentDto1 = new CommentCreateDto("댓글1");
+        CommentCreateDto commentDto2 = new CommentCreateDto("댓글2");
+
+        Long savedCommentId1 = commentService.createComment(savedPostId1, commentDto1, null, memberId).getCommentId();
+        Long savedCommentId2 = commentService.createComment(savedPostId1, commentDto2, null, memberId).getCommentId();
+
+        CommentCreateDto replyDto1 = new CommentCreateDto("대댓글1");
+        CommentCreateDto replyDto2 = new CommentCreateDto("대댓글2");
+        Long savedReplyId1 = commentService.createComment(savedPostId1, replyDto1, savedCommentId1, memberId).getCommentId();
+        Long savedReplyId2 = commentService.createComment(savedPostId1, replyDto2, savedCommentId2, memberId).getCommentId();
 
         em.flush();
         em.clear();
@@ -315,14 +317,16 @@ class PostServiceTest {
         likedService.changeMemberPostLiked(savedPostId1, memberId2);
 
         //댓글 달기
-        CommentCreateDto commentDto1 = new CommentCreateDto(savedPostId1, memberId1, "댓글1", null);
-        CommentCreateDto commentDto2 = new CommentCreateDto(savedPostId1, memberId2, "댓글2", null);
-        Long savedCommentId1 = commentService.createComment(commentDto1).getCommentId();
-        Long savedCommentId2 = commentService.createComment(commentDto2).getCommentId();
-        CommentCreateDto replyDto1 = new CommentCreateDto(savedPostId1, memberId2, "대댓글1", savedCommentId1);
-        CommentCreateDto replyDto2 = new CommentCreateDto(savedPostId1, memberId1, "대댓글2", savedCommentId2);
-        Long savedReplyId1 = commentService.createComment(replyDto1).getCommentId();
-        Long savedReplyId2 = commentService.createComment(replyDto2).getCommentId();
+        CommentCreateDto commentDto1 = new CommentCreateDto("댓글1");
+        CommentCreateDto commentDto2 = new CommentCreateDto("댓글2");
+
+        Long savedCommentId1 = commentService.createComment(savedPostId1, commentDto1, null, memberId1).getCommentId();
+        Long savedCommentId2 = commentService.createComment(savedPostId1, commentDto2, null, memberId2).getCommentId();
+
+        CommentCreateDto replyDto1 = new CommentCreateDto("대댓글1");
+        CommentCreateDto replyDto2 = new CommentCreateDto("대댓글2");
+        Long savedReplyId1 = commentService.createComment(savedPostId1, replyDto1, savedCommentId1, memberId2).getCommentId();
+        Long savedReplyId2 = commentService.createComment(savedPostId1, replyDto2, savedCommentId2, memberId1).getCommentId();
 
         em.flush();
         em.clear();

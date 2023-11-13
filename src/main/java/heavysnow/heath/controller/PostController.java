@@ -14,7 +14,6 @@ import heavysnow.heath.service.CommentService;
 import heavysnow.heath.service.LikedService;
 import heavysnow.heath.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -132,9 +131,7 @@ public class PostController {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        commentDto.setIds(postId, null, loginMemberId);
-
-        return commentService.createComment(commentDto);
+        return commentService.createComment(postId, commentDto, null, loginMemberId);
     }
 
     /**
@@ -146,9 +143,7 @@ public class PostController {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        commentDto.setIds(postId, commentId, loginMemberId);
-
-        return commentService.createComment(commentDto);
+        return commentService.createComment(postId, commentDto, commentId, loginMemberId);
     }
 
     /**
