@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class CommentCreateResponseDto {
+public class CommentCreateResponse {
 
     private Long commentId;
 
-    public static CommentCreateResponseDto of(Long commentId) {
-        return new CommentCreateResponseDto(commentId);
+    public static CommentCreateResponse of(Long commentId) {
+        return new CommentCreateResponse(commentId);
     }
 }
