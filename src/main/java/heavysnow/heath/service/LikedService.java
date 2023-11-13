@@ -22,17 +22,16 @@ public class LikedService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
-
     /**
-     * memberId를 가진 멤버가 postId를 가진 게시글에 좋아요를 누르거나 취소하는 상황
-     * @param postId
-     * @param memberId
+     * 특정 멤버가 특정 게시글에 좋아요를 추가하거나 취소
+     * @param postId: 해당 게시글에
+     * @param loginMemberId: 해당 멤버가 좋아요 기능을 이용
      */
-    public void changeMemberPostLiked(Long postId, Long memberId) {
+    public void changeMemberPostLiked(Long postId, Long loginMemberId) {
         Post findPost = postRepository.findById(postId).orElseThrow(NotFoundException::new);
-        Member findMember = memberRepository.findById(memberId).orElseThrow();
+        Member findMember = memberRepository.findById(loginMemberId).orElseThrow();
 
-        Optional<MemberPostLiked> memberPostLikedOptional = memberPostLikedRepository.findByMemberIdAndPostId(memberId, postId);
+        Optional<MemberPostLiked> memberPostLikedOptional = memberPostLikedRepository.findByMemberIdAndPostId(loginMemberId, postId);
         if (memberPostLikedOptional.isPresent()) {
             memberPostLikedRepository.delete(memberPostLikedOptional.get());
         } else {
