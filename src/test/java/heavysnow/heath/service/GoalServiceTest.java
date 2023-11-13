@@ -133,7 +133,7 @@ class GoalServiceTest {
 
         // when
         // 생성한 목표를 삭제
-        goalService.deleteGoalForMember(savedMemberId, savedGoalId.getGoalId());
+        goalService.deleteGoalForMember(savedMemberId, savedMemberId, savedGoalId.getGoalId());
 
         // then
         // 삭제한 데이터가 데베에 존재하지 않는지 확인
