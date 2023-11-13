@@ -1,7 +1,7 @@
 package heavysnow.heath.service;
 
 import heavysnow.heath.domain.MemberPostLiked;
-import heavysnow.heath.dto.member.MemberDto;
+import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostDetailResponse;
 import heavysnow.heath.repository.MemberPostLikedRepository;
@@ -31,8 +31,8 @@ class LikedServiceTest {
     @Test
     void changeMemberPostLiked() {
         //given
-        MemberDto memberDto = new MemberDto("memner1@example.com", "nickname", "", "");
-        Long savedMemberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("memner1@example.com", "nickname", "", "");
+        Long savedMemberId = memberService.createUser(memberRequest);
         List<String> imgUrls = new ArrayList<>();
         imgUrls.add("이미지1");
         PostAddRequest addRequest = new PostAddRequest("제목1", "내용1", imgUrls);

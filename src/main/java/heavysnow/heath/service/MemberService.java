@@ -1,7 +1,7 @@
 package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Member;
-import heavysnow.heath.dto.member.MemberDto;
+import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.dto.member.MemberResponseDto;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
@@ -18,13 +18,13 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long createUser(MemberDto dto){
+    public Long createUser(MemberRequest dto){
         Member savedMember = memberRepository.save(dto.toEntity());
         return savedMember.getId();
     }
 
     @Transactional
-    public void editMember(Long loginMemberId, Long memberId, MemberDto dto) {
+    public void editMember(Long loginMemberId, Long memberId, MemberRequest dto) {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundException::new);
 
         if (!loginMemberId.equals(memberId)) {

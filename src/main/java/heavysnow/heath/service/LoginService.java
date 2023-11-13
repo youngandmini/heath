@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.login.LoginResponse;
-import heavysnow.heath.dto.member.MemberDto;
+import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -75,8 +75,8 @@ public class LoginService {
 
     //회원 가입
     private Long joinMember(String email, String nickname, String profileImage) {
-        MemberDto memberDto = new MemberDto(email, nickname, null, profileImage);
-        return memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest(email, nickname, null, profileImage);
+        return memberService.createUser(memberRequest);
     }
 
     private Map<String, String> decodeToken(String token) {

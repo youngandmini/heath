@@ -4,7 +4,7 @@ import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.goal.GoalCreateRequest;
 import heavysnow.heath.dto.goal.GoalCreateResponse;
 import heavysnow.heath.dto.goal.GoalUpdateRequest;
-import heavysnow.heath.dto.member.MemberDto;
+import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.dto.member.MemberResponseDto;
 import heavysnow.heath.dto.post.PostDatesResponseDto;
 import heavysnow.heath.dto.post.PostListResponse;
@@ -88,17 +88,17 @@ public class MemberController {
     /**
      * 특정 회원의 정보를 수정하기 위한 요청
      * @param memberId: 수정할 회원 아이디
-     * @param memberDto: 수정할 회원 정보
+     * @param memberRequest: 수정할 회원 정보
      * @param request: 로그인 정보
      */
     @PatchMapping("/{memberId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateMember(@PathVariable("memberId") Long memberId, @RequestBody MemberDto memberDto,
+    public void updateMember(@PathVariable("memberId") Long memberId, @RequestBody MemberRequest memberRequest,
                                              HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        memberService.editMember(loginMemberId, memberId, memberDto);
+        memberService.editMember(loginMemberId, memberId, memberRequest);
     }
 
     /**

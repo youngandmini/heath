@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.domain.Goal;
 import heavysnow.heath.dto.goal.GoalCreateRequest;
 import heavysnow.heath.dto.goal.GoalUpdateRequest;
-import heavysnow.heath.dto.member.MemberDto;
+import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.repository.GoalRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class GoalServiceTest {
         // given
 
         // 멤버 DTO
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("leejungbin")
                 .nickname("ego2")
                 .userStatusMessage("fighting!!!")
@@ -42,7 +42,7 @@ class GoalServiceTest {
                 .build();
 
         // memberDto에 있는 정보 데베에 저장
-        Long savedMemberId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberRequest);
 
 
         final String content = "content";
@@ -68,7 +68,7 @@ class GoalServiceTest {
     public void updateGoal() throws Exception {
         // given
         // 멤버 DTO
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("leejungbin")
                 .nickname("ego2")
                 .userStatusMessage("fighting!!!")
@@ -76,7 +76,7 @@ class GoalServiceTest {
                 .build();
 
         // memberDto에 있는 정보 데베에 저장
-        Long savedMemberId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberRequest);
 
 
         // Goal DTO
@@ -108,7 +108,7 @@ class GoalServiceTest {
     public void deleteGoal() throws Exception {
         // given
         // 멤버 DTO
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("leejungbin")
                 .nickname("ego2")
                 .userStatusMessage("fighting!!!")
@@ -116,7 +116,7 @@ class GoalServiceTest {
                 .build();
 
         // memberDto에 있는 정보 데베에 저장
-        Long savedMemberId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberRequest);
 
         // Goal DTO
         GoalCreateRequest goalCreateRequest = new GoalCreateRequest("1일 1커밋 하기", false);

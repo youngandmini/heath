@@ -4,7 +4,7 @@ import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.comment.CommentCreateRequest;
 import heavysnow.heath.dto.comment.CommentUpdateRequest;
-import heavysnow.heath.dto.member.MemberDto;
+import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.repository.CommentRepository;
 import heavysnow.heath.repository.MemberRepository;
@@ -67,7 +67,7 @@ public class CommentServiceTest {
          * 포스트는 멤버1(savedMemberId1)의 포스트 이다.
          * 멤버1(savedMemberId1)의 포스트의 개수는 총2개 이다.
          */
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("leejungbin")
                 .nickname("ego2")
                 .userStatusMessage("fighting!!!")
@@ -75,11 +75,11 @@ public class CommentServiceTest {
                 .build();
 
         // memberDto에 있는 정보 데베에 저장
-        savedMemberId1 = memberService.createUser(memberDto);
+        savedMemberId1 = memberService.createUser(memberRequest);
 
         Member member = memberRepository.findById(savedMemberId1).get();
 
-        memberDto = MemberDto.builder()
+        memberRequest = MemberRequest.builder()
                 .username("leejungbin111")
                 .nickname("ego222222")
                 .userStatusMessage("fighting!!!")
@@ -87,7 +87,7 @@ public class CommentServiceTest {
                 .build();
 
         // memberDto에 있는 정보 데베에 저장
-        savedMemberId2 = memberService.createUser(memberDto);
+        savedMemberId2 = memberService.createUser(memberRequest);
 
 
         /**

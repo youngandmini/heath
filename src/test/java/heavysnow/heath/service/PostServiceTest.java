@@ -1,7 +1,7 @@
 package heavysnow.heath.service;
 
 import heavysnow.heath.dto.comment.CommentCreateRequest;
-import heavysnow.heath.dto.member.MemberDto;
+import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.post.PostDetailResponse;
@@ -59,8 +59,8 @@ class PostServiceTest {
     @Test
     void getPostListByMember() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -91,8 +91,8 @@ class PostServiceTest {
     @Test
     void getPostList() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -122,8 +122,8 @@ class PostServiceTest {
     @Test
     void getPostWithDetail() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -160,8 +160,8 @@ class PostServiceTest {
     @Test
     void postUpdateTest() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -199,8 +199,8 @@ class PostServiceTest {
     @Test
     void postDeleteTest() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -222,8 +222,8 @@ class PostServiceTest {
     @Test
     void postDeleteWithCommentsTest() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -262,10 +262,10 @@ class PostServiceTest {
     @Test
     void postDeleteWithLikesTest() {
         //given
-        MemberDto memberDto1 = new MemberDto("member1", "member11", "", "");
-        MemberDto memberDto2 = new MemberDto("member2", "member22", "", "");
-        Long memberId1 = memberService.createUser(memberDto1);
-        Long memberId2 = memberService.createUser(memberDto2);
+        MemberRequest memberRequest1 = new MemberRequest("member1", "member11", "", "");
+        MemberRequest memberRequest2 = new MemberRequest("member2", "member22", "", "");
+        Long memberId1 = memberService.createUser(memberRequest1);
+        Long memberId2 = memberService.createUser(memberRequest2);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -296,10 +296,10 @@ class PostServiceTest {
     @Test
     void postDeleteWithLikesAndCommentsTest() {
         //given
-        MemberDto memberDto1 = new MemberDto("member1", "member11", "", "");
-        MemberDto memberDto2 = new MemberDto("member2", "member22", "", "");
-        Long memberId1 = memberService.createUser(memberDto1);
-        Long memberId2 = memberService.createUser(memberDto2);
+        MemberRequest memberRequest1 = new MemberRequest("member1", "member11", "", "");
+        MemberRequest memberRequest2 = new MemberRequest("member2", "member22", "", "");
+        Long memberId1 = memberService.createUser(memberRequest1);
+        Long memberId2 = memberService.createUser(memberRequest2);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -344,13 +344,13 @@ class PostServiceTest {
     @Test
     @DisplayName("회원을 삭제하면 post도 함께 문제 없이 삭제되어야한다.")
     void deleteMemberWithPosts() {
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("aaaa@example.com")
                 .nickname("gwan")
                 .userStatusMessage("")
                 .profileImgUrl("imgUrl")
                 .build();
-        Long savedMemberId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
