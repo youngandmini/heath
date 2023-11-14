@@ -5,6 +5,7 @@ import heavysnow.heath.domain.Member;
 import heavysnow.heath.dto.goal.GoalCreateRequest;
 import heavysnow.heath.dto.goal.GoalCreateResponse;
 import heavysnow.heath.dto.goal.GoalUpdateRequest;
+import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.GoalRepository;
@@ -12,6 +13,8 @@ import heavysnow.heath.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -34,6 +37,11 @@ public class GoalService {
 
         if (!loginMemberId.equals(memberId)) {
             throw new ForbiddenException();
+        }
+
+        List<Goal> memberGoals = goalRepository.findByMemberId(memberId);
+        if (memberGoals.size() >= 5) {
+            throw new BadRequestException();
         }
 
         Goal goal = Goal.builder()
