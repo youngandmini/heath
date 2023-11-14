@@ -1,6 +1,10 @@
 package heavysnow.heath.dto.post;
 
-import lombok.*;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -8,12 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class PostAddRequest {
-    private Long memberId;
     private String title;
     private String content;
     private List<String> postImgUrls;
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
 }

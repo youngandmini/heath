@@ -1,4 +1,4 @@
-package heavysnow.heath.dto.postdto;
+package heavysnow.heath.dto.comment;
 
 import heavysnow.heath.domain.Comment;
 import lombok.AccessLevel;

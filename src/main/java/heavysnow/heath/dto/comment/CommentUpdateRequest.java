@@ -1,18 +1,14 @@
-package heavysnow.heath.dto.post;
-
+package heavysnow.heath.dto.comment;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
-public class PostEditRequest {
-    private String title;
+public class CommentUpdateRequest {
     private String content;
-    private List<String> postImgUrls;
+
 }

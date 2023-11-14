@@ -1,8 +1,8 @@
 package heavysnow.heath.service;
 
 import heavysnow.heath.domain.Member;
-import heavysnow.heath.dto.GoalCreationDto;
-import heavysnow.heath.dto.MemberDto;
+import heavysnow.heath.dto.goal.GoalCreateRequest;
+import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.GoalRepository;
 import heavysnow.heath.repository.MemberRepository;
@@ -10,12 +10,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -40,7 +36,7 @@ class MemberServiceTest {
     @Test
     void createUser() {
         //given
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("aaa")
                 .nickname("gwan")
                 .userStatusMessage("fighting!!!")
@@ -48,27 +44,27 @@ class MemberServiceTest {
                 .build();
 
         //when
-        Long savedMemberId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberRequest);
 
         //then
-        Member findMember = memberRepository.findByUsername(memberDto.getUsername()).orElse(null);
+        Member findMember = memberRepository.findByUsername(memberRequest.getUsername()).orElse(null);
         assertNotNull(findMember);
-        assertEquals(memberDto.getUsername(), findMember.getUsername());
-        assertEquals(memberDto.getNickname(), findMember.getNickname());
-        assertEquals(memberDto.getUserStatusMessage(), findMember.getUserStatusMessage());
-        assertEquals(memberDto.getProfileImgUrl(), findMember.getProfileImgUrl());
+        assertEquals(memberRequest.getUsername(), findMember.getUsername());
+        assertEquals(memberRequest.getNickname(), findMember.getNickname());
+        assertEquals(memberRequest.getUserStatusMessage(), findMember.getUserStatusMessage());
+        assertEquals(memberRequest.getProfileImgUrl(), findMember.getProfileImgUrl());
     }
 
     @Test
     void EditMember() {
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("aaa")
                 .nickname("gwan")
                 .userStatusMessage("fighting!!!")
                 .profileImgUrl("None")
                 .build();
-        Long savedId = memberService.createUser(memberDto);
-        MemberDto dto = MemberDto.builder()
+        Long savedId = memberService.createUser(memberRequest);
+        MemberRequest dto = MemberRequest.builder()
                 .username("aaa")
                 .nickname("hwi")
                 .userStatusMessage("good!")
@@ -85,13 +81,13 @@ class MemberServiceTest {
 
     @Test
     void deleteMember() {
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("aaaa@example.com")
                 .nickname("gwan")
                 .userStatusMessage("")
                 .profileImgUrl("imgUrl")
                 .build();
-        Long savedId = memberService.createUser(memberDto);
+        Long savedId = memberService.createUser(memberRequest);
         memberService.deleteMember(savedId, savedId);
 
 
@@ -102,16 +98,16 @@ class MemberServiceTest {
     @Test
     @DisplayName("회원을 삭제하면 goal도 함께 문제 없이 삭제되어야한다.")
     void deleteMemberWithGoals() {
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("aaaa@example.com")
                 .nickname("gwan")
                 .userStatusMessage("")
                 .profileImgUrl("imgUrl")
                 .build();
-        Long savedId = memberService.createUser(memberDto);
+        Long savedId = memberService.createUser(memberRequest);
 
-        Long goalId1 = goalService.createGoalForMember(savedId, savedId, new GoalCreationDto("목표1", false)).getGoalId();
-        Long goalId2 = goalService.createGoalForMember(savedId, savedId, new GoalCreationDto("목표2", false)).getGoalId();
+        Long goalId1 = goalService.createGoalForMember(savedId, savedId, new GoalCreateRequest("목표1", false)).getGoalId();
+        Long goalId2 = goalService.createGoalForMember(savedId, savedId, new GoalCreateRequest("목표2", false)).getGoalId();
 
         em.flush();
         em.clear();

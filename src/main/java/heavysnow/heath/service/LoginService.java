@@ -4,18 +4,16 @@ package heavysnow.heath.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.domain.Member;
-import heavysnow.heath.dto.LoginResponseDto;
-import heavysnow.heath.dto.MemberDto;
+import heavysnow.heath.dto.login.LoginResponse;
+import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.Base64;
 import java.util.Base64.Decoder;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,7 +28,7 @@ public class LoginService {
 
     /**
      * token을 받아서 로그아웃 수행
-     * @param token
+     * @param token: 해당 토큰으로 로그아웃 수행
      */
     public void logout(String token) {
         if (token == null) {
@@ -43,9 +41,9 @@ public class LoginService {
      * 로그인 요청이 들어왔을때, 토큰을 파싱하여 회원을 식별한다음,
      * 이미 존재한 회원이라면 로그인하고
      * 처음 방문한 회원이라면 로그인 정보를 저장한 다음 로그인을 수행
-     * @param token
+     * @param token: 해당 토큰으로 로그인을 수행
      */
-    public LoginResponseDto login(String token) {
+    public LoginResponse login(String token) {
         if (token == null) {
             throw new BadRequestException();
         }
@@ -60,13 +58,13 @@ public class LoginService {
             Member findMember = findMemberOptional.get();
             doLogin(token, findMember.getId());
 
-            return LoginResponseDto.of(findMember.getId());
+            return LoginResponse.of(findMember.getId());
         } else {
             //처음 방문한 회원이라면, 회원정보를 DB에 저장 후 로그인
             Long joinedMemberId = joinMember(email, nickname, profileImage);
             doLogin(token, joinedMemberId);
 
-            return LoginResponseDto.of(joinedMemberId);
+            return LoginResponse.of(joinedMemberId);
         }
     }
 
@@ -77,10 +75,11 @@ public class LoginService {
 
     //회원 가입
     private Long joinMember(String email, String nickname, String profileImage) {
-        MemberDto memberDto = new MemberDto(email, nickname, null, profileImage);
-        return memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest(email, nickname, null, profileImage);
+        return memberService.createUser(memberRequest);
     }
 
+    // 토큰 파싱
     private Map<String, String> decodeToken(String token) {
         ObjectMapper mapper = new ObjectMapper();
         Decoder decoder = Base64.getDecoder();

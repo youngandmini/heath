@@ -1,13 +1,11 @@
 package heavysnow.heath.service;
 
-import heavysnow.heath.domain.Member;
-import heavysnow.heath.domain.Post;
-import heavysnow.heath.dto.CommentCreateDto;
-import heavysnow.heath.dto.MemberDto;
+import heavysnow.heath.dto.comment.CommentCreateRequest;
+import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostEditRequest;
-import heavysnow.heath.dto.postdto.PostDetailResponseDto;
-import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.dto.post.PostDetailResponse;
+import heavysnow.heath.dto.post.PostListResponse;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.CommentRepository;
 import heavysnow.heath.repository.MemberPostLikedRepository;
@@ -23,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,8 +59,8 @@ class PostServiceTest {
     @Test
     void getPostListByMember() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -75,13 +72,13 @@ class PostServiceTest {
         imgUrls2.add("이미지22");
         imgUrls2.add("이미지23");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        PostAddRequest postAddRequest2 = new PostAddRequest(memberId, "게시글 제목2", "게시글 내용2", imgUrls2);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
-        Long savedPostId2 = postService.writePost(postAddRequest2).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        PostAddRequest postAddRequest2 = new PostAddRequest("게시글 제목2", "게시글 내용2", imgUrls2);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
+        Long savedPostId2 = postService.writePost(memberId, postAddRequest2).getPostId();
 
         //when - 멤버별로 최신순으로 검색한다.
-        PostListResponseDto responseDto = postService.getPostListByMember(memberId, 0);
+        PostListResponse responseDto = postService.getPostListByMember(memberId, 0);
 
         //then
         assertThat(responseDto.getPageInfo().getNumberOfElements()).isEqualTo(2);
@@ -94,8 +91,8 @@ class PostServiceTest {
     @Test
     void getPostList() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -107,13 +104,13 @@ class PostServiceTest {
         imgUrls2.add("이미지22");
         imgUrls2.add("이미지23");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        PostAddRequest postAddRequest2 = new PostAddRequest(memberId, "게시글 제목2", "게시글 내용2", imgUrls2);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
-        Long savedPostId2 = postService.writePost(postAddRequest2).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        PostAddRequest postAddRequest2 = new PostAddRequest("게시글 제목2", "게시글 내용2", imgUrls2);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
+        Long savedPostId2 = postService.writePost(memberId, postAddRequest2).getPostId();
 
         //when
-        PostListResponseDto responseDto = postService.getPostList(0, "createdDate");
+        PostListResponse responseDto = postService.getPostList(0, "createdDate");
 
         //then
         assertThat(responseDto.getPosts().get(0).getPostId()).isEqualTo(savedPostId2);
@@ -125,8 +122,8 @@ class PostServiceTest {
     @Test
     void getPostWithDetail() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
@@ -138,13 +135,13 @@ class PostServiceTest {
         imgUrls2.add("이미지22");
         imgUrls2.add("이미지23");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        PostAddRequest postAddRequest2 = new PostAddRequest(memberId, "게시글 제목2", "게시글 내용2", imgUrls2);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
-        Long savedPostId2 = postService.writePost(postAddRequest2).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        PostAddRequest postAddRequest2 = new PostAddRequest("게시글 제목2", "게시글 내용2", imgUrls2);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
+        Long savedPostId2 = postService.writePost(memberId, postAddRequest2).getPostId();
 
         //when
-        PostDetailResponseDto responseDto = postService.getPostWithDetail(savedPostId1, memberId);
+        PostDetailResponse responseDto = postService.getPostWithDetail(savedPostId1, memberId);
 
         //then
         assertThat(responseDto.getPostId()).isEqualTo(savedPostId1);
@@ -163,16 +160,16 @@ class PostServiceTest {
     @Test
     void postUpdateTest() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
         imgUrls1.add("이미지2");
         imgUrls1.add("이미지3");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
 
         //when
         List<String> editImgUrls = new ArrayList<>();
@@ -180,9 +177,9 @@ class PostServiceTest {
         editImgUrls.add("수정 이미지2");
         editImgUrls.add("수정 이미지3");
         editImgUrls.add("수정 이미지4");
-        PostEditRequest editRequest = new PostEditRequest(savedPostId1, "수정 제목1", "수정 게시글 내용1", editImgUrls);
-        postService.editPost(editRequest, memberId);
-        PostDetailResponseDto responseDto = postService.getPostWithDetail(savedPostId1, memberId);
+        PostEditRequest editRequest = new PostEditRequest("수정 제목1", "수정 게시글 내용1", editImgUrls);
+        postService.editPost(savedPostId1, editRequest, memberId);
+        PostDetailResponse responseDto = postService.getPostWithDetail(savedPostId1, memberId);
 
         //then
         assertThat(responseDto.getPostId()).isEqualTo(savedPostId1);
@@ -202,16 +199,16 @@ class PostServiceTest {
     @Test
     void postDeleteTest() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
         imgUrls1.add("이미지2");
         imgUrls1.add("이미지3");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
 
         //when
         postService.deletePost(savedPostId1, memberId);
@@ -225,25 +222,27 @@ class PostServiceTest {
     @Test
     void postDeleteWithCommentsTest() {
         //given
-        MemberDto memberDto = new MemberDto("member1", "member11", "", "");
-        Long memberId = memberService.createUser(memberDto);
+        MemberRequest memberRequest = new MemberRequest("member1", "member11", "", "");
+        Long memberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
         imgUrls1.add("이미지2");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(memberId, postAddRequest1).getPostId();
 
         //댓글 달기
-        CommentCreateDto commentDto1 = new CommentCreateDto(savedPostId1, memberId, "댓글1", null);
-        CommentCreateDto commentDto2 = new CommentCreateDto(savedPostId1, memberId, "댓글2", null);
-        Long savedCommentId1 = commentService.createComment(commentDto1).getCommentId();
-        Long savedCommentId2 = commentService.createComment(commentDto2).getCommentId();
-        CommentCreateDto replyDto1 = new CommentCreateDto(savedPostId1, memberId, "대댓글1", savedCommentId1);
-        CommentCreateDto replyDto2 = new CommentCreateDto(savedPostId1, memberId, "대댓글2", savedCommentId2);
-        Long savedReplyId1 = commentService.createComment(replyDto1).getCommentId();
-        Long savedReplyId2 = commentService.createComment(replyDto2).getCommentId();
+        CommentCreateRequest commentDto1 = new CommentCreateRequest("댓글1");
+        CommentCreateRequest commentDto2 = new CommentCreateRequest("댓글2");
+
+        Long savedCommentId1 = commentService.createComment(savedPostId1, commentDto1, null, memberId).getCommentId();
+        Long savedCommentId2 = commentService.createComment(savedPostId1, commentDto2, null, memberId).getCommentId();
+
+        CommentCreateRequest replyDto1 = new CommentCreateRequest("대댓글1");
+        CommentCreateRequest replyDto2 = new CommentCreateRequest("대댓글2");
+        Long savedReplyId1 = commentService.createComment(savedPostId1, replyDto1, savedCommentId1, memberId).getCommentId();
+        Long savedReplyId2 = commentService.createComment(savedPostId1, replyDto2, savedCommentId2, memberId).getCommentId();
 
         em.flush();
         em.clear();
@@ -263,18 +262,18 @@ class PostServiceTest {
     @Test
     void postDeleteWithLikesTest() {
         //given
-        MemberDto memberDto1 = new MemberDto("member1", "member11", "", "");
-        MemberDto memberDto2 = new MemberDto("member2", "member22", "", "");
-        Long memberId1 = memberService.createUser(memberDto1);
-        Long memberId2 = memberService.createUser(memberDto2);
+        MemberRequest memberRequest1 = new MemberRequest("member1", "member11", "", "");
+        MemberRequest memberRequest2 = new MemberRequest("member2", "member22", "", "");
+        Long memberId1 = memberService.createUser(memberRequest1);
+        Long memberId2 = memberService.createUser(memberRequest2);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
         imgUrls1.add("이미지2");
         imgUrls1.add("이미지3");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId1, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(memberId1, postAddRequest1).getPostId();
 
         //좋아요
         likedService.changeMemberPostLiked(savedPostId1, memberId1);
@@ -297,32 +296,34 @@ class PostServiceTest {
     @Test
     void postDeleteWithLikesAndCommentsTest() {
         //given
-        MemberDto memberDto1 = new MemberDto("member1", "member11", "", "");
-        MemberDto memberDto2 = new MemberDto("member2", "member22", "", "");
-        Long memberId1 = memberService.createUser(memberDto1);
-        Long memberId2 = memberService.createUser(memberDto2);
+        MemberRequest memberRequest1 = new MemberRequest("member1", "member11", "", "");
+        MemberRequest memberRequest2 = new MemberRequest("member2", "member22", "", "");
+        Long memberId1 = memberService.createUser(memberRequest1);
+        Long memberId2 = memberService.createUser(memberRequest2);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
         imgUrls1.add("이미지2");
         imgUrls1.add("이미지3");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(memberId1, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(memberId1, postAddRequest1).getPostId();
 
         //좋아요
         likedService.changeMemberPostLiked(savedPostId1, memberId1);
         likedService.changeMemberPostLiked(savedPostId1, memberId2);
 
         //댓글 달기
-        CommentCreateDto commentDto1 = new CommentCreateDto(savedPostId1, memberId1, "댓글1", null);
-        CommentCreateDto commentDto2 = new CommentCreateDto(savedPostId1, memberId2, "댓글2", null);
-        Long savedCommentId1 = commentService.createComment(commentDto1).getCommentId();
-        Long savedCommentId2 = commentService.createComment(commentDto2).getCommentId();
-        CommentCreateDto replyDto1 = new CommentCreateDto(savedPostId1, memberId2, "대댓글1", savedCommentId1);
-        CommentCreateDto replyDto2 = new CommentCreateDto(savedPostId1, memberId1, "대댓글2", savedCommentId2);
-        Long savedReplyId1 = commentService.createComment(replyDto1).getCommentId();
-        Long savedReplyId2 = commentService.createComment(replyDto2).getCommentId();
+        CommentCreateRequest commentDto1 = new CommentCreateRequest("댓글1");
+        CommentCreateRequest commentDto2 = new CommentCreateRequest("댓글2");
+
+        Long savedCommentId1 = commentService.createComment(savedPostId1, commentDto1, null, memberId1).getCommentId();
+        Long savedCommentId2 = commentService.createComment(savedPostId1, commentDto2, null, memberId2).getCommentId();
+
+        CommentCreateRequest replyDto1 = new CommentCreateRequest("대댓글1");
+        CommentCreateRequest replyDto2 = new CommentCreateRequest("대댓글2");
+        Long savedReplyId1 = commentService.createComment(savedPostId1, replyDto1, savedCommentId1, memberId2).getCommentId();
+        Long savedReplyId2 = commentService.createComment(savedPostId1, replyDto2, savedCommentId2, memberId1).getCommentId();
 
         em.flush();
         em.clear();
@@ -343,21 +344,21 @@ class PostServiceTest {
     @Test
     @DisplayName("회원을 삭제하면 post도 함께 문제 없이 삭제되어야한다.")
     void deleteMemberWithPosts() {
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("aaaa@example.com")
                 .nickname("gwan")
                 .userStatusMessage("")
                 .profileImgUrl("imgUrl")
                 .build();
-        Long savedMemberId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberRequest);
 
         List<String> imgUrls1 = new ArrayList<>();
         imgUrls1.add("이미지1");
         imgUrls1.add("이미지2");
         imgUrls1.add("이미지3");
 
-        PostAddRequest postAddRequest1 = new PostAddRequest(savedMemberId, "게시글 제목1", "게시글 내용1", imgUrls1);
-        Long savedPostId1 = postService.writePost(postAddRequest1).getPostId();
+        PostAddRequest postAddRequest1 = new PostAddRequest("게시글 제목1", "게시글 내용1", imgUrls1);
+        Long savedPostId1 = postService.writePost(savedMemberId, postAddRequest1).getPostId();
 
 
         em.flush();

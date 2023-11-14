@@ -6,14 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     /**
-     * lazy loading on child
-     * @param postId
-     * @return
+     * 특정 게시글의 댓글과 답글을 엮어서 조회
+     * @param postId: 해당 게시글의 댓글과 답글을 조회
+     * @return: 댓글 리스트를 반환
      */
     @Query("select distinct c from Comment c" +
             " left join fetch c.member" +
