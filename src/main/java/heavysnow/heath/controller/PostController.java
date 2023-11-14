@@ -9,11 +9,13 @@ import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.post.PostDetailResponse;
 import heavysnow.heath.dto.post.PostListResponse;
+import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.CommentService;
 import heavysnow.heath.service.LikedService;
 import heavysnow.heath.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +41,10 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public PostListResponse getPostList(@RequestParam("page") int page, @RequestParam("sort") String sort) {
 
+        if (!(sort.equals("createdDate") || sort.equals("liked"))) {
+            throw new BadRequestException();
+        }
+
         return postService.getPostList(page, sort);
     }
 
@@ -50,7 +56,7 @@ public class PostController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public PostAddResponse writePost(@RequestBody PostAddRequest postAddRequest, HttpServletRequest request) {
+    public PostAddResponse writePost(@RequestBody @Valid PostAddRequest postAddRequest, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 

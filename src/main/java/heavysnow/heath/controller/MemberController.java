@@ -13,6 +13,7 @@ import heavysnow.heath.service.GoalService;
 import heavysnow.heath.service.MemberService;
 import heavysnow.heath.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -93,7 +94,7 @@ public class MemberController {
      */
     @PatchMapping("/{memberId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateMember(@PathVariable("memberId") Long memberId, @RequestBody MemberRequest memberRequest,
+    public void updateMember(@PathVariable("memberId") Long memberId, @RequestBody @Valid MemberRequest memberRequest,
                                              HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);

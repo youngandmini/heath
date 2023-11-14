@@ -5,6 +5,7 @@ import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(basePackages = "heavysnow.heath.controller")
 public class ExceptionControllerAdvice {
 
-    @ExceptionHandler(BadRequestException.class)
+    @ExceptionHandler({BadRequestException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String badRequest() {
         return "잘못된 요청입니다.";
