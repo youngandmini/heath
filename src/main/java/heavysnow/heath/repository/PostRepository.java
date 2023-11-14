@@ -34,12 +34,25 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Slice<Post> findPageByMember(@Param("memberId") Long memberId, Pageable pageable);
 
     /**
-     * 게시글을 페이징하여 조회
-     * @param pageable: 해당 페이징 정보로 정렬 및 페이징하여 조회
+     * 게시글을 최신순으로 페이징하여 조회
+     * @param pageable: 해당 페이징 정보로 페이징하여 조회
      * @return: 게시글의 슬라이스를 반환
      */
-    @Query("select p from Post p join fetch p.member m")
-    Slice<Post> findPage(Pageable pageable);
+    @Query("select p from Post p join fetch p.member m order by p.createdDate desc ")
+    Slice<Post> findPageOrderByCreatedDate(Pageable pageable);
+
+    /**
+     * 게시글을 좋아요순으로 페이징하여 조회
+     * @param pageable: 해당 페이징 정보로 페이징하여 조회
+     * @return: 게시글의 슬라이스를 반환
+     */
+    @Query("select p from Post p" +
+            " join fetch p.member m" +
+            " left outer join p.memberPostLikedList mpl" +
+            " on p.id = mpl.post.id" +
+            " group by p.id" +
+            " order by count(mpl.member.id) desc ")
+    Slice<Post> findPageOrderByLiked(Pageable pageable);
 
 
     /**
