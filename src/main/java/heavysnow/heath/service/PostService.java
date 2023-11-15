@@ -10,6 +10,7 @@ import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;
 import heavysnow.heath.dto.post.PostDetailResponse;
 import heavysnow.heath.dto.post.PostListResponse;
+import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.exception.ForbiddenException;
 import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.MemberRepository;
@@ -174,9 +175,20 @@ public class PostService {
      * @return 게시글 리스트를 반환
      */
     public PostListResponse getPostList(int page, String sort) {
-        Pageable pageable = PageRequest.of(page, 3, Sort.by(Sort.Direction.DESC, sort));
-        Slice<Post> postSlice = postRepository.findPage(pageable);
-        return PostListResponse.of(postSlice);
+//        Pageable pageable = PageRequest.of(page, 3, Sort.by(Sort.Direction.DESC, sort));
+//        Slice<Post> postSlice = postRepository.findPage(pageable);
+//        return PostListResponse.of(postSlice);
+
+        Pageable pageable = PageRequest.of(page, 3);
+        if (sort.equals("createdDate")) {
+            Slice<Post> pageOrderByCreatedDate = postRepository.findPageOrderByCreatedDate(pageable);
+            return PostListResponse.of(pageOrderByCreatedDate);
+        } else if (sort.equals("liked")) {
+            Slice<Post> pageOrderByLiked = postRepository.findPageOrderByLiked(pageable);
+            return PostListResponse.of(pageOrderByLiked);
+        }
+
+        throw new BadRequestException();
     }
 
     /**
