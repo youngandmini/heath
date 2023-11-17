@@ -174,7 +174,7 @@ public class PostService {
      * @return 게시글 리스트를 반환
      */
     public PostListResponse getPostList(int page, String sort) {
-        Pageable pageable = PageRequest.of(page, 3, Sort.by(Sort.Direction.DESC, sort));
+        Pageable pageable = PageRequest.of(page-1, 3, Sort.by(Sort.Direction.DESC, sort));
         Slice<Post> postSlice = postRepository.findPage(pageable);
         return PostListResponse.of(postSlice);
     }

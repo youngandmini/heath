@@ -21,6 +21,6 @@ public class PageInfo {
     private int numberOfElements;
 
     public static PageInfo of(Slice<Post> postSlice) {
-        return new PageInfo(postSlice.isFirst(), postSlice.isLast(), postSlice.getNumber(), postSlice.getNumberOfElements());
+        return new PageInfo(postSlice.isFirst(), postSlice.isLast(), postSlice.getNumber()+1, postSlice.getNumberOfElements());
     }
 }
