@@ -34,7 +34,7 @@ public class Goal {
         this.isAchieved = isAchieved;
     }
 
-    // 엔티티 내부 udpate 메서드
+    // 엔티티 내부 update 메서드
     public void update(boolean isAchieved){
         this.isAchieved = isAchieved;
     }
