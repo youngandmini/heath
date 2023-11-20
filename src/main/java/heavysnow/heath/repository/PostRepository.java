@@ -76,7 +76,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query("select distinct p.createdDate from Post p" +
             " where p.member.id = :memberId" +
-            " and date_format(p.createdDate, '%y') = :year" +
+            " and date_format(p.createdDate, '%Y') = :year" +
             " and date_format(p.createdDate, '%m') = :month" +
             " order by p.createdDate")
     List<LocalDateTime> findDatesByMemberAndYearMonth(@Param("memberId") Long memberId, @Param("year") int year, @Param("month") int month);
