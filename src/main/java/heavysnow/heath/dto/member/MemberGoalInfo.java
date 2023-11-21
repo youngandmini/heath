@@ -1,6 +1,7 @@
 package heavysnow.heath.dto.member;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import heavysnow.heath.domain.Goal;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,13 +17,14 @@ import java.util.stream.Collectors;
 public class MemberGoalInfo {
     private Long goalId;
     private String content;
-    private boolean isAchieved;
+//    @JsonProperty("isAchieved")
+    private Boolean isAchieved;
 
     private static MemberGoalInfo of(Goal goal) {
         return new MemberGoalInfo(
                 goal.getId(),
                 goal.getContent(),
-                goal.isAchieved()
+                goal.getIsAchieved()
         );
     }
 

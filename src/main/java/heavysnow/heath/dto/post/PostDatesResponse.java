@@ -20,6 +20,9 @@ public class PostDatesResponse {
 
     public static PostDatesResponse of(List<LocalDateTime> postDatetimes) {
 
-        return new PostDatesResponse(postDatetimes.stream().map(LocalDate::from).collect(Collectors.toList()));
+        return new PostDatesResponse(postDatetimes.stream()
+                .map(LocalDate::from)
+                .distinct()
+                .collect(Collectors.toList()));
     }
 }

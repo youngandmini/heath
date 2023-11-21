@@ -7,8 +7,15 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-@Getter
 public class GoalCreateRequest {
     private String content;
     private boolean isAchieved;
+
+    public String getContent() {
+        return content;
+    }
+
+    public boolean getIsAchieved() {
+        return isAchieved;
+    }
 }

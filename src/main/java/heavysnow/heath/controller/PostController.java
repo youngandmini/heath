@@ -39,7 +39,7 @@ public class PostController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PostListResponse getPostList(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "sort", defaultValue = "createdDate") String sort) {
+    public PostListResponse getPostList(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "sort", defaultValue = "createdDate") String sort) {
 
         if (!(sort.equals("createdDate") || sort.equals("liked"))) {
             throw new BadRequestException();

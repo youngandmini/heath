@@ -74,9 +74,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param month: 해당 월에 등록했던 게시글들의 날짜를 조회
      * @return: 날짜 리스트를 반환
      */
-    @Query("select distinct p.createdDate from Post p" +
+    @Query("select p.createdDate from Post p" +
             " where p.member.id = :memberId" +
-            " and date_format(p.createdDate, '%y') = :year" +
+            " and date_format(p.createdDate, '%Y') = :year" +
             " and date_format(p.createdDate, '%m') = :month" +
             " order by p.createdDate")
     List<LocalDateTime> findDatesByMemberAndYearMonth(@Param("memberId") Long memberId, @Param("year") int year, @Param("month") int month);
