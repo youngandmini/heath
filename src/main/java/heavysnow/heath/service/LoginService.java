@@ -51,7 +51,7 @@ public class LoginService {
 
         String email = map.get("email");
         String nickname = map.get("name");
-        String profileImage = map.get("image");
+        String profileImage = map.get("picture");
 
         Optional<Member> findMemberOptional = memberRepository.findByUsername(email);
         if (findMemberOptional.isPresent()) {

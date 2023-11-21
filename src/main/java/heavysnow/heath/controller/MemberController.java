@@ -1,5 +1,6 @@
 package heavysnow.heath.controller;
 
+import heavysnow.heath.common.CookieManager;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.goal.GoalCreateRequest;
 import heavysnow.heath.dto.goal.GoalCreateResponse;
@@ -79,7 +80,7 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteMember(@PathVariable("memberId") Long memberId, HttpServletRequest request) {
         // 인증 토큰 확인
-        Optional<Long> loginMemberOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberOptional.orElseThrow(UnauthorizedException::new);
 
         // 회원 탈퇴
@@ -96,7 +97,7 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public void updateMember(@PathVariable("memberId") Long memberId, @RequestBody @Valid MemberRequest memberRequest,
                                              HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         memberService.editMember(loginMemberId, memberId, memberRequest);
@@ -113,7 +114,7 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public GoalCreateResponse addGoal(@PathVariable("memberId") Long memberId, @RequestBody GoalCreateRequest goalCreateRequest,
                                       HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         GoalCreateResponse response = goalService.createGoalForMember(loginMemberId, memberId, goalCreateRequest);
@@ -131,7 +132,7 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public void updateGoal(@PathVariable("memberId") Long memberId, @PathVariable("goalId") Long goalId, @RequestBody GoalUpdateRequest goalUpdateRequest, HttpServletRequest request) {
         // 인증 토큰 확인
-        Optional<Long> loginMemberOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberOptional.orElseThrow(UnauthorizedException::new);
 
         goalService.updateGoalForMember(loginMemberId, memberId, goalId, goalUpdateRequest);
@@ -147,7 +148,7 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteGoal(@PathVariable("memberId") Long memberId, @PathVariable("goalId") Long goalId,
                                            HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         goalService.deleteGoalForMember(loginMemberId, memberId, goalId);
