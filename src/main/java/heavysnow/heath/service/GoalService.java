@@ -47,7 +47,7 @@ public class GoalService {
         Goal goal = Goal.builder()
                 .member(member)
                 .content(goalDto.getContent())
-                .isAchieved(goalDto.isAchieved())
+                .isAchieved(false)
                 .build();
 
         Goal savedGoal = goalRepository.save(goal);
@@ -70,7 +70,7 @@ public class GoalService {
         }
 
         // 값 변경
-        goal.update(updateDto.isAchieved());
+        goal.update(updateDto.getIsAchieved());
     }
 
     /**

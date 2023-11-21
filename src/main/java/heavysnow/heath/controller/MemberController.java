@@ -64,7 +64,7 @@ public class MemberController {
      */
     @GetMapping("/{memberId}/posts")
     @ResponseStatus(HttpStatus.OK)
-    public PostListResponse getMemberPosts(@PathVariable("memberId") Long memberId, @RequestParam(value = "page", defaultValue = "0") int page) {
+    public PostListResponse getMemberPosts(@PathVariable("memberId") Long memberId, @RequestParam(value = "page", defaultValue = "1") int page) {
         PostListResponse response = postService.getPostListByMember(memberId, page);
         return response;
     }

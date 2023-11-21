@@ -163,7 +163,7 @@ public class PostService {
      * @return 게시글 리스트를 반환
      */
     public PostListResponse getPostListByMember(Long memberId, int page) {
-        Pageable pageable = PageRequest.of(page, 9);
+        Pageable pageable = PageRequest.of(page-1, 9);
         Slice<Post> postSlice = postRepository.findPageByMember(memberId, pageable);
         return PostListResponse.of(postSlice);
     }
@@ -179,7 +179,7 @@ public class PostService {
 //        Slice<Post> postSlice = postRepository.findPage(pageable);
 //        return PostListResponse.of(postSlice);
 
-        Pageable pageable = PageRequest.of(page, 3);
+        Pageable pageable = PageRequest.of(page-1, 3);
         if (sort.equals("createdDate")) {
             Slice<Post> pageOrderByCreatedDate = postRepository.findPageOrderByCreatedDate(pageable);
             return PostListResponse.of(pageOrderByCreatedDate);

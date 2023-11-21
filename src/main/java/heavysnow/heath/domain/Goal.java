@@ -4,11 +4,10 @@ package heavysnow.heath.domain;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
+//@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "goal")
 public class Goal {
@@ -34,9 +33,24 @@ public class Goal {
         this.isAchieved = isAchieved;
     }
 
-    // 엔티티 내부 udpate 메서드
+    // 엔티티 내부 update 메서드
     public void update(boolean isAchieved){
         this.isAchieved = isAchieved;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public boolean getIsAchieved() {
+        return isAchieved;
+    }
 }
