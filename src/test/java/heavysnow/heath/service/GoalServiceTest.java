@@ -2,20 +2,15 @@ package heavysnow.heath.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heavysnow.heath.domain.Goal;
-import heavysnow.heath.domain.Member;
-import heavysnow.heath.dto.GoalCreationDto;
-import heavysnow.heath.dto.GoalIdResponseDto;
-import heavysnow.heath.dto.GoalUpdateDto;
-import heavysnow.heath.dto.MemberDto;
+import heavysnow.heath.dto.goal.GoalCreateRequest;
+import heavysnow.heath.dto.goal.GoalUpdateRequest;
+import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.repository.GoalRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,7 +34,7 @@ class GoalServiceTest {
         // given
 
         // 멤버 DTO
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("leejungbin")
                 .nickname("ego2")
                 .userStatusMessage("fighting!!!")
@@ -47,33 +42,33 @@ class GoalServiceTest {
                 .build();
 
         // memberDto에 있는 정보 데베에 저장
-        Long savedMemberId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberRequest);
 
 
         final String content = "content";
         final boolean isAchieved = false;
 
         // Goal DTO
-        GoalCreationDto goalCreationDto = new GoalCreationDto(content, isAchieved);
+        GoalCreateRequest goalCreateRequest = new GoalCreateRequest(content, isAchieved);
 
         // when
         // 해당 멤버의 목표 데베 저장
-        Long savedGoalId = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreationDto).getGoalId();
+        Long savedGoalId = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreateRequest).getGoalId();
         Goal findGoal = goalRepository.findById(savedGoalId).get();
 
         // then
         assertThat(findGoal.getMember().getId()).isEqualTo(savedMemberId);  // 같은 멤버인지 검증
-        assertThat(findGoal.getContent()).isEqualTo(goalCreationDto.getContent());
-        assertThat(findGoal.isAchieved()).isEqualTo(goalCreationDto.isAchieved());
+        assertThat(findGoal.getContent()).isEqualTo(goalCreateRequest.getContent());
+        assertThat(findGoal.getIsAchieved()).isEqualTo(goalCreateRequest.getIsAchieved());
     }
 
-    @DisplayName("updateGoalForMember : 특정 멤버에 대한 목표를 수정한다.")
+    @DisplayName("updateGoalForMember : 특정 멤버에 대한 목표의 달성 상태를 수정한다.")
     @Test
     @Transactional
     public void updateGoal() throws Exception {
         // given
         // 멤버 DTO
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("leejungbin")
                 .nickname("ego2")
                 .userStatusMessage("fighting!!!")
@@ -81,22 +76,21 @@ class GoalServiceTest {
                 .build();
 
         // memberDto에 있는 정보 데베에 저장
-        Long savedMemberId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberRequest);
 
 
         // Goal DTO
-        GoalCreationDto goalCreationDto1 = new GoalCreationDto("content1", false);
-        GoalCreationDto goalCreationDto2 = new GoalCreationDto("content2", true);
+        GoalCreateRequest goalCreateRequest1 = new GoalCreateRequest("content1", false);
+        GoalCreateRequest goalCreateRequest2 = new GoalCreateRequest("content2", true);
 
 
         // 해당 멤버의 목표 데베 저장
-        Long savedGoalId1 = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreationDto1).getGoalId();
-        Long savedGoalId2 = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreationDto2).getGoalId();
+        Long savedGoalId1 = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreateRequest1).getGoalId();
+        Long savedGoalId2 = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreateRequest2).getGoalId();
 
-        String updatedContent = "update content 1";
         Boolean isAchieved = true;
 
-        GoalUpdateDto updateDto = new GoalUpdateDto(updatedContent, isAchieved);
+        GoalUpdateRequest updateDto = new GoalUpdateRequest(isAchieved);
 
 
         // when
@@ -104,8 +98,7 @@ class GoalServiceTest {
         Goal findGoal1 = goalRepository.findById(savedGoalId1).get();
 
         // then
-        assertThat(findGoal1.getContent()).isEqualTo(updatedContent);
-        assertThat(findGoal1.isAchieved()).isEqualTo(isAchieved);
+        assertThat(findGoal1.getIsAchieved()).isEqualTo(isAchieved);
 
     }
 
@@ -115,7 +108,7 @@ class GoalServiceTest {
     public void deleteGoal() throws Exception {
         // given
         // 멤버 DTO
-        MemberDto memberDto = MemberDto.builder()
+        MemberRequest memberRequest = MemberRequest.builder()
                 .username("leejungbin")
                 .nickname("ego2")
                 .userStatusMessage("fighting!!!")
@@ -123,13 +116,13 @@ class GoalServiceTest {
                 .build();
 
         // memberDto에 있는 정보 데베에 저장
-        Long savedMemberId = memberService.createUser(memberDto);
+        Long savedMemberId = memberService.createUser(memberRequest);
 
         // Goal DTO
-        GoalCreationDto goalCreationDto = new GoalCreationDto("1일 1커밋 하기", false);
+        GoalCreateRequest goalCreateRequest = new GoalCreateRequest("1일 1커밋 하기", false);
 
         // 멤버의 목표 데베에 저장
-        Long savedGoalId = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreationDto).getGoalId();
+        Long savedGoalId = goalService.createGoalForMember(savedMemberId, savedMemberId, goalCreateRequest).getGoalId();
 
         // when
         // 생성한 목표를 삭제

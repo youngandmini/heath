@@ -1,20 +1,21 @@
 package heavysnow.heath.controller;
 
 import heavysnow.heath.common.LoginMemberHolder;
-import heavysnow.heath.dto.CommentCreateDto;
-import heavysnow.heath.dto.CommentCreateResponseDto;
-import heavysnow.heath.dto.CommentUpdateDto;
+import heavysnow.heath.dto.comment.CommentCreateRequest;
+import heavysnow.heath.dto.comment.CommentCreateResponse;
+import heavysnow.heath.dto.comment.CommentUpdateRequest;
 import heavysnow.heath.dto.post.PostAddRequest;
 import heavysnow.heath.dto.post.PostAddResponse;
 import heavysnow.heath.dto.post.PostEditRequest;
-import heavysnow.heath.dto.postdto.PostDetailResponseDto;
-import heavysnow.heath.dto.postdto.PostListResponseDto;
+import heavysnow.heath.dto.post.PostDetailResponse;
+import heavysnow.heath.dto.post.PostListResponse;
+import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.exception.UnauthorizedException;
 import heavysnow.heath.service.CommentService;
 import heavysnow.heath.service.LikedService;
 import heavysnow.heath.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.websocket.server.PathParam;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,45 +32,42 @@ public class PostController {
     private final LikedService likedService;
 
     /**
-     * 메인페이지
+     * 메인페이지에서 게시글 리스트를 요청
+     * @param page: 페이지 번호
+     * @param sort: 정렬 조건
+     * @return: 게시글 리스트를 3개씩 반환
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public PostListResponseDto getPostList(
-            @RequestParam("page") int page,
-            @RequestParam("sort") String sort
-    ) {
+    public PostListResponse getPostList(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "sort", defaultValue = "createdDate") String sort) {
+
+        if (!(sort.equals("createdDate") || sort.equals("liked"))) {
+            throw new BadRequestException();
+        }
+
         return postService.getPostList(page, sort);
     }
 
     /**
-     * 게시글 등록 요청
+     * 새로운 게시글을 등록하기 위한 요청
+     * @param postAddRequest: 등록할 게시글 정보
+     * @param request: 로그인 정보
+     * @return: 등록한 게시글의 아이디
      */
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public PostAddResponse writePost(@RequestBody PostAddRequest postAddRequest, HttpServletRequest request) {
+    public PostAddResponse writePost(@RequestBody @Valid PostAddRequest postAddRequest, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        postAddRequest.setMemberId(loginMemberId);
-        return postService.writePost(postAddRequest);
-    }
-
-
-    /**
-     * 게시글 상세 조회 요청
-     */
-    @GetMapping("/{postId}")
-    @ResponseStatus(HttpStatus.OK)
-    public PostDetailResponseDto detailedPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
-        Long loginMemberId = loginMemberIdOptional.orElse(null);
-
-        return postService.getPostWithDetail(postId, loginMemberId);
+        return postService.writePost(loginMemberId, postAddRequest);
     }
 
     /**
-     * 게시글 수정 요청
+     * 게시글을 수정하기 위한 요청
+     * @param postId: 수정할 게시글 아이디
+     * @param postEditRequest: 수정할 게시글 정보
+     * @param request: 로그인 정보
      */
     @PatchMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
@@ -79,12 +77,29 @@ public class PostController {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        postService.editPost(postEditRequest, loginMemberId);
+        postService.editPost(postId, postEditRequest, loginMemberId);
+    }
+
+    /**
+     * 게시글 상세를 조회하기 위한 요청
+     * @param postId: 조회할 게시글 아이디
+     * @param request: 로그인 정보
+     * @return: 게시글 상세 정보
+     */
+    @GetMapping("/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public PostDetailResponse detailedPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Long loginMemberId = loginMemberIdOptional.orElse(null);
+
+        return postService.getPostWithDetail(postId, loginMemberId);
     }
 
 
     /**
-     * 게시글 삭제 요청
+     * 게시글을 삭제하기 위한 요청
+     * @param postId: 삭제할 게시글 아이디
+     * @param request: 로그인 정보
      */
     @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
@@ -96,7 +111,9 @@ public class PostController {
     }
 
     /**
-     * 좋아요 요청
+     * 좋아요 상태를 수정하기 위한 요청
+     * @param postId: 좋아요를 달 게시글 아이디
+     * @param request: 로그인 정보
      */
     @PostMapping("/{postId}/likes")
     @ResponseStatus(HttpStatus.OK)
@@ -108,48 +125,57 @@ public class PostController {
     }
 
     /**
-     * 새로운 댓글 요청
+     * 새로운 댓글을 달기 위한 요청
+     * @param commentDto: 댓글 내용
+     * @param postId: 댓글을 달 게시글 아이디
+     * @param request: 로그인 정보
+     * @return: 댓글 아이디
      */
     @PostMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.OK)
-    public CommentCreateResponseDto addComment(@RequestBody CommentCreateDto commentDto, @PathVariable("postId") Long postId, HttpServletRequest request) {
+    public CommentCreateResponse addComment(@RequestBody CommentCreateRequest commentDto, @PathVariable("postId") Long postId, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        commentDto.setIds(postId, null, loginMemberId);
-
-        return commentService.createComment(commentDto);
+        return commentService.createComment(postId, commentDto, null, loginMemberId);
     }
 
     /**
-     * 새로운 답글 요청
+     * 특정 댓글에 답글을 달기 위한 요청
+     * @param commentDto: 답글 내용
+     * @param postId: 답글을 달 댓글이 존재하는 게시글 아이디
+     * @param commentId: 답글을 달 댓글 아이디
+     * @param request: 로그인 정보
+     * @return: 답글 아이디
      */
     @PostMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public CommentCreateResponseDto addReply(@RequestBody CommentCreateDto commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
+    public CommentCreateResponse addReply(@RequestBody CommentCreateRequest commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        commentDto.setIds(postId, commentId, loginMemberId);
-
-        return commentService.createComment(commentDto);
+        return commentService.createComment(postId, commentDto, commentId, loginMemberId);
     }
 
     /**
-     * 댓글(답글) 수정
+     * 특정 댓글을 수정하기 위한 요청
+     * @param commentDto: 수정할 댓글 내용
+     * @param postId: 수정할 댓글이 속한 게시글 아이디
+     * @param commentId: 수정할 댓글 아이디
+     * @param request: 로그인 정보
      */
     @PatchMapping("/{postId}/comments/{commentId}")
-    public void updateComment(@RequestBody CommentUpdateDto commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
+    public void updateComment(@RequestBody CommentUpdateRequest commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
-        commentDto.setIds(postId, commentId, loginMemberId);
-
-        commentService.updateComment(commentDto);
+        commentService.updateComment(postId, commentId, commentDto, loginMemberId);
     }
 
     /**
-     * 댓글(답글) 삭제
+     * 특정 댓글을 삭제하기 위한 요청
+     * @param commentId: 삭제할 댓글 아이디
+     * @param request: 로그인 정보
      */
     @DeleteMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)

@@ -1,6 +1,13 @@
 package heavysnow.heath.dto.post;
 
-import lombok.*;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -8,12 +15,12 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class PostAddRequest {
-    private Long memberId;
     private String title;
     private String content;
+
+    @Valid
+    @NotNull
+    @Size(min = 1, max = 1)
     private List<String> postImgUrls;
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
 }

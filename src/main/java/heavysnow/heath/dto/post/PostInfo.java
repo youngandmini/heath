@@ -1,11 +1,10 @@
-package heavysnow.heath.dto.postdto;
+package heavysnow.heath.dto.post;
 
 import heavysnow.heath.domain.Post;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 
 import java.time.LocalDate;

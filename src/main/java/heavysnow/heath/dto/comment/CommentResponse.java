@@ -1,6 +1,5 @@
-package heavysnow.heath.dto.postdto;
+package heavysnow.heath.dto.comment;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import heavysnow.heath.domain.Comment;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class CommentResponseDto {
+public class CommentResponse {
 
     private Long memberId;
     private String profileImgUrl;
@@ -25,12 +24,12 @@ public class CommentResponseDto {
     private List<ChildCommentInfo> childComments;
 
 
-    public static List<CommentResponseDto> listOf(List<Comment> parentComments) {
-        return parentComments.stream().map(CommentResponseDto::of).collect(Collectors.toList());
+    public static List<CommentResponse> listOf(List<Comment> parentComments) {
+        return parentComments.stream().map(CommentResponse::of).collect(Collectors.toList());
     }
 
-    private static CommentResponseDto of(Comment parentComment) {
-        return new CommentResponseDto(
+    private static CommentResponse of(Comment parentComment) {
+        return new CommentResponse(
                 parentComment.getMember().getId(),
                 parentComment.getMember().getProfileImgUrl(),
                 parentComment.getMember().getNickname(),
