@@ -78,7 +78,7 @@ class PostServiceTest {
         Long savedPostId2 = postService.writePost(memberId, postAddRequest2).getPostId();
 
         //when - 멤버별로 최신순으로 검색한다.
-        PostListResponse responseDto = postService.getPostListByMember(memberId, 0);
+        PostListResponse responseDto = postService.getPostListByMember(memberId, 1);
 
         //then
         assertThat(responseDto.getPageInfo().getNumberOfElements()).isEqualTo(2);
@@ -128,7 +128,7 @@ class PostServiceTest {
         likedService.changeMemberPostLiked(savedPostId4, memberId1);
 
         //when
-        PostListResponse responseDto1 = postService.getPostList(0, "liked");
+        PostListResponse responseDto1 = postService.getPostList(1, "liked");
 
         //then
         assertThat(responseDto1.getPosts().get(0).getPostId()).isEqualTo(savedPostId1);
@@ -137,7 +137,7 @@ class PostServiceTest {
         assertThat(responseDto1.getPageInfo().getNumberOfElements()).isEqualTo(3);
 
         //when
-        PostListResponse responseDto2 = postService.getPostList(0, "createdDate");
+        PostListResponse responseDto2 = postService.getPostList(1, "createdDate");
 
         //then
         assertThat(responseDto2.getPageInfo().getNumberOfElements()).isEqualTo(3);

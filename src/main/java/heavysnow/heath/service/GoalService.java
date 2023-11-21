@@ -47,7 +47,7 @@ public class GoalService {
         Goal goal = Goal.builder()
                 .member(member)
                 .content(goalDto.getContent())
-                .isAchieved(goalDto.getIsAchieved())
+                .isAchieved(false)
                 .build();
 
         Goal savedGoal = goalRepository.save(goal);

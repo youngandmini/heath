@@ -59,7 +59,7 @@ class GoalServiceTest {
         // then
         assertThat(findGoal.getMember().getId()).isEqualTo(savedMemberId);  // 같은 멤버인지 검증
         assertThat(findGoal.getContent()).isEqualTo(goalCreateRequest.getContent());
-        assertThat(findGoal.isAchieved()).isEqualTo(goalCreateRequest.isAchieved());
+        assertThat(findGoal.getIsAchieved()).isEqualTo(goalCreateRequest.getIsAchieved());
     }
 
     @DisplayName("updateGoalForMember : 특정 멤버에 대한 목표의 달성 상태를 수정한다.")
@@ -98,7 +98,7 @@ class GoalServiceTest {
         Goal findGoal1 = goalRepository.findById(savedGoalId1).get();
 
         // then
-        assertThat(findGoal1.isAchieved()).isEqualTo(isAchieved);
+        assertThat(findGoal1.getIsAchieved()).isEqualTo(isAchieved);
 
     }
 
