@@ -40,7 +40,9 @@ public class MemberController {
     @GetMapping("/{memberId}")
     @ResponseStatus(HttpStatus.OK)
     public MemberResponse getMember(@PathVariable("memberId") Long memberId) {
+        log.info("회원id {}에 대한 정보 및 목표 가져오기 요청" , memberId);
         MemberResponse response = memberService.findMemberWithGoals(memberId);
+        log.info("회원id {}에 대한 정보 및 목표 성공적으로 가져옴." , memberId);
         return response;
     }
 
@@ -55,7 +57,9 @@ public class MemberController {
     @GetMapping("/{memberId}/dates")
     @ResponseStatus(HttpStatus.OK)
     public PostDatesResponse getExerciseDates(@PathVariable("memberId") Long memberId, @RequestParam("year") int year, @RequestParam("month") int month) {
+        log.info("회원id {}, 년도 : {}, 월 : {}에 대한 운동 날짜 정보 요청" ,memberId, year, month);
         PostDatesResponse response = postService.getPostDates(memberId, year, month);
+        log.info("회원id {}에 대한 운동 날짜 정보 성공적으로 가져옴." , memberId);
         return response;
     }
 
@@ -68,7 +72,9 @@ public class MemberController {
     @GetMapping("/{memberId}/posts")
     @ResponseStatus(HttpStatus.OK)
     public PostListResponse getMemberPosts(@PathVariable("memberId") Long memberId, @RequestParam(value = "page", defaultValue = "1") int page) {
+        log.info("회원id {} 에 대한 포스트 정보 가져오기 page : {} 요청" ,memberId, page);
         PostListResponse response = postService.getPostListByMember(memberId, page);
+        log.info("회원id {} 에 대한 포스트 정보 가져오기 page : {} 성공" ,memberId, page);
         return response;
     }
 
@@ -82,11 +88,13 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteMember(@PathVariable("memberId") Long memberId, HttpServletRequest request) {
         // 인증 토큰 확인
+        log.info("회원id {}에 대한 삭제 시도" , memberId);
         Optional<Long> loginMemberOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberOptional.orElseThrow(UnauthorizedException::new);
 
         // 회원 탈퇴
         memberService.deleteMember(memberId, loginMemberId);
+        log.info("회원id {}에 대한 삭제 성공" , memberId);
     }
 
     /**
