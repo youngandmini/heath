@@ -11,6 +11,7 @@ import heavysnow.heath.exception.NotFoundException;
 import heavysnow.heath.repository.GoalRepository;
 import heavysnow.heath.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Transactional
+@Slf4j
 public class GoalService {
     private final GoalRepository goalRepository;
     private final MemberRepository memberRepository;
@@ -84,10 +86,10 @@ public class GoalService {
         Member member = memberRepository.findById(memberId).orElseThrow();
         // 목표 조회
         Goal goal = goalRepository.findByIdAndMemberId(goalId, memberId).orElseThrow(NotFoundException::new);
-
         if (!loginMemberId.equals(memberId)) {
             throw new ForbiddenException();
         }
+        log.info("삭제되는 목표: {}", goal.toString());
 
         goalRepository.delete(goal);
     }
