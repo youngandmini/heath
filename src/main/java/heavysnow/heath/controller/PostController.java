@@ -127,10 +127,15 @@ public class PostController {
     @PostMapping("/{postId}/likes")
     @ResponseStatus(HttpStatus.OK)
     public void likesPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
+        log.info("게시글 좋아요 요청 발생");
+
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+        log.info("게시글 정보: {}", postId);
+        log.info("게시글 좋아요 요청자: {}", loginMemberId);
 
         likedService.changeMemberPostLiked(postId, loginMemberId);
+        log.info("게시글 좋아요 완료");
     }
 
     /**
@@ -143,10 +148,16 @@ public class PostController {
     @PostMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.OK)
     public CommentCreateResponse addComment(@RequestBody CommentCreateRequest commentDto, @PathVariable("postId") Long postId, HttpServletRequest request) {
+        log.info("새로운 댓글 등록 요청 발생");
+
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+        log.info("새로운 댓글 등록 요청 정보: {}, {}", commentDto.getContent(), postId);
+        log.info("새로운 댓글 등록 요청자: {}", loginMemberId);
 
-        return commentService.createComment(postId, commentDto, null, loginMemberId);
+        CommentCreateResponse commentCreateResponse = commentService.createComment(postId, commentDto, null, loginMemberId);
+        log.info("새로운 댓글 등록 완료: {}", commentCreateResponse.getCommentId());
+        return commentCreateResponse;
     }
 
     /**
@@ -159,11 +170,20 @@ public class PostController {
      */
     @PostMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public CommentCreateResponse addReply(@RequestBody CommentCreateRequest commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
+    public CommentCreateResponse addReply(@RequestBody CommentCreateRequest commentDto,
+                                          @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId,
+                                          HttpServletRequest request) {
+        log.info("새로운 답글 등록 요청 발생");
+
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+        log.info("새로운 답글 등록 요청 정보: {}, {}, {}", commentDto.getContent(), postId, commentId);
+        log.info("새로운 답글 등록 요청자: {}", loginMemberId);
 
-        return commentService.createComment(postId, commentDto, commentId, loginMemberId);
+
+        CommentCreateResponse commentCreateResponse = commentService.createComment(postId, commentDto, commentId, loginMemberId);
+        log.info("새로운 답글 등록 완료: {}", commentCreateResponse.getCommentId());
+        return commentCreateResponse;
     }
 
     /**
@@ -174,11 +194,18 @@ public class PostController {
      * @param request: 로그인 정보
      */
     @PatchMapping("/{postId}/comments/{commentId}")
-    public void updateComment(@RequestBody CommentUpdateRequest commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
+    public void updateComment(@RequestBody CommentUpdateRequest commentDto,
+                              @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId,
+                              HttpServletRequest request) {
+        log.info("댓글 수정 요청 발생");
+
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+        log.info("댓글 수정 요청 정보: {}, {}, {}", commentDto.getContent(), postId, commentId);
+        log.info("댓글 수정 요청자: {}", loginMemberId);
 
         commentService.updateComment(postId, commentId, commentDto, loginMemberId);
+        log.info("댓글 수정 완료");
     }
 
     /**
@@ -188,11 +215,16 @@ public class PostController {
      */
     @DeleteMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteComment(@PathVariable("commentId") Long commentId, HttpServletRequest request) {
+    public void deleteComment(@PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId,
+                              HttpServletRequest request) {
+        log.info("댓글 삭제 요청 발생");
+
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+        log.info("댓글 삭제 요청 정보: {}, {}", postId, commentId);
+        log.info("댓글 삭제 요청자: {}", loginMemberId);
 
         commentService.deleteComment(commentId, loginMemberId);
+        log.info("댓글 삭제 완료");
     }
-
 }
