@@ -44,6 +44,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public PostListResponse getPostList(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "sort", defaultValue = "createdDate") String sort) {
 
+        log.info("게시글 리스트 조회 요청 발생. 요청한 페이지: {}, 정렬 기준: {}", page, sort);
         if (!(sort.equals("createdDate") || sort.equals("liked"))) {
             throw new BadRequestException();
         }
@@ -83,10 +84,14 @@ public class PostController {
     public void editPost(@PathVariable("postId") Long postId,
                          @RequestBody PostEditRequest postEditRequest,
                          HttpServletRequest request) {
+        log.info("게시글 수정 요청 발생. 요청한 게시글: {}", postId);
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+        log.info("게시글 수정 요청 정보: {}, {}, {}", postEditRequest.getTitle(), postEditRequest.getContent(), postEditRequest.getPostImgUrls());
+        log.info("게시글 수정 요청자: {}", loginMemberId);
 
         postService.editPost(postId, postEditRequest, loginMemberId);
+        log.info("게시글 수정 요청 수락");
     }
 
     /**
@@ -98,8 +103,10 @@ public class PostController {
     @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public PostDetailResponse detailedPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
+        log.info("게시글 상세 조회 요청 발생. 요청한 게시글: {}", postId);
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElse(null);
+        log.info("게시글 상세 조회 요청자: {}", loginMemberId);
 
         return postService.getPostWithDetail(postId, loginMemberId);
     }
@@ -113,10 +120,14 @@ public class PostController {
     @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public void deletePost(@PathVariable("postId") Long postId, HttpServletRequest request) {
+        log.info("게시글 삭제 요청 발생. 요청한 게시글: {}", postId);
+
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+        log.info("게시글 삭제 요청자: {}", loginMemberId);
 
         postService.deletePost(postId, loginMemberId);
+        log.info("게시글 삭제 요청 수락");
     }
 
     /**
