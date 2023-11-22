@@ -1,5 +1,6 @@
 package heavysnow.heath.controller;
 
+import heavysnow.heath.common.CookieManager;
 import heavysnow.heath.common.LoginMemberHolder;
 import heavysnow.heath.dto.comment.CommentCreateRequest;
 import heavysnow.heath.dto.comment.CommentCreateResponse;
@@ -17,6 +18,7 @@ import heavysnow.heath.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/posts")
+@Slf4j
 public class PostController {
 
     private final PostService postService;
@@ -57,10 +60,16 @@ public class PostController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public PostAddResponse writePost(@RequestBody @Valid PostAddRequest postAddRequest, HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
-        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+        log.info("새로운 게시글 등록 요청 발생");
 
-        return postService.writePost(loginMemberId, postAddRequest);
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+        log.info("새로운 게시글 등록 요청 정보: {}, {}, {}", postAddRequest.getTitle(), postAddRequest.getContent(), postAddRequest.getPostImgUrls());
+        log.info("새로운 게시글 등록 요청자: {}", loginMemberId);
+
+        PostAddResponse postAddResponse = postService.writePost(loginMemberId, postAddRequest);
+        log.info("새로운 게시글 등록 완료: {}", postAddResponse.getPostId());
+        return postAddResponse;
     }
 
     /**
@@ -74,7 +83,7 @@ public class PostController {
     public void editPost(@PathVariable("postId") Long postId,
                          @RequestBody PostEditRequest postEditRequest,
                          HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         postService.editPost(postId, postEditRequest, loginMemberId);
@@ -89,7 +98,7 @@ public class PostController {
     @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public PostDetailResponse detailedPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElse(null);
 
         return postService.getPostWithDetail(postId, loginMemberId);
@@ -104,7 +113,7 @@ public class PostController {
     @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public void deletePost(@PathVariable("postId") Long postId, HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         postService.deletePost(postId, loginMemberId);
@@ -118,7 +127,7 @@ public class PostController {
     @PostMapping("/{postId}/likes")
     @ResponseStatus(HttpStatus.OK)
     public void likesPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         likedService.changeMemberPostLiked(postId, loginMemberId);
@@ -134,7 +143,7 @@ public class PostController {
     @PostMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.OK)
     public CommentCreateResponse addComment(@RequestBody CommentCreateRequest commentDto, @PathVariable("postId") Long postId, HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         return commentService.createComment(postId, commentDto, null, loginMemberId);
@@ -151,7 +160,7 @@ public class PostController {
     @PostMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
     public CommentCreateResponse addReply(@RequestBody CommentCreateRequest commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         return commentService.createComment(postId, commentDto, commentId, loginMemberId);
@@ -166,7 +175,7 @@ public class PostController {
      */
     @PatchMapping("/{postId}/comments/{commentId}")
     public void updateComment(@RequestBody CommentUpdateRequest commentDto, @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId, HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         commentService.updateComment(postId, commentId, commentDto, loginMemberId);
@@ -180,7 +189,7 @@ public class PostController {
     @DeleteMapping("/{postId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteComment(@PathVariable("commentId") Long commentId, HttpServletRequest request) {
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         commentService.deleteComment(commentId, loginMemberId);
