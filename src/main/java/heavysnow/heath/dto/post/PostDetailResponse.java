@@ -1,5 +1,6 @@
 package heavysnow.heath.dto.post;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import heavysnow.heath.domain.Comment;
 import heavysnow.heath.domain.Post;
 import heavysnow.heath.domain.PostImage;
@@ -28,6 +29,7 @@ public class PostDetailResponse {
     private LocalDate createdDate;
     private int consecutiveDays;
     private int liked;
+    @JsonProperty("isLiked")
     private boolean isLiked;
     private List<String> postImgUrls;
     private List<CommentResponse> comments;

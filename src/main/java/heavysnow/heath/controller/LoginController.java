@@ -33,7 +33,8 @@ public class LoginController {
 //        Cookie cookie = new Cookie("accessToken", token);
 //        response.addCookie(cookie);
 
-        response.setHeader("Set-Cookie", "loginSession=" + token + "; HttpOnly; SameSite=None");
+//        response.setHeader("Set-Cookie", "loginSession=" + token + "; SameSite=None;");
+
         return loginResponse;
     }
 

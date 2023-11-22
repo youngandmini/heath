@@ -62,8 +62,8 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public PostAddResponse writePost(@RequestBody @Valid PostAddRequest postAddRequest, HttpServletRequest request) {
         log.info("새로운 게시글 등록 요청 발생");
-
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
         log.info("새로운 게시글 등록 요청 정보: {}, {}, {}", postAddRequest.getTitle(), postAddRequest.getContent(), postAddRequest.getPostImgUrls());
         log.info("새로운 게시글 등록 요청자: {}", loginMemberId);
@@ -85,7 +85,8 @@ public class PostController {
                          @RequestBody PostEditRequest postEditRequest,
                          HttpServletRequest request) {
         log.info("게시글 수정 요청 발생. 요청한 게시글: {}", postId);
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
         log.info("게시글 수정 요청 정보: {}, {}, {}", postEditRequest.getTitle(), postEditRequest.getContent(), postEditRequest.getPostImgUrls());
         log.info("게시글 수정 요청자: {}", loginMemberId);
@@ -104,7 +105,8 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public PostDetailResponse detailedPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
         log.info("게시글 상세 조회 요청 발생. 요청한 게시글: {}", postId);
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElse(null);
         log.info("게시글 상세 조회 요청자: {}", loginMemberId);
 
@@ -121,8 +123,8 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public void deletePost(@PathVariable("postId") Long postId, HttpServletRequest request) {
         log.info("게시글 삭제 요청 발생. 요청한 게시글: {}", postId);
-
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
         log.info("게시글 삭제 요청자: {}", loginMemberId);
 
@@ -139,8 +141,8 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public void likesPost(@PathVariable("postId") Long postId, HttpServletRequest request) {
         log.info("게시글 좋아요 요청 발생");
-
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
         log.info("게시글 정보: {}", postId);
         log.info("게시글 좋아요 요청자: {}", loginMemberId);
@@ -160,8 +162,8 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public CommentCreateResponse addComment(@RequestBody CommentCreateRequest commentDto, @PathVariable("postId") Long postId, HttpServletRequest request) {
         log.info("새로운 댓글 등록 요청 발생");
-
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
         log.info("새로운 댓글 등록 요청 정보: {}, {}", commentDto.getContent(), postId);
         log.info("새로운 댓글 등록 요청자: {}", loginMemberId);
@@ -185,8 +187,8 @@ public class PostController {
                                           @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId,
                                           HttpServletRequest request) {
         log.info("새로운 답글 등록 요청 발생");
-
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
         log.info("새로운 답글 등록 요청 정보: {}, {}, {}", commentDto.getContent(), postId, commentId);
         log.info("새로운 답글 등록 요청자: {}", loginMemberId);
@@ -209,8 +211,8 @@ public class PostController {
                               @PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId,
                               HttpServletRequest request) {
         log.info("댓글 수정 요청 발생");
-
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
         log.info("댓글 수정 요청 정보: {}, {}, {}", commentDto.getContent(), postId, commentId);
         log.info("댓글 수정 요청자: {}", loginMemberId);
@@ -229,8 +231,8 @@ public class PostController {
     public void deleteComment(@PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId,
                               HttpServletRequest request) {
         log.info("댓글 삭제 요청 발생");
-
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
         log.info("댓글 삭제 요청 정보: {}, {}", postId, commentId);
         log.info("댓글 삭제 요청자: {}", loginMemberId);
