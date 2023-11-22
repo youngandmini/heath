@@ -16,6 +16,7 @@ import heavysnow.heath.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
+@Slf4j
 public class MemberController {
 
     private final GoalService goalService;
@@ -97,10 +99,13 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public void updateMember(@PathVariable("memberId") Long memberId, @RequestBody @Valid MemberRequest memberRequest,
                                              HttpServletRequest request) {
+        log.info("회원정보 수정 요청 발생");
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
+        log.info("수정되는 회원정보 {}, {}, {}", memberRequest.getUsername(), memberRequest.getNickname(), memberRequest.getUserStatusMessage());
 
         memberService.editMember(loginMemberId, memberId, memberRequest);
+        log.info("수정 완료");
     }
 
     /**
@@ -114,10 +119,12 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public GoalCreateResponse addGoal(@PathVariable("memberId") Long memberId, @RequestBody GoalCreateRequest goalCreateRequest,
                                       HttpServletRequest request) {
+        log.info("목표 추가요청 발생");
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
-
+        log.info("목표 생성 내용: {}", goalCreateRequest.toString());
         GoalCreateResponse response = goalService.createGoalForMember(loginMemberId, memberId, goalCreateRequest);
+        log.info("생성 완료");
         return response;
     }
 
@@ -130,12 +137,15 @@ public class MemberController {
      */
     @PatchMapping("/{memberId}/goals/{goalId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateGoal(@PathVariable("memberId") Long memberId, @PathVariable("goalId") Long goalId, @RequestBody GoalUpdateRequest goalUpdateRequest, HttpServletRequest request) {
+    public void updateGoal(@PathVariable("memberId") Long memberId, @PathVariable("goalId") Long goalId,
+                           @RequestBody GoalUpdateRequest goalUpdateRequest, HttpServletRequest request) {
+        log.info("목표 수정요청 발생");
         // 인증 토큰 확인
         Optional<Long> loginMemberOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberOptional.orElseThrow(UnauthorizedException::new);
-
+        log.info("목표 수정 정보: {}", goalUpdateRequest.toString());
         goalService.updateGoalForMember(loginMemberId, memberId, goalId, goalUpdateRequest);
+        log.info("수정 완료");
     }
 
     /**
@@ -148,9 +158,11 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteGoal(@PathVariable("memberId") Long memberId, @PathVariable("goalId") Long goalId,
                                            HttpServletRequest request) {
+        log.info("목표 삭제 요청 발생");
         Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         goalService.deleteGoalForMember(loginMemberId, memberId, goalId);
+        log.info("삭제 완료");
     }
 }
