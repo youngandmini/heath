@@ -89,8 +89,9 @@ public class MemberController {
     public void deleteMember(@PathVariable("memberId") Long memberId, HttpServletRequest request) {
         // 인증 토큰 확인
         log.info("회원id {}에 대한 삭제 시도" , memberId);
-        Optional<Long> loginMemberOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
-        Long loginMemberId = loginMemberOptional.orElseThrow(UnauthorizedException::new);
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         // 회원 탈퇴
         memberService.deleteMember(memberId, loginMemberId);
@@ -108,7 +109,8 @@ public class MemberController {
     public void updateMember(@PathVariable("memberId") Long memberId, @RequestBody @Valid MemberRequest memberRequest,
                                              HttpServletRequest request) {
         log.info("회원정보 수정 요청 발생");
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
         log.info("수정되는 회원정보 {}, {}, {}", memberRequest.getUsername(), memberRequest.getNickname(), memberRequest.getUserStatusMessage());
 
@@ -128,7 +130,8 @@ public class MemberController {
     public GoalCreateResponse addGoal(@PathVariable("memberId") Long memberId, @RequestBody GoalCreateRequest goalCreateRequest,
                                       HttpServletRequest request) {
         log.info("목표 추가요청 발생");
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
         log.info("목표 생성 내용: {}", goalCreateRequest.toString());
         GoalCreateResponse response = goalService.createGoalForMember(loginMemberId, memberId, goalCreateRequest);
@@ -149,8 +152,9 @@ public class MemberController {
                            @RequestBody GoalUpdateRequest goalUpdateRequest, HttpServletRequest request) {
         log.info("목표 수정요청 발생");
         // 인증 토큰 확인
-        Optional<Long> loginMemberOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
-        Long loginMemberId = loginMemberOptional.orElseThrow(UnauthorizedException::new);
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
         log.info("목표 수정 정보: {}", goalUpdateRequest.toString());
         goalService.updateGoalForMember(loginMemberId, memberId, goalId, goalUpdateRequest);
         log.info("수정 완료");
@@ -167,7 +171,8 @@ public class MemberController {
     public void deleteGoal(@PathVariable("memberId") Long memberId, @PathVariable("goalId") Long goalId,
                                            HttpServletRequest request) {
         log.info("목표 삭제 요청 발생");
-        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
+        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(request.getHeader("accessToken"));
+//        Optional<Long> loginMemberIdOptional = LoginMemberHolder.findLoginMemberId(CookieManager.findLoginSessionCookie(request));
         Long loginMemberId = loginMemberIdOptional.orElseThrow(UnauthorizedException::new);
 
         goalService.deleteGoalForMember(loginMemberId, memberId, goalId);

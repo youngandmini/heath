@@ -9,6 +9,7 @@ import heavysnow.heath.dto.member.MemberRequest;
 import heavysnow.heath.exception.BadRequestException;
 import heavysnow.heath.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class LoginService {
 
     private final MemberRepository memberRepository;
@@ -82,8 +84,7 @@ public class LoginService {
     // 토큰 파싱
     private Map<String, String> decodeToken(String token) {
         ObjectMapper mapper = new ObjectMapper();
-        Decoder decoder = Base64.getDecoder();
-
+        Decoder decoder = Base64.getUrlDecoder();
         try {
             String[] chunks = token.split("\\.");
             String payload = new String(decoder.decode(chunks[1]));
