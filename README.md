@@ -113,7 +113,7 @@
 
 <h2>사용 스택</h2>
 <h3>[백엔드 stack]</h3>
-<img src="https://img.shields.io/badge/임시-3423A6?style=for-the-badge&logo=nextauth&logoColor=black">
+<img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"><img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
 
 <h3>[협업 tools]</h3>
 <h5>figma, slack, github proejcts, issues, notion</h5>
